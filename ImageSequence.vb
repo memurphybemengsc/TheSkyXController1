@@ -270,7 +270,7 @@
         componentY += exposureType.Size.Height
 
         Dim labFilter As New ComboBox()
-        For Each filter As String In ImagerMainForm.defaultFilterWheelNames
+        For Each filter As String In TheSkyXController.defaultFilterWheelNames
             labFilter.Items.Add(filter)
         Next
         labFilter.Font = panelFont

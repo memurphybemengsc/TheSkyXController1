@@ -1,5 +1,5 @@
 ﻿<Global.Microsoft.VisualBasic.CompilerServices.DesignerGenerated()> _
-Partial Class Form1
+Partial Class TheSkyXController
     Inherits System.Windows.Forms.Form
 
     'Form overrides dispose to clean up the component list.
@@ -24,6 +24,7 @@ Partial Class Form1
     Private Sub InitializeComponent()
         Me.BtnSkyX = New System.Windows.Forms.Button()
         Me.BtnPHD2 = New System.Windows.Forms.Button()
+        Me.BtnCalibrationFrames = New System.Windows.Forms.Button()
         Me.SuspendLayout()
         '
         'BtnSkyX
@@ -44,19 +45,30 @@ Partial Class Form1
         Me.BtnPHD2.Text = "PHD2"
         Me.BtnPHD2.UseVisualStyleBackColor = True
         '
-        'Form1
+        'BtnCalibrationFrames
+        '
+        Me.BtnCalibrationFrames.Location = New System.Drawing.Point(12, 106)
+        Me.BtnCalibrationFrames.Name = "BtnCalibrationFrames"
+        Me.BtnCalibrationFrames.Size = New System.Drawing.Size(117, 23)
+        Me.BtnCalibrationFrames.TabIndex = 10
+        Me.BtnCalibrationFrames.Text = "Calibration Frames"
+        Me.BtnCalibrationFrames.UseVisualStyleBackColor = True
+        '
+        'TheSkyXController
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
         Me.ClientSize = New System.Drawing.Size(800, 450)
+        Me.Controls.Add(Me.BtnCalibrationFrames)
         Me.Controls.Add(Me.BtnPHD2)
         Me.Controls.Add(Me.BtnSkyX)
-        Me.Name = "Form1"
-        Me.Text = "Form1"
+        Me.Name = "TheSkyXController"
+        Me.Text = "TheSkyXController"
         Me.ResumeLayout(False)
 
     End Sub
 
     Friend WithEvents BtnSkyX As Button
     Friend WithEvents BtnPHD2 As Button
+    Friend WithEvents BtnCalibrationFrames As Button
 End Class

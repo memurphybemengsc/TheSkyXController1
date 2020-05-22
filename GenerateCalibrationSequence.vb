@@ -11,7 +11,7 @@ Public Class GenerateCalibrationSequence
 
         If folderBrowserDialog1.ShowDialog() = System.Windows.Forms.DialogResult.OK Then
             TxtBoxImageFolder.Text = folderBrowserDialog1.SelectedPath
-            ImagerMainForm.fitsKeyCollection.rootFolder = TxtBoxImageFolder.Text
+            TheSkyXController.fitsKeyCollection.rootFolder = TxtBoxImageFolder.Text
         Else
             Me.Close()
         End If
@@ -33,7 +33,7 @@ Public Class GenerateCalibrationSequence
         End If
 
         fkc.populateKeysAndGenerateSequence(TxtBoxImageFolder.Text)
-        ImagerMainForm.imageFileSequence.buildPanel()
+        TheSkyXController.imageFileSequence.buildPanel()
 
     End Sub
 
