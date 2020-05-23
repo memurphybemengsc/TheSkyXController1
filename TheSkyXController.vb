@@ -24,6 +24,8 @@
 
     End Sub
     Private Sub BtnSkyX_Click(sender As Object, e As EventArgs) Handles BtnSkyX.Click
+        Dim skyobj As New SkyXFunctions
+        skyobj.isSkyXPresent()
 
     End Sub
 
