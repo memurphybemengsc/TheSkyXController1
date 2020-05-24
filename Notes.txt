@@ -1,0 +1,10 @@
+Items to add
+============
+
+Check for lost guiding. If lost for <x> secs stop imaging and wait until re-acqire. once re-acquired re-centre.
+
+Meridian flip.
+
+Auto Stop if Sun is higher than <x>.
+
+Analyse images to determine if guiding, locartion is OK.
