@@ -4,7 +4,7 @@
     Dim imagingSequenceInProgress As Boolean
     Dim phd2Connected As Boolean = False
     Public fitsKeyCollection As FitsKeyCollection
-    Public phd2guiding As PHD2Guiding1 = Nothing
+    Public phd2guiding As PHD2Guiding = Nothing
     Public Sub New()
         ' This call is required by the designer.
         InitializeComponent()
@@ -32,7 +32,7 @@
 
     Private Sub BtnPHD2_Click(sender As Object, e As EventArgs) Handles BtnPHD2.Click
         If phd2guiding Is Nothing Then
-            phd2guiding = New PHD2Guiding1()
+            phd2guiding = New PHD2Guiding()
 
             If PHD2Guiding.checkPHD2IsRunning() Then
                 phd2Connected = True

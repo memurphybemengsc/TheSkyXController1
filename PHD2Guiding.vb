@@ -1,7 +1,7 @@
 ﻿Imports System.IO
 Imports System.Net.Sockets
 
-Public Class PHD2Guiding1
+Public Class PHD2Guiding
     Private tcpConnection As TcpClient
     Private tcpPort = 4300
 

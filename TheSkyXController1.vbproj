@@ -96,10 +96,10 @@
     <Compile Include="AscomUtilities.vb" />
     <Compile Include="FitsKeyCollection.vb" />
     <Compile Include="FitsKeyValues.vb" />
-    <Compile Include="PHD2Guiding1.Designer.vb">
-      <DependentUpon>PHD2Guiding1.vb</DependentUpon>
+    <Compile Include="PHD2Guiding.Designer.vb">
+      <DependentUpon>PHD2Guiding.vb</DependentUpon>
     </Compile>
-    <Compile Include="PHD2Guiding1.vb">
+    <Compile Include="PHD2Guiding.vb">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="TheSkyXController.vb">
@@ -134,8 +134,8 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="PHD2Guiding1.resx">
-      <DependentUpon>PHD2Guiding1.vb</DependentUpon>
+    <EmbeddedResource Include="PHD2Guiding.resx">
+      <DependentUpon>PHD2Guiding.vb</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="TheSkyXController.resx">
       <DependentUpon>TheSkyXController.vb</DependentUpon>
