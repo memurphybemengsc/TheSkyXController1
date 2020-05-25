@@ -1,7 +1,13 @@
 ﻿Imports System.IO
 Imports System.Net.Sockets
 
-Public Class PHD2Guiding
+Public Class PHD2Guiding1
+    Private tcpConnection As TcpClient
+    Private tcpPort = 4300
+
+    Public Sub New()
+
+    End Sub
 
     ''' <summary>
     ''' Pause guiding. Camera exposures continue to loop if they are already looping. <br/><b>Response</b> 0.
@@ -251,7 +257,7 @@ Public Class PHD2Guiding
         End Get
     End Property
 
-    Public Shared Function SendMessage(message As Byte) As Byte
+    Public Function SendMessage(message As Byte) As Byte
         Dim retval As Byte
         Dim tc As TcpClient = New TcpClient()
         Dim ns As NetworkStream
@@ -272,17 +278,19 @@ Public Class PHD2Guiding
 
     End Function
 
-    Public Shared Function checkPHD2IsRunning() As Boolean
+    Public Function checkPHD2IsRunning() As Boolean
         Dim isPHD2Running As Boolean = True
 
-        Dim tc As TcpClient = New TcpClient()
+        'Dim tc As TcpClient = New TcpClient()
+        tcpConnection = New TcpClient()
         Try
-            tc.Connect(“127.0.0.1”, 4300)
+            tcpConnection.Connect(“127.0.0.1”, tcpPort)
         Catch ex As Exception
             isPHD2Running = False
         End Try
 
         Return isPHD2Running
     End Function
+
 
 End Class

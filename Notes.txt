@@ -8,3 +8,7 @@ Meridian flip.
 Auto Stop if Sun is higher than <x>.
 
 Analyse images to determine if guiding, locartion is OK.
+
+Analyse images to cehck for saturation.
+
+Add code to PHD2 to allow for ports other than 4300.  Possibly if can't connect, change port or 'is PHD running'?  Or put form with port default to 4300.

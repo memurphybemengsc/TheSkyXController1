@@ -14,11 +14,20 @@
     Public Function isSkyXPresent() As Boolean
         Dim skyX As Boolean = False
 
-        Dim tsxo = CreateObject("TheSkyX.Application")
+        Dim tsxo As Object = Nothing
+
+        Try
+            tsxo = New TheSkyXLib.Application
+        Catch ex As Exception
+
+        End Try
+
         If tsxo IsNot Nothing Then
             skyXVersion = tsxo.version
             skyX = True
             MsgBox(“TSX Version: “ & skyXVersion)
+        Else
+            MsgBox(“SkyX is not present“)
         End If
 
         Return skyX
