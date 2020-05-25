@@ -96,10 +96,10 @@
     <Compile Include="AscomUtilities.vb" />
     <Compile Include="FitsKeyCollection.vb" />
     <Compile Include="FitsKeyValues.vb" />
-    <Compile Include="GenerateCalibrationSequence1.Designer.vb">
-      <DependentUpon>GenerateCalibrationSequence1.vb</DependentUpon>
+    <Compile Include="GenerateCalibrationSequence.Designer.vb">
+      <DependentUpon>GenerateCalibrationSequence.vb</DependentUpon>
     </Compile>
-    <Compile Include="GenerateCalibrationSequence1.vb">
+    <Compile Include="GenerateCalibrationSequence.vb">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="PHD2Guiding.Designer.vb">
@@ -134,8 +134,8 @@
     <Compile Include="SkyXFunctions.vb" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="GenerateCalibrationSequence1.resx">
-      <DependentUpon>GenerateCalibrationSequence1.vb</DependentUpon>
+    <EmbeddedResource Include="GenerateCalibrationSequence.resx">
+      <DependentUpon>GenerateCalibrationSequence.vb</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="PHD2Guiding.resx">
       <DependentUpon>PHD2Guiding.vb</DependentUpon>

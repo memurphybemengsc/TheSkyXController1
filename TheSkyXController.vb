@@ -52,7 +52,7 @@
         ' 2) List Files
         ' 3) Generate sequence
         ' 4) Remove existing sequence and replace with new - Add message box to warn user
-        GenerateCalibrationSequence1.Show()
+        GenerateCalibrationSequence.Show()
     End Sub
 
     Private Sub btnExit_Click(sender As Object, e As EventArgs) Handles btnExit.Click
