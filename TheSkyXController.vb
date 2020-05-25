@@ -46,13 +46,13 @@
         End If
     End Sub
 
-    Private Sub BtnCalibrationFrames_Click(sender As Object, e As EventArgs)
+    Private Sub BtnCalibrationFrames_Click(sender As Object, e As EventArgs) Handles BtnCalibrationFrames.Click
         ' Add code to generate a sequence to generate calibration frames
         ' 1) Specify folder
         ' 2) List Files
         ' 3) Generate sequence
         ' 4) Remove existing sequence and replace with new - Add message box to warn user
-        GenerateCalibrationSequence.Show()
+        GenerateCalibrationSequence1.Show()
     End Sub
 
     Private Sub btnExit_Click(sender As Object, e As EventArgs) Handles btnExit.Click

@@ -1,7 +1,7 @@
 ﻿Imports System.IO
 Imports System.Text
 
-Public Class GenerateCalibrationSequence
+Public Class GenerateCalibrationSequence1
     Public fkc As New FitsKeyCollection
 
     Private Sub BtnSelectImageFolder_Click(sender As Object, e As EventArgs) Handles BtnSelectImageFolder.Click
