@@ -25,13 +25,14 @@ Partial Class PHD2Guiding
         Me.Label1 = New System.Windows.Forms.Label()
         Me.NumUDTcpPort = New System.Windows.Forms.NumericUpDown()
         Me.BtnConnect = New System.Windows.Forms.Button()
+        Me.Label2 = New System.Windows.Forms.Label()
         CType(Me.NumUDTcpPort, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.SuspendLayout()
         '
         'Label1
         '
         Me.Label1.AutoSize = True
-        Me.Label1.Location = New System.Drawing.Point(47, 29)
+        Me.Label1.Location = New System.Drawing.Point(46, 78)
         Me.Label1.Name = "Label1"
         Me.Label1.Size = New System.Drawing.Size(50, 13)
         Me.Label1.TabIndex = 0
@@ -39,7 +40,7 @@ Partial Class PHD2Guiding
         '
         'NumUDTcpPort
         '
-        Me.NumUDTcpPort.Location = New System.Drawing.Point(123, 22)
+        Me.NumUDTcpPort.Location = New System.Drawing.Point(122, 71)
         Me.NumUDTcpPort.Maximum = New Decimal(New Integer() {4399, 0, 0, 0})
         Me.NumUDTcpPort.Minimum = New Decimal(New Integer() {4300, 0, 0, 0})
         Me.NumUDTcpPort.Name = "NumUDTcpPort"
@@ -49,22 +50,32 @@ Partial Class PHD2Guiding
         '
         'BtnConnect
         '
-        Me.BtnConnect.Location = New System.Drawing.Point(89, 77)
+        Me.BtnConnect.Location = New System.Drawing.Point(88, 117)
         Me.BtnConnect.Name = "BtnConnect"
         Me.BtnConnect.Size = New System.Drawing.Size(75, 23)
         Me.BtnConnect.TabIndex = 2
         Me.BtnConnect.Text = "Connect"
         Me.BtnConnect.UseVisualStyleBackColor = True
         '
-        'PHD2Guiding1
+        'Label2
+        '
+        Me.Label2.Font = New System.Drawing.Font("Microsoft Sans Serif", 9.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.Label2.Location = New System.Drawing.Point(26, 24)
+        Me.Label2.Name = "Label2"
+        Me.Label2.Size = New System.Drawing.Size(244, 32)
+        Me.Label2.TabIndex = 3
+        Me.Label2.Text = "If you are using a second instance of PHD," & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & "you will need to change the port"
+        '
+        'PHD2Guiding
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
-        Me.ClientSize = New System.Drawing.Size(282, 125)
+        Me.ClientSize = New System.Drawing.Size(282, 163)
+        Me.Controls.Add(Me.Label2)
         Me.Controls.Add(Me.BtnConnect)
         Me.Controls.Add(Me.NumUDTcpPort)
         Me.Controls.Add(Me.Label1)
-        Me.Name = "PHD2Guiding1"
+        Me.Name = "PHD2Guiding"
         Me.Text = "PHD2 Connection Setup"
         CType(Me.NumUDTcpPort, System.ComponentModel.ISupportInitialize).EndInit()
         Me.ResumeLayout(False)
@@ -75,4 +86,5 @@ Partial Class PHD2Guiding
     Friend WithEvents Label1 As Label
     Friend WithEvents NumUDTcpPort As NumericUpDown
     Friend WithEvents BtnConnect As Button
+    Friend WithEvents Label2 As Label
 End Class

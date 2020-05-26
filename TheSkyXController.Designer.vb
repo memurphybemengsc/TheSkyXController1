@@ -46,6 +46,7 @@ Partial Class TheSkyXController
         Me.GroupBox1 = New System.Windows.Forms.GroupBox()
         Me.PnlPhd2Status = New System.Windows.Forms.Panel()
         Me.PnlSkyXStatus = New System.Windows.Forms.Panel()
+        Me.BtnTest = New System.Windows.Forms.Button()
         Me.Panel2.SuspendLayout()
         Me.GroupBox2.SuspendLayout()
         Me.GroupBox1.SuspendLayout()
@@ -284,11 +285,21 @@ Partial Class TheSkyXController
         Me.PnlSkyXStatus.Size = New System.Drawing.Size(25, 23)
         Me.PnlSkyXStatus.TabIndex = 9
         '
+        'BtnTest
+        '
+        Me.BtnTest.Location = New System.Drawing.Point(43, 414)
+        Me.BtnTest.Name = "BtnTest"
+        Me.BtnTest.Size = New System.Drawing.Size(75, 23)
+        Me.BtnTest.TabIndex = 11
+        Me.BtnTest.Text = "Test"
+        Me.BtnTest.UseVisualStyleBackColor = True
+        '
         'TheSkyXController
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
         Me.ClientSize = New System.Drawing.Size(1167, 545)
+        Me.Controls.Add(Me.BtnTest)
         Me.Controls.Add(Me.GroupBox1)
         Me.Controls.Add(Me.GroupBox2)
         Me.Controls.Add(Me.Panel2)
@@ -331,4 +342,5 @@ Partial Class TheSkyXController
     Friend WithEvents GroupBox1 As GroupBox
     Friend WithEvents PnlPhd2Status As Panel
     Friend WithEvents PnlSkyXStatus As Panel
+    Friend WithEvents BtnTest As Button
 End Class

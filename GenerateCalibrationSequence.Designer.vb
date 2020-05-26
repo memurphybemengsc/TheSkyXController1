@@ -86,7 +86,7 @@ Partial Class GenerateCalibrationSequence
         Me.BtnSelectImageFolder.Text = "Select Image Folder"
         Me.BtnSelectImageFolder.UseVisualStyleBackColor = True
         '
-        'GenerateCalibrationSequence1
+        'GenerateCalibrationSequence
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
@@ -97,8 +97,8 @@ Partial Class GenerateCalibrationSequence
         Me.Controls.Add(Me.Label1)
         Me.Controls.Add(Me.TxtBoxImageFolder)
         Me.Controls.Add(Me.BtnSelectImageFolder)
-        Me.Name = "GenerateCalibrationSequence1"
-        Me.Text = "GenerateCalibrationSequence1"
+        Me.Name = "GenerateCalibrationSequence"
+        Me.Text = "Generate Calibration Sequence"
         CType(Me.NumUDNoOfSubs, System.ComponentModel.ISupportInitialize).EndInit()
         Me.ResumeLayout(False)
         Me.PerformLayout()

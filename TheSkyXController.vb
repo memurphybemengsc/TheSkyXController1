@@ -32,17 +32,22 @@
 
     Private Sub BtnPHD2_Click(sender As Object, e As EventArgs) Handles BtnPHD2.Click
         If phd2guiding Is Nothing Then
-            phd2guiding = New PHD2Guiding()
-
-            If PHD2Guiding.checkPHD2IsRunning() Then
+            Try
+                phd2guiding = New PHD2Guiding()
                 phd2Connected = True
                 Me.PnlPhd2Status.BackColor = Color.Green
-            Else
+            Catch ex As Exception
                 MsgBox("PHD2 is not running")
-            End If
+            End Try
         Else
             ' We are disconnecting, check are we guiding or imaging
-
+            Dim res = MsgBox("PHD2 is running, do you wish to disconnect?", MsgBoxStyle.YesNo)
+            If (res = MsgBoxResult.Yes) Then
+                'dispose of phd object
+                Me.PnlPhd2Status.BackColor = Color.Red
+                phd2guiding.Dispose()
+                phd2guiding = Nothing
+            End If
         End If
     End Sub
 
@@ -85,4 +90,7 @@
         imageFileSequence.refreshComponentsAndSaveFile()
     End Sub
 
+    Private Sub BtnTest_Click(sender As Object, e As EventArgs) Handles BtnTest.Click
+        MsgBox("phd status is " + Me.phd2guiding.isPHDLooping.ToString)
+    End Sub
 End Class
