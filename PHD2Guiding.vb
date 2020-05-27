@@ -18,7 +18,7 @@ Public Class PHD2Guiding
         ShowDialog() ' Show the form as a modal dialog so we pause until the dialog closes
 
         ' We have now set the port, Check PHD is running
-        If checkPHD2IsRunning() Then
+        If createPHDConnection() Then
             'OK, we will have set the tcpConnection
         Else
             'PHD is not running so throw exception
@@ -316,7 +316,9 @@ Public Class PHD2Guiding
     End Function
 
     ''' <summary>
-    ''' Start looping exposures. <br/><b>Response</b> 0 if request to start looping was accepted, non-zero otherwise (like when looping was already active). Client should poll with MSG_GETSTATUS to see if looping actually started.
+    ''' Start looping exposures. <br/>
+    ''' Will poll for 500ms to cehck looping has started.<br/>
+    ''' <b>Response</b> True if looping started and false otherwise.
     ''' </summary>
     ''' <remarks></remarks>
     Public Function startPHDLooping() As Boolean
@@ -324,26 +326,22 @@ Public Class PHD2Guiding
         If SendMessage(Me.MSG_LOOP) <> 0 Then
             retval = False
         Else
-
+            retval = isPHDLoopingButNoStarSelected()
         End If
         Return retval
     End Function
 
     ''' <summary>
     ''' Check PHD status for a certain number of milliseconds and return.<br/>
-    ''' The function will return if the expected status is found prior to timeout.
     ''' </summary>
     ''' <remarks></remarks>
-    Private Function checkStatus(milliSecondTimeout As Integer, expectedStatus As Byte) As Byte
+    Private Function checkStatus(milliSecondTimeout As Integer) As Byte
         Dim status As Byte
         Dim startTime As Date = TimeOfDay()
         Dim sw As New Stopwatch
         sw.Start()
         Do
             status = SendMessage(Me.MSG_GETSTATUS)
-            If status = expectedStatus Then
-                Exit Do
-            End If
         Loop Until sw.ElapsedMilliseconds > milliSecondTimeout
 
         sw.Stop()
@@ -351,16 +349,101 @@ Public Class PHD2Guiding
         Return status
     End Function
 
+    ''' <summary>
+    ''' Check PHD status for a 100 milliseconds and return.<br/>
+    ''' </summary>
+    Public Function checkStatus() As Byte
+        Return checkStatus(100)
+    End Function
 
     ''' <summary>
-    ''' Is PHD looping?.
+    ''' Returns true if PHD is neither Paused, Looping or Guiding i.e. status 0.
+    ''' </summary>
+    Public Function isPHDNotPausedLoopingOrGuiding() As Boolean
+        Dim retval As Boolean = False
+
+        If checkStatus() = 0 Then
+            retval = True
+        End If
+
+        Return retval
+    End Function
+
+    ''' <summary>
+    ''' Returns true if PHD is looping and a guide star has been selected i.e. status 1.
+    ''' </summary>
+    Public Function isPHDLoopingAndStarSelected() As Boolean
+        Dim retval As Boolean = False
+
+        If checkStatus() = 1 Then
+            retval = True
+        End If
+
+        Return retval
+    End Function
+
+    ''' <summary>
+    ''' Returns true if PHD is calibrating i.e. status 2.
+    ''' </summary>
+    Public Function isPHDCalibrating() As Boolean
+        Dim retval As Boolean = False
+
+        If checkStatus() = 2 Then
+            retval = True
+        End If
+
+        Return retval
+    End Function
+
+    ''' <summary>
+    ''' Returns true if PHD is guiding and locked on a star i.e. status 3.
+    ''' </summary>
+    Public Function isPHDGuidingAndLockedOnStar() As Boolean
+        Dim retval As Boolean = False
+
+        If checkStatus() = 3 Then
+            retval = True
+        End If
+
+        Return retval
+    End Function
+
+    ''' <summary>
+    ''' Returns true if PHD is guiding but star lost i.e. status 4.
+    ''' </summary>
+    Public Function isPHDGuidingButStarLost() As Boolean
+        Dim retval As Boolean = False
+
+        If checkStatus() = 4 Then
+            retval = True
+        End If
+
+        Return retval
+    End Function
+
+    ''' <summary>
+    ''' Returns true if PHD has paused guiding  i.e. status 100.
+    ''' </summary>
+    Public Function isPHDGuidingPaused() As Boolean
+        Dim retval As Boolean = False
+
+        If checkStatus() = 4 Then
+            retval = True
+        End If
+
+        Return retval
+    End Function
+
+    ''' <summary>
+    ''' Returns true if PHD is looping but no star selected i.e. status 101.
     ''' </summary>
     ''' <remarks></remarks>
-    Public Function isPHDLooping() As Boolean
+    Public Function isPHDLoopingButNoStarSelected() As Boolean
         Dim retval As Boolean = False
         Dim status As Byte
 
-        status = SendMessage(Me.MSG_GETSTATUS)
+        status = checkStatus()
+
         If status = 101 Then
             retval = True
         End If
@@ -369,12 +452,17 @@ Public Class PHD2Guiding
     End Function
 
     ''' <summary>
-    ''' Auto-select a guide star. <br/><b>Response</b> 1 if a star was selected, 0 if not.
+    ''' Auto-select a guide star. <br/>
+    ''' <b>Response</b> true if a star was selected, false if not.
     ''' </summary>
     ''' <remarks></remarks>
-    Public Function selectGuideStar() As Byte
-        Dim retval As Byte
-        retval = SendMessage(Me.MSG_AUTOFINDSTAR)
+    Public Function selectGuideStar() As Boolean
+        Dim retval As Boolean = False
+
+        If SendMessage(Me.MSG_AUTOFINDSTAR) <> 1 Then
+            retval = False
+        End If
+
         Return retval
     End Function
 
@@ -388,12 +476,21 @@ Public Class PHD2Guiding
     Public Function startGuiding() As Boolean
         Dim retval As Boolean = False
 
-        If Not isPHDLooping() Then
+        If isPHDNotPausedLoopingOrGuiding() Then
             startPHDLooping()
         End If
 
-        Dim sts As Byte
-        sts = SendMessage(Me.MSG_STARTGUIDING)
+        If isPHDLoopingButNoStarSelected() Then
+            selectGuideStar()
+        End If
+
+        SendMessage(Me.MSG_STARTGUIDING)
+        If isPHDGuidingAndLockedOnStar() Then
+            retval = True
+        Else
+            retval = False
+        End If
+
         Return retval
     End Function
 
@@ -434,24 +531,24 @@ Public Class PHD2Guiding
     End Function
 
     ''' <summary>
-    ''' Check that we can connect to PHD.<br/>
+    ''' Check that we can connect to PHD and create the tcp connection, readers and writers<br/>
+    ''' <b>Response</b>True is connection suceeded and false if not.
     ''' </summary>
     ''' <remarks></remarks>
-    Public Function checkPHD2IsRunning() As Boolean
+    Public Function createPHDConnection() As Boolean
         Dim isPHD2Running As Boolean = True
 
         'Dim tc As TcpClient = New TcpClient()
         tcpConnection = New TcpClient()
         Try
             tcpConnection.Connect(“127.0.0.1”, tcpPort)
+            ' We have a connection so now setup readers and writers
+            Me.networkStream = Me.tcpConnection.GetStream
+            Me.binReader = New BinaryReader(networkStream)
+            Me.binWriter = New BinaryWriter(networkStream)
         Catch ex As Exception
             isPHD2Running = False
         End Try
-
-        ' We have a connection so now setup readers and writers
-        Me.networkStream = Me.tcpConnection.GetStream
-        Me.binReader = New BinaryReader(networkStream)
-        Me.binWriter = New BinaryWriter(networkStream)
 
         Return isPHD2Running
     End Function

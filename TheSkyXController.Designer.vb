@@ -47,6 +47,8 @@ Partial Class TheSkyXController
         Me.PnlPhd2Status = New System.Windows.Forms.Panel()
         Me.PnlSkyXStatus = New System.Windows.Forms.Panel()
         Me.BtnTest = New System.Windows.Forms.Button()
+        Me.Label8 = New System.Windows.Forms.Label()
+        Me.Label9 = New System.Windows.Forms.Label()
         Me.Panel2.SuspendLayout()
         Me.GroupBox2.SuspendLayout()
         Me.GroupBox1.SuspendLayout()
@@ -81,9 +83,10 @@ Partial Class TheSkyXController
         '
         'PnlImageSequence
         '
+        Me.PnlImageSequence.AutoScroll = True
         Me.PnlImageSequence.Location = New System.Drawing.Point(633, 12)
         Me.PnlImageSequence.Name = "PnlImageSequence"
-        Me.PnlImageSequence.Size = New System.Drawing.Size(487, 319)
+        Me.PnlImageSequence.Size = New System.Drawing.Size(755, 319)
         Me.PnlImageSequence.TabIndex = 12
         '
         'BtnSequenceOpen
@@ -115,6 +118,8 @@ Partial Class TheSkyXController
         '
         'Panel2
         '
+        Me.Panel2.Controls.Add(Me.Label9)
+        Me.Panel2.Controls.Add(Me.Label8)
         Me.Panel2.Controls.Add(Me.Label7)
         Me.Panel2.Controls.Add(Me.Label6)
         Me.Panel2.Controls.Add(Me.Label5)
@@ -124,7 +129,7 @@ Partial Class TheSkyXController
         Me.Panel2.Controls.Add(Me.Label1)
         Me.Panel2.Location = New System.Drawing.Point(413, 12)
         Me.Panel2.Name = "Panel2"
-        Me.Panel2.Size = New System.Drawing.Size(200, 339)
+        Me.Panel2.Size = New System.Drawing.Size(200, 319)
         Me.Panel2.TabIndex = 16
         '
         'Label7
@@ -294,11 +299,31 @@ Partial Class TheSkyXController
         Me.BtnTest.Text = "Test"
         Me.BtnTest.UseVisualStyleBackColor = True
         '
+        'Label8
+        '
+        Me.Label8.AutoSize = True
+        Me.Label8.Font = New System.Drawing.Font("Microsoft Sans Serif", 9.75!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.Label8.Location = New System.Drawing.Point(16, 251)
+        Me.Label8.Name = "Label8"
+        Me.Label8.Size = New System.Drawing.Size(137, 16)
+        Me.Label8.TabIndex = 7
+        Me.Label8.Text = "Run on previous Error"
+        '
+        'Label9
+        '
+        Me.Label9.AutoSize = True
+        Me.Label9.Font = New System.Drawing.Font("Microsoft Sans Serif", 9.75!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.Label9.Location = New System.Drawing.Point(16, 222)
+        Me.Label9.Name = "Label9"
+        Me.Label9.Size = New System.Drawing.Size(160, 16)
+        Me.Label9.TabIndex = 8
+        Me.Label9.Text = "Run on previous Success"
+        '
         'TheSkyXController
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
-        Me.ClientSize = New System.Drawing.Size(1167, 545)
+        Me.ClientSize = New System.Drawing.Size(1430, 545)
         Me.Controls.Add(Me.BtnTest)
         Me.Controls.Add(Me.GroupBox1)
         Me.Controls.Add(Me.GroupBox2)
@@ -343,4 +368,6 @@ Partial Class TheSkyXController
     Friend WithEvents PnlPhd2Status As Panel
     Friend WithEvents PnlSkyXStatus As Panel
     Friend WithEvents BtnTest As Button
+    Friend WithEvents Label9 As Label
+    Friend WithEvents Label8 As Label
 End Class

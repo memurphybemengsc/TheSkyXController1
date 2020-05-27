@@ -91,6 +91,16 @@
     End Sub
 
     Private Sub BtnTest_Click(sender As Object, e As EventArgs) Handles BtnTest.Click
-        MsgBox("phd status is " + Me.phd2guiding.isPHDLooping.ToString)
+        If phd2guiding IsNot Nothing Then
+            phd2guiding.startGuiding()
+            MsgBox("phd status is " + Me.phd2guiding.checkStatus.ToString)
+        Else
+            MsgBox("phd is not connected")
+        End If
+
+        MsgBox("Cick to stop guiding")
+
+        phd2guiding.stopGuiding()
+
     End Sub
 End Class

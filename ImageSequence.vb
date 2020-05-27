@@ -18,16 +18,20 @@
         'Public ditherYn As String
         Public repeats As String
         Public ditherEveryNImages As String
+        Public runOnPreviousSuccess As String
+        Public runOnPreviousError As String
 
         Public Sub New()
             filter = ""
             exposureLength = "1"
-            binY = "1"
+            binX = "1"
             binY = "1"
             exposureType = "Light"
             'ditherYn = "N"
             repeats = "1"
             ditherEveryNImages = "0"
+            runOnPreviousSuccess = "Y"
+            runOnPreviousError = "Y"
         End Sub
     End Class
 
@@ -104,22 +108,26 @@
                 If sequenceLine.CompareTo("; Sequence Footer") = 0 Then
                     readSequenceFileContext = ReadSequenceFileContext.inSequenceElementHeader
                     imageSequenceElements.Add(imageSequenceElement)
-                ElseIf sequenceLine.Substring(0, 24).CompareTo("Filter                = ") = 0 Then
-                    imageSequenceElement.filter = sequenceLine.Substring(24, sequenceLine.Length - 24)
-                ElseIf sequenceLine.Substring(0, 24).CompareTo("Exposure Time         = ") = 0 Then
-                    imageSequenceElement.exposureLength = sequenceLine.Substring(24, sequenceLine.Length - 24)
-                ElseIf sequenceLine.Substring(0, 24).CompareTo("Exposure Type         = ") = 0 Then
-                    imageSequenceElement.exposureType = sequenceLine.Substring(24, sequenceLine.Length - 24)
-                ElseIf sequenceLine.Substring(0, 24).CompareTo("BinX                  = ") = 0 Then
-                    imageSequenceElement.binX = sequenceLine.Substring(24, sequenceLine.Length - 24)
-                ElseIf sequenceLine.Substring(0, 24).CompareTo("BinY                  = ") = 0 Then
-                    imageSequenceElement.binY = sequenceLine.Substring(24, sequenceLine.Length - 24)
-                ElseIf sequenceLine.Substring(0, 24).CompareTo("Repeats               = ") = 0 Then
-                    imageSequenceElement.repeats = sequenceLine.Substring(24, sequenceLine.Length - 24)
+                ElseIf sequenceLine.Substring(0, 27).CompareTo("Filter                   = ") = 0 Then
+                    imageSequenceElement.filter = sequenceLine.Substring(27, sequenceLine.Length - 27)
+                ElseIf sequenceLine.Substring(0, 27).CompareTo("Exposure Time            = ") = 0 Then
+                    imageSequenceElement.exposureLength = sequenceLine.Substring(27, sequenceLine.Length - 27)
+                ElseIf sequenceLine.Substring(0, 27).CompareTo("Exposure Type            = ") = 0 Then
+                    imageSequenceElement.exposureType = sequenceLine.Substring(27, sequenceLine.Length - 27)
+                ElseIf sequenceLine.Substring(0, 27).CompareTo("BinX                     = ") = 0 Then
+                    imageSequenceElement.binX = sequenceLine.Substring(27, sequenceLine.Length - 27)
+                ElseIf sequenceLine.Substring(0, 27).CompareTo("BinY                     = ") = 0 Then
+                    imageSequenceElement.binY = sequenceLine.Substring(27, sequenceLine.Length - 27)
+                ElseIf sequenceLine.Substring(0, 27).CompareTo("Repeats                  = ") = 0 Then
+                    imageSequenceElement.repeats = sequenceLine.Substring(27, sequenceLine.Length - 27)
                     'ElseIf sequenceLine.Substring(0, 24).CompareTo("DitherYN              = ") = 0 Then
                     '    imageSequenceElement.ditherYn = sequenceLine.Substring(24, sequenceLine.Length - 24)
-                ElseIf sequenceLine.Substring(0, 24).CompareTo("Dither Every N Images = ") = 0 Then
-                    imageSequenceElement.repeats = sequenceLine.Substring(24, sequenceLine.Length - 24)
+                ElseIf sequenceLine.Substring(0, 27).CompareTo("Dither Every N Images    = ") = 0 Then
+                    imageSequenceElement.ditherEveryNImages = sequenceLine.Substring(27, sequenceLine.Length - 27)
+                ElseIf sequenceLine.Substring(0, 27).CompareTo("Run on Previous Success  = ") = 0 Then
+                    imageSequenceElement.runOnPreviousSuccess = sequenceLine.Substring(27, sequenceLine.Length - 27)
+                ElseIf sequenceLine.Substring(0, 27).CompareTo("Run on Previous Error    = ") = 0 Then
+                    imageSequenceElement.runOnPreviousError = sequenceLine.Substring(27, sequenceLine.Length - 27)
                 Else
                     'corrupt file format
                 End If
@@ -138,15 +146,16 @@
         file.WriteLine("; Sequence File")
         For Each imageSequenceElement In imageSequenceElements
             file.WriteLine("; Sequence Header")
-            file.WriteLine("Filter                = " & imageSequenceElement.filter)
-            file.WriteLine("Exposure Time         = " & imageSequenceElement.exposureLength)
-            file.WriteLine("Exposure Type         = " & imageSequenceElement.exposureType)
-            file.WriteLine("BinX                  = " & imageSequenceElement.binX)
-            file.WriteLine("BinY                  = " & imageSequenceElement.binY)
-            file.WriteLine("Repeats               = " & imageSequenceElement.repeats)
+            file.WriteLine("Filter                   = " & imageSequenceElement.filter)
+            file.WriteLine("Exposure Time            = " & imageSequenceElement.exposureLength)
+            file.WriteLine("Exposure Type            = " & imageSequenceElement.exposureType)
+            file.WriteLine("BinX                     = " & imageSequenceElement.binX)
+            file.WriteLine("BinY                     = " & imageSequenceElement.binY)
+            file.WriteLine("Repeats                  = " & imageSequenceElement.repeats)
             'file.WriteLine("DitherYN              = " & imageSequenceElement.ditherYn)
-            file.WriteLine("Dither Every N Images = " & imageSequenceElement.ditherEveryNImages)
-
+            file.WriteLine("Dither Every N Images    = " & imageSequenceElement.ditherEveryNImages)
+            file.WriteLine("Run on Previous Success  = " & imageSequenceElement.runOnPreviousSuccess)
+            file.WriteLine("Run on Previous Error    = " & imageSequenceElement.runOnPreviousError)
             file.WriteLine("; Sequence Footer")
         Next
         file.Close()
@@ -258,8 +267,12 @@
         exposureType.Items.Add("Flat (s)")
         exposureType.Items.Add("Flat (%)")
         exposureType.Items.Add("Bias")
-        exposureType.Items.Add("@Focus3")
+        exposureType.Items.Add("@Focus3") ' <=======================  ON FAIL ON FAIL =============================  ???????
         exposureType.Items.Add("Prompt")
+        exposureType.Items.Add("CLS") ' <=======================  ON FAIL ON FAIL =============================  ???????
+        exposureType.Items.Add("Abort")
+        exposureType.Items.Add("Park")
+        exposureType.Items.Add("Shutdown")
         exposureType.Name = "exposureType"
         exposureType.Text = imgSeqEl.exposureType
         exposureType.ItemHeight = 10
@@ -347,6 +360,30 @@
         ditherEveryNImages.Location = New System.Drawing.Point(0, componentY)
         pnlComponents.Controls.Add(ditherEveryNImages)
         componentY += ditherEveryNImages.Size.Height
+
+        ' Error handling, Do we run this element if the previous element suceeded?
+        Dim runOnPreviousSuccess As New ComboBox()
+        runOnPreviousSuccess.Items.Add("Y")
+        runOnPreviousSuccess.Items.Add("N")
+        runOnPreviousSuccess.Text = "Y"
+        runOnPreviousSuccess.ItemHeight = 10
+        runOnPreviousSuccess.Font = panelFont
+        runOnPreviousSuccess.TabIndex = 9
+        runOnPreviousSuccess.Location = New System.Drawing.Point(0, componentY)
+        pnlComponents.Controls.Add(runOnPreviousSuccess)
+        componentY += runOnPreviousSuccess.Size.Height
+
+        ' Error handling, Do we run this element if the previous element failed?
+        Dim runOnPreviousError As New ComboBox()
+        runOnPreviousError.Items.Add("Y")
+        runOnPreviousError.Items.Add("N")
+        runOnPreviousError.Text = "Y"
+        runOnPreviousError.ItemHeight = 10
+        runOnPreviousError.Font = panelFont
+        runOnPreviousError.TabIndex = 10
+        runOnPreviousError.Location = New System.Drawing.Point(0, componentY)
+        pnlComponents.Controls.Add(runOnPreviousError)
+        componentY += runOnPreviousError.Size.Height
 
         Dim btnX As Integer = 0
         Dim btnY As Integer = componentY
