@@ -78,6 +78,9 @@
 
     Private Sub PnlImageSequence_Paint(sender As Object, e As PaintEventArgs) Handles PnlImageSequence.Paint
         If imageFileSequence.componentPanel Is Nothing Then
+            Me.PnlImageSequence.AutoScroll = False
+            Me.PnlImageSequence.VerticalScroll.Enabled = False
+            Me.PnlImageSequence.AutoScroll = True
             imageFileSequence.componentPanel = Me.PnlImageSequence
             imageFileSequence.createInitialPanel()
         End If

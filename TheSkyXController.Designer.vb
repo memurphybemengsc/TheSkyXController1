@@ -29,14 +29,16 @@ Partial Class TheSkyXController
         Me.BtnSequenceOpen = New System.Windows.Forms.Button()
         Me.BtnSeqenceAppend = New System.Windows.Forms.Button()
         Me.BtnSequenceSave = New System.Windows.Forms.Button()
-        Me.Panel2 = New System.Windows.Forms.Panel()
-        Me.Label7 = New System.Windows.Forms.Label()
-        Me.Label6 = New System.Windows.Forms.Label()
-        Me.Label5 = New System.Windows.Forms.Label()
-        Me.Label4 = New System.Windows.Forms.Label()
-        Me.Label3 = New System.Windows.Forms.Label()
-        Me.Label2 = New System.Windows.Forms.Label()
-        Me.Label1 = New System.Windows.Forms.Label()
+        Me.PnlImageSeqTitles = New System.Windows.Forms.Panel()
+        Me.LblRunPrevSuccess = New System.Windows.Forms.Label()
+        Me.LblRunPrevError = New System.Windows.Forms.Label()
+        Me.LblDitherEveryNImages = New System.Windows.Forms.Label()
+        Me.LblRepeats = New System.Windows.Forms.Label()
+        Me.LblBinY = New System.Windows.Forms.Label()
+        Me.LblBinX = New System.Windows.Forms.Label()
+        Me.LblExposureLength = New System.Windows.Forms.Label()
+        Me.LblFilter = New System.Windows.Forms.Label()
+        Me.LblExposureType = New System.Windows.Forms.Label()
         Me.GroupBox2 = New System.Windows.Forms.GroupBox()
         Me.BtnCalibrationFrames = New System.Windows.Forms.Button()
         Me.BtnStartImaging = New System.Windows.Forms.Button()
@@ -47,9 +49,7 @@ Partial Class TheSkyXController
         Me.PnlPhd2Status = New System.Windows.Forms.Panel()
         Me.PnlSkyXStatus = New System.Windows.Forms.Panel()
         Me.BtnTest = New System.Windows.Forms.Button()
-        Me.Label8 = New System.Windows.Forms.Label()
-        Me.Label9 = New System.Windows.Forms.Label()
-        Me.Panel2.SuspendLayout()
+        Me.PnlImageSeqTitles.SuspendLayout()
         Me.GroupBox2.SuspendLayout()
         Me.GroupBox1.SuspendLayout()
         Me.SuspendLayout()
@@ -86,12 +86,12 @@ Partial Class TheSkyXController
         Me.PnlImageSequence.AutoScroll = True
         Me.PnlImageSequence.Location = New System.Drawing.Point(633, 12)
         Me.PnlImageSequence.Name = "PnlImageSequence"
-        Me.PnlImageSequence.Size = New System.Drawing.Size(755, 319)
+        Me.PnlImageSequence.Size = New System.Drawing.Size(755, 236)
         Me.PnlImageSequence.TabIndex = 12
         '
         'BtnSequenceOpen
         '
-        Me.BtnSequenceOpen.Location = New System.Drawing.Point(650, 363)
+        Me.BtnSequenceOpen.Location = New System.Drawing.Point(701, 272)
         Me.BtnSequenceOpen.Name = "BtnSequenceOpen"
         Me.BtnSequenceOpen.Size = New System.Drawing.Size(75, 23)
         Me.BtnSequenceOpen.TabIndex = 13
@@ -100,7 +100,7 @@ Partial Class TheSkyXController
         '
         'BtnSeqenceAppend
         '
-        Me.BtnSeqenceAppend.Location = New System.Drawing.Point(752, 363)
+        Me.BtnSeqenceAppend.Location = New System.Drawing.Point(868, 272)
         Me.BtnSeqenceAppend.Name = "BtnSeqenceAppend"
         Me.BtnSeqenceAppend.Size = New System.Drawing.Size(75, 23)
         Me.BtnSeqenceAppend.TabIndex = 14
@@ -109,98 +109,119 @@ Partial Class TheSkyXController
         '
         'BtnSequenceSave
         '
-        Me.BtnSequenceSave.Location = New System.Drawing.Point(895, 363)
+        Me.BtnSequenceSave.Location = New System.Drawing.Point(1065, 272)
         Me.BtnSequenceSave.Name = "BtnSequenceSave"
         Me.BtnSequenceSave.Size = New System.Drawing.Size(75, 23)
         Me.BtnSequenceSave.TabIndex = 15
         Me.BtnSequenceSave.Text = "Save"
         Me.BtnSequenceSave.UseVisualStyleBackColor = True
         '
-        'Panel2
+        'PnlImageSeqTitles
         '
-        Me.Panel2.Controls.Add(Me.Label9)
-        Me.Panel2.Controls.Add(Me.Label8)
-        Me.Panel2.Controls.Add(Me.Label7)
-        Me.Panel2.Controls.Add(Me.Label6)
-        Me.Panel2.Controls.Add(Me.Label5)
-        Me.Panel2.Controls.Add(Me.Label4)
-        Me.Panel2.Controls.Add(Me.Label3)
-        Me.Panel2.Controls.Add(Me.Label2)
-        Me.Panel2.Controls.Add(Me.Label1)
-        Me.Panel2.Location = New System.Drawing.Point(413, 12)
-        Me.Panel2.Name = "Panel2"
-        Me.Panel2.Size = New System.Drawing.Size(200, 319)
-        Me.Panel2.TabIndex = 16
+        Me.PnlImageSeqTitles.Controls.Add(Me.LblRunPrevSuccess)
+        Me.PnlImageSeqTitles.Controls.Add(Me.LblRunPrevError)
+        Me.PnlImageSeqTitles.Controls.Add(Me.LblDitherEveryNImages)
+        Me.PnlImageSeqTitles.Controls.Add(Me.LblRepeats)
+        Me.PnlImageSeqTitles.Controls.Add(Me.LblBinY)
+        Me.PnlImageSeqTitles.Controls.Add(Me.LblBinX)
+        Me.PnlImageSeqTitles.Controls.Add(Me.LblExposureLength)
+        Me.PnlImageSeqTitles.Controls.Add(Me.LblFilter)
+        Me.PnlImageSeqTitles.Controls.Add(Me.LblExposureType)
+        Me.PnlImageSeqTitles.Location = New System.Drawing.Point(481, 12)
+        Me.PnlImageSeqTitles.Name = "PnlImageSeqTitles"
+        Me.PnlImageSeqTitles.Size = New System.Drawing.Size(146, 236)
+        Me.PnlImageSeqTitles.TabIndex = 16
         '
-        'Label7
+        'LblRunPrevSuccess
         '
-        Me.Label7.AutoSize = True
-        Me.Label7.Font = New System.Drawing.Font("Microsoft Sans Serif", 9.75!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.Label7.Location = New System.Drawing.Point(16, 194)
-        Me.Label7.Name = "Label7"
-        Me.Label7.Size = New System.Drawing.Size(142, 16)
-        Me.Label7.TabIndex = 6
-        Me.Label7.Text = "Dither Every N Images"
+        Me.LblRunPrevSuccess.AutoSize = True
+        Me.LblRunPrevSuccess.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.LblRunPrevSuccess.Location = New System.Drawing.Point(0, 98)
+        Me.LblRunPrevSuccess.Name = "LblRunPrevSuccess"
+        Me.LblRunPrevSuccess.Size = New System.Drawing.Size(129, 13)
+        Me.LblRunPrevSuccess.TabIndex = 8
+        Me.LblRunPrevSuccess.Text = "Run on previous Success"
         '
-        'Label6
+        'LblRunPrevError
         '
-        Me.Label6.AutoSize = True
-        Me.Label6.Font = New System.Drawing.Font("Microsoft Sans Serif", 9.75!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.Label6.Location = New System.Drawing.Point(16, 164)
-        Me.Label6.Name = "Label6"
-        Me.Label6.Size = New System.Drawing.Size(60, 16)
-        Me.Label6.TabIndex = 5
-        Me.Label6.Text = "Repeats"
+        Me.LblRunPrevError.AutoSize = True
+        Me.LblRunPrevError.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.LblRunPrevError.Location = New System.Drawing.Point(0, 111)
+        Me.LblRunPrevError.Name = "LblRunPrevError"
+        Me.LblRunPrevError.Size = New System.Drawing.Size(110, 13)
+        Me.LblRunPrevError.TabIndex = 7
+        Me.LblRunPrevError.Text = "Run on previous Error"
         '
-        'Label5
+        'LblDitherEveryNImages
         '
-        Me.Label5.AutoSize = True
-        Me.Label5.Font = New System.Drawing.Font("Microsoft Sans Serif", 9.75!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.Label5.Location = New System.Drawing.Point(16, 137)
-        Me.Label5.Name = "Label5"
-        Me.Label5.Size = New System.Drawing.Size(39, 16)
-        Me.Label5.TabIndex = 4
-        Me.Label5.Text = "Bin Y"
+        Me.LblDitherEveryNImages.AutoSize = True
+        Me.LblDitherEveryNImages.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.LblDitherEveryNImages.Location = New System.Drawing.Point(0, 84)
+        Me.LblDitherEveryNImages.Name = "LblDitherEveryNImages"
+        Me.LblDitherEveryNImages.Size = New System.Drawing.Size(113, 13)
+        Me.LblDitherEveryNImages.TabIndex = 6
+        Me.LblDitherEveryNImages.Text = "Dither Every N Images"
         '
-        'Label4
+        'LblRepeats
         '
-        Me.Label4.AutoSize = True
-        Me.Label4.Font = New System.Drawing.Font("Microsoft Sans Serif", 9.75!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.Label4.Location = New System.Drawing.Point(16, 109)
-        Me.Label4.Name = "Label4"
-        Me.Label4.Size = New System.Drawing.Size(38, 16)
-        Me.Label4.TabIndex = 3
-        Me.Label4.Text = "Bin X"
+        Me.LblRepeats.AutoSize = True
+        Me.LblRepeats.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.LblRepeats.Location = New System.Drawing.Point(0, 70)
+        Me.LblRepeats.Name = "LblRepeats"
+        Me.LblRepeats.Size = New System.Drawing.Size(47, 13)
+        Me.LblRepeats.TabIndex = 5
+        Me.LblRepeats.Text = "Repeats"
         '
-        'Label3
+        'LblBinY
         '
-        Me.Label3.AutoSize = True
-        Me.Label3.Font = New System.Drawing.Font("Microsoft Sans Serif", 9.75!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.Label3.Location = New System.Drawing.Point(16, 79)
-        Me.Label3.Name = "Label3"
-        Me.Label3.Size = New System.Drawing.Size(108, 16)
-        Me.Label3.TabIndex = 2
-        Me.Label3.Text = "Exposure Length"
+        Me.LblBinY.AutoSize = True
+        Me.LblBinY.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.LblBinY.Location = New System.Drawing.Point(0, 56)
+        Me.LblBinY.Name = "LblBinY"
+        Me.LblBinY.Size = New System.Drawing.Size(32, 13)
+        Me.LblBinY.TabIndex = 4
+        Me.LblBinY.Text = "Bin Y"
         '
-        'Label2
+        'LblBinX
         '
-        Me.Label2.AutoSize = True
-        Me.Label2.Font = New System.Drawing.Font("Microsoft Sans Serif", 9.75!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.Label2.Location = New System.Drawing.Point(16, 46)
-        Me.Label2.Name = "Label2"
-        Me.Label2.Size = New System.Drawing.Size(37, 16)
-        Me.Label2.TabIndex = 1
-        Me.Label2.Text = "Filter"
+        Me.LblBinX.AutoSize = True
+        Me.LblBinX.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.LblBinX.Location = New System.Drawing.Point(0, 42)
+        Me.LblBinX.Name = "LblBinX"
+        Me.LblBinX.Size = New System.Drawing.Size(32, 13)
+        Me.LblBinX.TabIndex = 3
+        Me.LblBinX.Text = "Bin X"
         '
-        'Label1
+        'LblExposureLength
         '
-        Me.Label1.AutoSize = True
-        Me.Label1.Font = New System.Drawing.Font("Microsoft Sans Serif", 9.75!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.Label1.Location = New System.Drawing.Point(16, 14)
-        Me.Label1.Name = "Label1"
-        Me.Label1.Size = New System.Drawing.Size(100, 16)
-        Me.Label1.TabIndex = 0
-        Me.Label1.Text = "Exposure Type"
+        Me.LblExposureLength.AutoSize = True
+        Me.LblExposureLength.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.LblExposureLength.Location = New System.Drawing.Point(0, 28)
+        Me.LblExposureLength.Name = "LblExposureLength"
+        Me.LblExposureLength.Size = New System.Drawing.Size(87, 13)
+        Me.LblExposureLength.TabIndex = 2
+        Me.LblExposureLength.Text = "Exposure Length"
+        '
+        'LblFilter
+        '
+        Me.LblFilter.AutoSize = True
+        Me.LblFilter.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.LblFilter.Location = New System.Drawing.Point(0, 14)
+        Me.LblFilter.Name = "LblFilter"
+        Me.LblFilter.Size = New System.Drawing.Size(29, 13)
+        Me.LblFilter.TabIndex = 1
+        Me.LblFilter.Text = "Filter"
+        '
+        'LblExposureType
+        '
+        Me.LblExposureType.AutoSize = True
+        Me.LblExposureType.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.LblExposureType.Location = New System.Drawing.Point(0, 0)
+        Me.LblExposureType.Margin = New System.Windows.Forms.Padding(0)
+        Me.LblExposureType.Name = "LblExposureType"
+        Me.LblExposureType.Size = New System.Drawing.Size(78, 13)
+        Me.LblExposureType.TabIndex = 0
+        Me.LblExposureType.Text = "Exposure Type"
         '
         'GroupBox2
         '
@@ -299,26 +320,6 @@ Partial Class TheSkyXController
         Me.BtnTest.Text = "Test"
         Me.BtnTest.UseVisualStyleBackColor = True
         '
-        'Label8
-        '
-        Me.Label8.AutoSize = True
-        Me.Label8.Font = New System.Drawing.Font("Microsoft Sans Serif", 9.75!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.Label8.Location = New System.Drawing.Point(16, 251)
-        Me.Label8.Name = "Label8"
-        Me.Label8.Size = New System.Drawing.Size(137, 16)
-        Me.Label8.TabIndex = 7
-        Me.Label8.Text = "Run on previous Error"
-        '
-        'Label9
-        '
-        Me.Label9.AutoSize = True
-        Me.Label9.Font = New System.Drawing.Font("Microsoft Sans Serif", 9.75!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.Label9.Location = New System.Drawing.Point(16, 222)
-        Me.Label9.Name = "Label9"
-        Me.Label9.Size = New System.Drawing.Size(160, 16)
-        Me.Label9.TabIndex = 8
-        Me.Label9.Text = "Run on previous Success"
-        '
         'TheSkyXController
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
@@ -327,7 +328,7 @@ Partial Class TheSkyXController
         Me.Controls.Add(Me.BtnTest)
         Me.Controls.Add(Me.GroupBox1)
         Me.Controls.Add(Me.GroupBox2)
-        Me.Controls.Add(Me.Panel2)
+        Me.Controls.Add(Me.PnlImageSeqTitles)
         Me.Controls.Add(Me.BtnSequenceSave)
         Me.Controls.Add(Me.BtnSeqenceAppend)
         Me.Controls.Add(Me.BtnSequenceOpen)
@@ -335,8 +336,8 @@ Partial Class TheSkyXController
         Me.Controls.Add(Me.btnExit)
         Me.Name = "TheSkyXController"
         Me.Text = "TheSkyXController"
-        Me.Panel2.ResumeLayout(False)
-        Me.Panel2.PerformLayout()
+        Me.PnlImageSeqTitles.ResumeLayout(False)
+        Me.PnlImageSeqTitles.PerformLayout()
         Me.GroupBox2.ResumeLayout(False)
         Me.GroupBox1.ResumeLayout(False)
         Me.ResumeLayout(False)
@@ -350,14 +351,14 @@ Partial Class TheSkyXController
     Friend WithEvents BtnSequenceOpen As Button
     Friend WithEvents BtnSeqenceAppend As Button
     Friend WithEvents BtnSequenceSave As Button
-    Friend WithEvents Panel2 As Panel
-    Friend WithEvents Label7 As Label
-    Friend WithEvents Label6 As Label
-    Friend WithEvents Label5 As Label
-    Friend WithEvents Label4 As Label
-    Friend WithEvents Label3 As Label
-    Friend WithEvents Label2 As Label
-    Friend WithEvents Label1 As Label
+    Friend WithEvents PnlImageSeqTitles As Panel
+    Friend WithEvents LblDitherEveryNImages As Label
+    Friend WithEvents LblRepeats As Label
+    Friend WithEvents LblBinY As Label
+    Friend WithEvents LblBinX As Label
+    Friend WithEvents LblExposureLength As Label
+    Friend WithEvents LblFilter As Label
+    Friend WithEvents LblExposureType As Label
     Friend WithEvents GroupBox2 As GroupBox
     Friend WithEvents BtnCalibrationFrames As Button
     Friend WithEvents BtnStartImaging As Button
@@ -368,6 +369,6 @@ Partial Class TheSkyXController
     Friend WithEvents PnlPhd2Status As Panel
     Friend WithEvents PnlSkyXStatus As Panel
     Friend WithEvents BtnTest As Button
-    Friend WithEvents Label9 As Label
-    Friend WithEvents Label8 As Label
+    Friend WithEvents LblRunPrevSuccess As Label
+    Friend WithEvents LblRunPrevError As Label
 End Class

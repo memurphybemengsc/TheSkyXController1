@@ -12,3 +12,5 @@ Analyse images to determine if guiding, locartion is OK.
 Analyse images to check for saturation.
 
 Add Target list
+
+Allow the grouping of sequence (i.e. focus group, CLS....)

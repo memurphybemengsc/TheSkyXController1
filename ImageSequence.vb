@@ -161,119 +161,123 @@
         file.Close()
     End Sub
 
-    Function BuildPanelAndAddLabels()
-        Dim panelFont = New System.Drawing.Font("Microsoft Sans Serif", 8.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Dim panelComponentSize = New System.Drawing.Size(100, panelFont.Height)
+    'Function BuildPanelAndAddLabels()
+    '    Dim panelFont = New System.Drawing.Font("Microsoft Sans Serif", 8.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+    '    Dim panelComponentSize = New System.Drawing.Size(100, panelFont.Height)
 
-        Dim pnlComponents As New Panel()
-        Dim componentY As Integer = 0
-        Dim componentYIncrement As Integer = 21
+    '    Dim pnlComponents As New Panel()
+    '    Dim componentY As Integer = 0
+    '    Dim componentYIncrement As Integer = 21
 
-        Dim exposureType As New Label()
-        exposureType.Font = panelFont
-        exposureType.Location = New System.Drawing.Point(0, componentY)
-        exposureType.Name = "labFilter"
-        exposureType.Size = panelComponentSize
-        exposureType.Text = "Exposure Type"
-        exposureType.TabIndex = 1
-        pnlComponents.Controls.Add(exposureType)
-        componentY += componentYIncrement
+    '    Dim exposureType As New Label()
+    '    exposureType.Font = panelFont
+    '    exposureType.Location = New System.Drawing.Point(0, componentY)
+    '    exposureType.Name = "labFilter"
+    '    exposureType.Size = panelComponentSize
+    '    exposureType.Text = "Exposure Type"
+    '    exposureType.TabIndex = 1
+    '    pnlComponents.Controls.Add(exposureType)
+    '    componentY += componentYIncrement
 
-        Dim labFilter As New Label()
-        labFilter.Font = panelFont
-        labFilter.Location = New System.Drawing.Point(0, componentY)
-        labFilter.Name = "labFilter"
-        labFilter.Size = panelComponentSize
-        labFilter.Text = "Filter"
-        labFilter.TabIndex = 2
-        pnlComponents.Controls.Add(labFilter)
-        componentY += componentYIncrement
+    '    Dim labFilter As New Label()
+    '    labFilter.Font = panelFont
+    '    labFilter.Location = New System.Drawing.Point(0, componentY)
+    '    labFilter.Name = "labFilter"
+    '    labFilter.Size = panelComponentSize
+    '    labFilter.Text = "Filter"
+    '    labFilter.TabIndex = 2
+    '    pnlComponents.Controls.Add(labFilter)
+    '    componentY += componentYIncrement
 
-        Dim labExposureLength As New Label()
-        labExposureLength.Font = panelFont
-        labExposureLength.Location = New System.Drawing.Point(0, componentY)
-        labExposureLength.Name = "labExposureLength"
-        labExposureLength.Text = "Exposure Length"
-        labExposureLength.Size = panelComponentSize
-        labExposureLength.TabIndex = 3
-        pnlComponents.Controls.Add(labExposureLength)
-        componentY += componentYIncrement
+    '    Dim labExposureLength As New Label()
+    '    labExposureLength.Font = panelFont
+    '    labExposureLength.Location = New System.Drawing.Point(0, componentY)
+    '    labExposureLength.Name = "labExposureLength"
+    '    labExposureLength.Text = "Exposure Length"
+    '    labExposureLength.Size = panelComponentSize
+    '    labExposureLength.TabIndex = 3
+    '    pnlComponents.Controls.Add(labExposureLength)
+    '    componentY += componentYIncrement
 
-        Dim binX As New Label()
-        binX.Font = panelFont
-        binX.Location = New System.Drawing.Point(0, componentY)
-        binX.Name = "BinX"
-        binX.Size = panelComponentSize
-        binX.Text = "Bin X"
-        binX.TabIndex = 4
-        pnlComponents.Controls.Add(binX)
-        componentY += componentYIncrement
+    '    Dim binX As New Label()
+    '    binX.Font = panelFont
+    '    binX.Location = New System.Drawing.Point(0, componentY)
+    '    binX.Name = "BinX"
+    '    binX.Size = panelComponentSize
+    '    binX.Text = "Bin X"
+    '    binX.TabIndex = 4
+    '    pnlComponents.Controls.Add(binX)
+    '    componentY += componentYIncrement
 
-        Dim binY As New Label()
-        binY.Font = panelFont
-        binY.Location = New System.Drawing.Point(0, componentY)
-        binY.Name = "BinY"
-        binY.Size = panelComponentSize
-        binY.Text = "Bin Y"
-        binY.TabIndex = 5
-        pnlComponents.Controls.Add(binY)
-        componentY += componentYIncrement
+    '    Dim binY As New Label()
+    '    binY.Font = panelFont
+    '    binY.Location = New System.Drawing.Point(0, componentY)
+    '    binY.Name = "BinY"
+    '    binY.Size = panelComponentSize
+    '    binY.Text = "Bin Y"
+    '    binY.TabIndex = 5
+    '    pnlComponents.Controls.Add(binY)
+    '    componentY += componentYIncrement
 
-        Dim repeats As New Label()
-        repeats.Font = panelFont
-        repeats.Location = New System.Drawing.Point(0, componentY)
-        repeats.Name = "repeats"
-        repeats.Size = panelComponentSize
-        repeats.Text = "Repeats"
-        repeats.TabIndex = 6
-        pnlComponents.Controls.Add(repeats)
-        componentY += componentYIncrement
+    '    Dim repeats As New Label()
+    '    repeats.Font = panelFont
+    '    repeats.Location = New System.Drawing.Point(0, componentY)
+    '    repeats.Name = "repeats"
+    '    repeats.Size = panelComponentSize
+    '    repeats.Text = "Repeats"
+    '    repeats.TabIndex = 6
+    '    pnlComponents.Controls.Add(repeats)
+    '    componentY += componentYIncrement
 
-        'Dim ditherYn As New ComboBox()
-        'ditherYn.Items.Add("Y")
-        'ditherYn.Items.Add("N")
-        'ditherYn.ItemHeight = 10
-        'ditherYn.SelectedItem = imgSeqEl.ditherYn
-        'ditherYn.Name = "ditherYn"
-        'ditherYn.Font = panelFont
-        'ditherYn.TabIndex = 7
-        'ditherYn.Location = New System.Drawing.Point(0, componentY)
-        'pnlComponents.Controls.Add(ditherYn)
-        'componentY += ditherYn.Size.Height
+    '    'Dim ditherYn As New ComboBox()
+    '    'ditherYn.Items.Add("Y")
+    '    'ditherYn.Items.Add("N")
+    '    'ditherYn.ItemHeight = 10
+    '    'ditherYn.SelectedItem = imgSeqEl.ditherYn
+    '    'ditherYn.Name = "ditherYn"
+    '    'ditherYn.Font = panelFont
+    '    'ditherYn.TabIndex = 7
+    '    'ditherYn.Location = New System.Drawing.Point(0, componentY)
+    '    'pnlComponents.Controls.Add(ditherYn)
+    '    'componentY += ditherYn.Size.Height
 
-        Dim ditherEveryNImages As New Label()
-        ditherEveryNImages.Font = panelFont
-        ditherEveryNImages.Name = "ditherEveryNImages"
-        ditherEveryNImages.Text = "Dither Every N Images"
-        ditherEveryNImages.TabIndex = 8
-        ditherEveryNImages.Location = New System.Drawing.Point(0, componentY)
-        pnlComponents.Controls.Add(ditherEveryNImages)
-        componentY += componentYIncrement
 
-        Return pnlComponents
-    End Function
+    '    Dim ditherEveryNImages As New Label()
+    '    ditherEveryNImages.Font = panelFont
+    '    ditherEveryNImages.Name = "ditherEveryNImages"
+    '    ditherEveryNImages.Text = "Dither Every N Images"
+    '    ditherEveryNImages.TabIndex = 8
+    '    ditherEveryNImages.Location = New System.Drawing.Point(0, componentY)
+    '    pnlComponents.Controls.Add(ditherEveryNImages)
+    '    componentY += componentYIncrement
+
+    '    Return pnlComponents
+    'End Function
 
 
     Function BuildPanelAndAddComponents(counter As Integer, imgSeqEl As ImageSequenceElement) As Panel
         Dim panelFont = New System.Drawing.Font("Microsoft Sans Serif", 8.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Dim panelComponentSize = New System.Drawing.Size(100, 1)
+        Dim panelComponentSize = New System.Drawing.Size(150, 1)
 
         Dim pnlComponents As New Panel()
+        pnlComponents.Size = panelComponentSize
         Dim componentY As Integer = 0
 
+        TheSkyXController.LblExposureType.Location = New System.Drawing.Point(0, componentY)
         Dim exposureType As New ComboBox()
         exposureType.Items.Add("Light")
         exposureType.Items.Add("Dark")
         exposureType.Items.Add("Flat (s)")
         exposureType.Items.Add("Flat (%)")
         exposureType.Items.Add("Bias")
-        exposureType.Items.Add("@Focus3") ' <=======================  ON FAIL ON FAIL =============================  ???????
+        exposureType.Items.Add("@Focus3")
         exposureType.Items.Add("Prompt")
-        exposureType.Items.Add("CLS") ' <=======================  ON FAIL ON FAIL =============================  ???????
+        exposureType.Items.Add("CLS")
         exposureType.Items.Add("Abort")
         exposureType.Items.Add("Park")
         exposureType.Items.Add("Shutdown")
         exposureType.Name = "exposureType"
+        exposureType.Size = panelComponentSize
         exposureType.Text = imgSeqEl.exposureType
         exposureType.ItemHeight = 10
         exposureType.Font = panelFont
@@ -282,6 +286,7 @@
         pnlComponents.Controls.Add(exposureType)
         componentY += exposureType.Size.Height
 
+        TheSkyXController.LblFilter.Location = New System.Drawing.Point(0, componentY)
         Dim labFilter As New ComboBox()
         For Each filter As String In TheSkyXController.defaultFilterWheelNames
             labFilter.Items.Add(filter)
@@ -295,6 +300,7 @@
         pnlComponents.Controls.Add(labFilter)
         componentY += labFilter.Size.Height
 
+        TheSkyXController.LblExposureLength.Location = New System.Drawing.Point(0, componentY)
         Dim labExposureLength As New NumericUpDown()
         labExposureLength.Font = panelFont
         labExposureLength.Location = New System.Drawing.Point(0, componentY)
@@ -307,6 +313,7 @@
         pnlComponents.Controls.Add(labExposureLength)
         componentY += labExposureLength.Size.Height
 
+        TheSkyXController.LblBinX.Location = New System.Drawing.Point(0, componentY)
         Dim binX As New NumericUpDown()
         binX.Font = panelFont
         binX.Location = New System.Drawing.Point(0, componentY)
@@ -318,6 +325,7 @@
         pnlComponents.Controls.Add(binX)
         componentY += binX.Size.Height
 
+        TheSkyXController.LblBinY.Location = New System.Drawing.Point(0, componentY)
         Dim binY As New NumericUpDown()
         binY.Font = panelFont
         binY.Location = New System.Drawing.Point(0, componentY)
@@ -329,6 +337,7 @@
         pnlComponents.Controls.Add(binY)
         componentY += binY.Size.Height
 
+        TheSkyXController.LblRepeats.Location = New System.Drawing.Point(0, componentY)
         Dim repeats As New NumericUpDown()
         repeats.Font = panelFont
         repeats.Location = New System.Drawing.Point(0, componentY)
@@ -352,20 +361,24 @@
         'pnlComponents.Controls.Add(ditherYn)
         'componentY += ditherYn.Size.Height
 
+        TheSkyXController.LblDitherEveryNImages.Location = New System.Drawing.Point(0, componentY)
         Dim ditherEveryNImages As New NumericUpDown()
         ditherEveryNImages.Value = imgSeqEl.ditherEveryNImages
         ditherEveryNImages.Font = panelFont
         ditherEveryNImages.Name = "ditherEveryNImages"
+        ditherEveryNImages.Size = panelComponentSize
         ditherEveryNImages.TabIndex = 8
         ditherEveryNImages.Location = New System.Drawing.Point(0, componentY)
         pnlComponents.Controls.Add(ditherEveryNImages)
         componentY += ditherEveryNImages.Size.Height
 
         ' Error handling, Do we run this element if the previous element suceeded?
+        TheSkyXController.LblRunPrevSuccess.Location = New System.Drawing.Point(0, componentY)
         Dim runOnPreviousSuccess As New ComboBox()
         runOnPreviousSuccess.Items.Add("Y")
         runOnPreviousSuccess.Items.Add("N")
         runOnPreviousSuccess.Text = "Y"
+        runOnPreviousSuccess.Size = panelComponentSize
         runOnPreviousSuccess.ItemHeight = 10
         runOnPreviousSuccess.Font = panelFont
         runOnPreviousSuccess.TabIndex = 9
@@ -374,10 +387,12 @@
         componentY += runOnPreviousSuccess.Size.Height
 
         ' Error handling, Do we run this element if the previous element failed?
+        TheSkyXController.LblRunPrevError.Location = New System.Drawing.Point(0, componentY)
         Dim runOnPreviousError As New ComboBox()
         runOnPreviousError.Items.Add("Y")
         runOnPreviousError.Items.Add("N")
         runOnPreviousError.Text = "Y"
+        runOnPreviousError.Size = panelComponentSize
         runOnPreviousError.ItemHeight = 10
         runOnPreviousError.Font = panelFont
         runOnPreviousError.TabIndex = 10
@@ -387,10 +402,12 @@
 
         Dim btnX As Integer = 0
         Dim btnY As Integer = componentY
-        Dim btnWidth As Integer = 30
-        Dim btnHeight As Integer = 30
+        Dim btnWidth As Integer = 25
+        Dim btnHeight As Integer = 25
+        Dim buttonFont = New System.Drawing.Font("Microsoft Sans Serif", 6.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
 
         Dim btnFarLeft As New Button()
+        btnFarLeft.Font = buttonFont
         btnFarLeft.Text = "<<"
         btnFarLeft.Size = New System.Drawing.Size(btnWidth, btnHeight)
         btnFarLeft.Name = "btnFarLeft_" & counter
@@ -401,6 +418,7 @@
         btnX += btnWidth
 
         Dim btnLeft As New Button()
+        btnLeft.Font = buttonFont
         btnLeft.Text = "<"
         btnLeft.Size = New System.Drawing.Size(btnWidth, btnHeight)
         btnLeft.Name = "btnLeft_" & counter
@@ -411,6 +429,7 @@
         btnX += btnWidth
 
         Dim btnCopy As New Button()
+        btnCopy.Font = buttonFont
         btnCopy.Text = "C"
         btnCopy.Size = New System.Drawing.Size(btnWidth, btnHeight)
         btnCopy.Name = "btnCopy_" & counter
@@ -421,6 +440,7 @@
         btnX += btnWidth
 
         Dim btnDelete As New Button()
+        btnDelete.Font = buttonFont
         btnDelete.Text = "X"
         btnDelete.Size = New System.Drawing.Size(btnWidth, btnHeight)
         btnDelete.Name = "btnDelete_" & counter
@@ -430,6 +450,7 @@
 
         btnX += btnWidth
         Dim btnRight As New Button()
+        btnRight.Font = buttonFont
         btnRight.Text = ">"
         btnRight.Size = New System.Drawing.Size(btnWidth, btnHeight)
         btnRight.Name = "btnRight_" & counter
@@ -440,6 +461,7 @@
         btnX += btnWidth
 
         Dim btnFarRight As New Button()
+        btnFarRight.Font = buttonFont
         btnFarRight.Text = ">>"
         btnFarRight.Size = New System.Drawing.Size(btnWidth, btnHeight)
         btnFarRight.Name = "btnFarRight_" & counter
@@ -589,6 +611,7 @@
     Public Sub buildPanel()
         componentPanel.Controls.Clear()
         Dim xPos As Integer = 0
+        Dim xSpacing As Integer = 5
         Dim counter As Integer = 1
 
         'Dim labelPanel As Panel = BuildPanelAndAddLabels()
@@ -603,7 +626,7 @@
             newPanel.Location = New System.Drawing.Point(xPos, 0)
             newPanel.Size = New Size(newPanel.Size.Width, componentPanel.Size.Height)
             componentPanel.Controls.Add(newPanel)
-            xPos = xPos + newPanel.Size.Width
+            xPos = xPos + newPanel.Size.Width + xSpacing
             counter = counter + 1
         Next
     End Sub
