@@ -3,35 +3,33 @@
     Dim skyXVersion As String = ""
     Dim skyXObject As Object = vbNull
     Dim currentSkyObject As Object = vbNull
+    Private theSkyXObject As Object = Nothing
 
     Public Sub New()
         'Create the SkyX object and check that Skyx is present and initialised
+        connectToSkyX()
+        If theSkyXObject Is Nothing Then
+            'SkyX is not running so throw exception
+            Throw New System.Exception("SkyX is not running")
+        End If
     End Sub
 
 
     ' Add a method to check for image saturation
 
-    Public Function isSkyXPresent() As Boolean
-        Dim skyX As Boolean = False
-
-        Dim tsxo As Object = Nothing
-
+    Private Sub connectToSkyX()
         Try
-            tsxo = New TheSkyXLib.Application
+            theSkyXObject = New TheSkyXLib.Application
         Catch ex As Exception
-
+            theSkyXObject = Nothing
         End Try
 
-        If tsxo IsNot Nothing Then
-            skyXVersion = tsxo.version
-            skyX = True
+        If theSkyXObject IsNot Nothing Then
+            skyXVersion = theSkyXObject.version
             MsgBox(“TSX Version: “ & skyXVersion)
-        Else
-            MsgBox(“SkyX is not present“)
         End If
 
-        Return skyX
-    End Function
+    End Sub
 
     Public Function isSkyXInitialised() As Boolean
         Dim initialised As Boolean

@@ -1,6 +1,42 @@
 ﻿Public Class ImageSequence
     Dim sequenceFileValue As String = ""
     Public componentPanel As Panel = Nothing
+    Private currentImageSequenceElement As Integer = 0
+
+    ''' <summary>
+    ''' Get the first sequence. Returns Nothing if none.
+    ''' </summary>
+    Public Function getFirstImageSequenceElement() As ImageSequenceElement
+        currentImageSequenceElement = 0
+        Return getImageSequenceElement(currentImageSequenceElement)
+    End Function
+
+    ''' <summary>
+    ''' Get the next sequence. Returns Nothing if none.
+    ''' </summary>
+    Public Function getNextImageSequenceElement() As ImageSequenceElement
+        currentImageSequenceElement += 1
+        Return getImageSequenceElement(currentImageSequenceElement)
+    End Function
+
+    ''' <summary>
+    ''' Get the last sequence. Returns Nothing if none.
+    ''' </summary>
+    Public Function getlastImageSequenceElement() As ImageSequenceElement
+        Return getImageSequenceElement(imageSequenceElements.Count - 1)
+    End Function
+
+    ''' <summary>
+    ''' Get the next sequence. Returns Nothing if none.
+    ''' </summary>
+    Public Function getImageSequenceElement(index As Integer) As ImageSequenceElement
+        If index >= imageSequenceElements.Count Or index < 0 Then
+            Return Nothing
+        End If
+        ' ElementAt is zero based
+        Return imageSequenceElements.ElementAt(index)
+    End Function
+
 
     Enum ReadSequenceFileContext
         firstLineOfFile

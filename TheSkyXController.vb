@@ -2,9 +2,30 @@
     Public imageFileSequence As New ImageSequence()
     Public defaultFilterWheelNames As New List(Of String)
     Dim imagingSequenceInProgress As Boolean
-    Dim phd2Connected As Boolean = False
+    Dim isPhd2Connected As Boolean = False
     Public fitsKeyCollection As FitsKeyCollection
     Public phd2guiding As PHD2Guiding = Nothing
+    Public skyXFunctions As SkyXFunctions = Nothing
+    Dim isSkyXConnected As Boolean = False
+    Private imagingRunPaused As Boolean
+    Private imagingRunAborted As Boolean
+    Private currentImagingLogo As Integer = ImagingStatus.notImaging
+
+    Private Enum ImagingStatus
+        notImaging
+        startGuiding
+        takeImage
+        imageInProgress
+        imageComplete
+        dither
+        ditheringInProgress
+        changeFilter
+        filterChangeInProgress
+        runClosedLoopSlew
+        meridianFlip
+    End Enum
+
+
     Public Sub New()
         ' This call is required by the designer.
         InitializeComponent()
@@ -23,18 +44,37 @@
 
         fitsKeyCollection = New FitsKeyCollection
 
+        BtnAbortImaging.Enabled = False
+        BtnPauseImaging.Enabled = False
+        BtnStopImaging.Enabled = False
+
     End Sub
     Private Sub BtnSkyX_Click(sender As Object, e As EventArgs) Handles BtnSkyX.Click
-        Dim skyobj As New SkyXFunctions
-        skyobj.isSkyXPresent()
-
+        If skyXFunctions Is Nothing Then
+            ' We have not connected to SkyX
+            Try
+                skyXFunctions = New SkyXFunctions()
+                Me.PnlSkyXStatus.BackColor = Color.Green
+                isSkyXConnected = True
+            Catch ex As Exception
+                MsgBox("SkyX is not running")
+            End Try
+        Else
+            ' We are disconnecting from SkyX, check are we guiding or imaging
+            Dim res = MsgBox("Imaging is in progress, do you wish to disconnect?", MsgBoxStyle.YesNo)
+            If (res = MsgBoxResult.Yes) Then
+                Me.PnlSkyXStatus.BackColor = Color.Red
+                skyXFunctions = Nothing
+                isSkyXConnected = False
+            End If
+        End If
     End Sub
 
     Private Sub BtnPHD2_Click(sender As Object, e As EventArgs) Handles BtnPHD2.Click
         If phd2guiding Is Nothing Then
             Try
                 phd2guiding = New PHD2Guiding()
-                phd2Connected = True
+                isPhd2Connected = True
                 Me.PnlPhd2Status.BackColor = Color.Green
             Catch ex As Exception
                 MsgBox("PHD2 is not running")
@@ -104,6 +144,49 @@
         MsgBox("Cick to stop guiding")
 
         phd2guiding.stopGuiding()
+
+    End Sub
+
+    Private Sub BtnSeqenceAppend_Click(sender As Object, e As EventArgs) Handles BtnSeqenceAppend.Click
+        MsgBox("Feature to be added")
+    End Sub
+
+    Private Sub BtnLoadGroup_Click(sender As Object, e As EventArgs) Handles BtnLoadGroup.Click
+        MsgBox("Feature to be added")
+    End Sub
+
+    Private Sub BtnStartImaging_Click(sender As Object, e As EventArgs) Handles BtnStartImaging.Click
+        ' Are we connected to SkyX?
+        If isSkyXConnected Then
+            BtnAbortImaging.Enabled = True
+            BtnPauseImaging.Enabled = True
+            BtnStopImaging.Enabled = True
+
+            ' Start the imaging timer
+        Else
+            MsgBox("SkyX is not connected")
+        End If
+    End Sub
+
+    Private Sub BtnPauseImaging_Click(sender As Object, e As EventArgs) Handles BtnPauseImaging.Click
+        ' Set the pause flag, the imaging loop still runs
+        MsgBox("Pausing the imaging, the current image will complete")
+    End Sub
+
+    Private Sub BtnAbortImaging_Click(sender As Object, e As EventArgs) Handles BtnAbortImaging.Click
+        ' Abort the imaging run
+        Dim result = MessageBox.Show("Image run is in progress, Are you sure you want to abort", "Abort Imaging Run", MessageBoxButtons.YesNo)
+        If result = DialogResult.No Then
+            ' abort current image and then stop timer.
+            ' The timer function will need to abort and then stop itself
+        End If
+    End Sub
+
+    Private Sub TmrImagingLoop_Tick(sender As Object, e As EventArgs) Handles TmrImagingLoop.Tick
+
+    End Sub
+
+    Private Sub BtnStopImaging_Click(sender As Object, e As EventArgs) Handles BtnStopImaging.Click
 
     End Sub
 End Class
