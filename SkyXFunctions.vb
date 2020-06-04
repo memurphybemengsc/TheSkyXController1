@@ -1,21 +1,59 @@
-﻿Public Class SkyXFunctions
+﻿Imports Microsoft.VisualBasic.CompilerServices
+Imports TheSkyXLib
+
+Public Class SkyXFunctions
     ' This class holds the functions to interact with TheSkyX
     Dim skyXVersion As String = ""
     Dim skyXObject As Object = vbNull
     Dim currentSkyObject As Object = vbNull
     Private theSkyXObject As TheSkyXLib.Application = Nothing
     Private camera As TheSkyXLib.ccdsoftCamera = Nothing
+    Private imageFolder As String = ""
 
     Public Sub New()
         'Create the SkyX object and check that Skyx is present and initialised
-        connectToSkyXTest()
+        connectToSkyX()
         If theSkyXObject Is Nothing Then
             'SkyX is not running so throw exception
             Throw New System.Exception("SkyX is not running")
         End If
+
+        ' Connect to the camera
+        connectToCamera()
+        If camera Is Nothing Then
+            Throw New System.Exception("Unable to connect to camera")
+        End If
+
+        'Get the filter wheel filters and refresh the filters in the drop downs
     End Sub
 
+    Public Sub cameraStatus()
+        'MsgBox(camera.Status) '"Ready" when camera is idle
+        'MsgBox(camera.State) ' '0' when idle ccdsoftCameraState.cdStateNone
+        MsgBox("camera.szFilterName(0) " + camera.szFilterName(0))
+    End Sub
 
+    Public Sub setImageFolder(imgFldr As String)
+        imageFolder = imgFldr
+    End Sub
+
+    Public Function getImageFolder() As String
+        Return imageFolder
+    End Function
+
+    Public Sub disconnect()
+        disconnectFromCamera()
+    End Sub
+
+    Public Sub setImageSettings(filter As String, exposure As Double, bx As Integer, by As Integer)
+        If camera.filterWheelIsConnected() = 1 Then
+            camera.szFilterName(0)
+        End If
+
+        camera.ExposureTime = exposure
+        camera.BinX = bx
+        camera.BinY = by
+    End Sub
     ' Add a method to check for image saturation
 
     Private Sub connectToSkyXTest()
@@ -35,7 +73,26 @@
             skyXVersion = theSkyXObject.version
             MsgBox(“TSX Version: “ & skyXVersion)
         End If
+    End Sub
 
+    Private Sub connectToCamera()
+        Try
+            camera = New TheSkyXLib.ccdsoftCamera
+        Catch ex As Exception
+            camera = Nothing
+        End Try
+
+        Try
+            camera.Connect()
+        Catch ex As Exception
+            camera = Nothing
+        End Try
+    End Sub
+
+    Private Sub disconnectFromCamera()
+        If camera IsNot Nothing Then
+            camera.Disconnect()
+        End If
     End Sub
 
     Public Function isCameraConnected() As Boolean

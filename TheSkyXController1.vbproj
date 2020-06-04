@@ -102,6 +102,12 @@
     <Compile Include="GenerateCalibrationSequence.vb">
       <SubType>Form</SubType>
     </Compile>
+    <Compile Include="ImagingSettings.Designer.vb">
+      <DependentUpon>ImagingSettings.vb</DependentUpon>
+    </Compile>
+    <Compile Include="ImagingSettings.vb">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Include="PHD2Guiding.Designer.vb">
       <DependentUpon>PHD2Guiding.vb</DependentUpon>
     </Compile>
@@ -136,6 +142,9 @@
   <ItemGroup>
     <EmbeddedResource Include="GenerateCalibrationSequence.resx">
       <DependentUpon>GenerateCalibrationSequence.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ImagingSettings.resx">
+      <DependentUpon>ImagingSettings.vb</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="PHD2Guiding.resx">
       <DependentUpon>PHD2Guiding.vb</DependentUpon>

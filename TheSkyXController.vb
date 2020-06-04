@@ -1,4 +1,6 @@
-﻿Public Class TheSkyXController
+﻿Imports TheSkyXLib
+
+Public Class TheSkyXController
     Public imageFileSequence As New ImageSequence()
     Public defaultFilterWheelNames As New List(Of String)
     Dim imagingSequenceInProgress As Boolean
@@ -51,6 +53,7 @@
         BtnAbortImaging.Enabled = False
         BtnPauseImaging.Enabled = False
         BtnStopImaging.Enabled = False
+        BtnSettingsImaging.Enabled = False
 
     End Sub
     Private Sub BtnSkyX_Click(sender As Object, e As EventArgs) Handles BtnSkyX.Click
@@ -61,6 +64,7 @@
                 Me.PnlSkyXStatus.BackColor = Color.Green
                 isSkyXConnected = True
                 BtnStartImaging.Enabled = True
+                BtnSettingsImaging.Enabled = True
             Catch ex As Exception
                 MsgBox("SkyX is not running")
             End Try
@@ -69,8 +73,11 @@
             Dim res = MsgBox("Imaging is in progress, do you wish to disconnect?", MsgBoxStyle.YesNo)
             If (res = MsgBoxResult.Yes) Then
                 Me.PnlSkyXStatus.BackColor = Color.Red
+                skyXFunctions.disconnect()
                 skyXFunctions = Nothing
                 isSkyXConnected = False
+                BtnStartImaging.Enabled = False
+                BtnSettingsImaging.Enabled = False
             End If
         End If
     End Sub
@@ -139,16 +146,19 @@
     End Sub
 
     Private Sub BtnTest_Click(sender As Object, e As EventArgs) Handles BtnTest.Click
-        If phd2guiding IsNot Nothing Then
-            phd2guiding.startGuiding()
-            MsgBox("phd status is " + Me.phd2guiding.checkStatus.ToString)
-        Else
-            MsgBox("phd is not connected")
-        End If
 
-        MsgBox("Cick to stop guiding")
+        skyXFunctions.cameraStatus()
 
-        phd2guiding.stopGuiding()
+        'If phd2guiding IsNot Nothing Then
+        '    phd2guiding.startGuiding()
+        '    MsgBox("phd status is " + Me.phd2guiding.checkStatus.ToString)
+        'Else
+        '    MsgBox("phd is not connected")
+        'End If
+
+        'MsgBox("Cick to stop guiding")
+
+        'phd2guiding.stopGuiding()
 
     End Sub
 
@@ -162,7 +172,12 @@
 
     Private Sub BtnStartImaging_Click(sender As Object, e As EventArgs) Handles BtnStartImaging.Click
         ' Are we connected to SkyX?
+        ' we need to validate the image sequence against the camera filters/binning etc.
         If isSkyXConnected AndAlso skyXFunctions IsNot Nothing AndAlso skyXFunctions.isCameraConnected Then
+            If skyXFunctions.getImageFolder = "" Then
+                MsgBox("Please set the imaging folder")
+                Return
+            End If
             BtnAbortImaging.Enabled = True
             BtnPauseImaging.Enabled = True
             BtnStopImaging.Enabled = True
@@ -207,5 +222,9 @@
 
     Private Sub BtnStopImaging_Click(sender As Object, e As EventArgs) Handles BtnStopImaging.Click
         currentImagingStatus = ImagingStatus.halt
+    End Sub
+
+    Private Sub BtnSettingsImaging_Click(sender As Object, e As EventArgs) Handles BtnSettingsImaging.Click
+        ImagingSettings.Show()
     End Sub
 End Class
