@@ -3,11 +3,12 @@
     Dim skyXVersion As String = ""
     Dim skyXObject As Object = vbNull
     Dim currentSkyObject As Object = vbNull
-    Private theSkyXObject As Object = Nothing
+    Private theSkyXObject As TheSkyXLib.Application = Nothing
+    Private camera As TheSkyXLib.ccdsoftCamera = Nothing
 
     Public Sub New()
         'Create the SkyX object and check that Skyx is present and initialised
-        connectToSkyX()
+        connectToSkyXTest()
         If theSkyXObject Is Nothing Then
             'SkyX is not running so throw exception
             Throw New System.Exception("SkyX is not running")
@@ -16,6 +17,12 @@
 
 
     ' Add a method to check for image saturation
+
+    Private Sub connectToSkyXTest()
+        skyXVersion = "TEST"
+        theSkyXObject = New Object()
+        MsgBox(“TSX Version: “ & skyXVersion)
+    End Sub
 
     Private Sub connectToSkyX()
         Try
@@ -30,6 +37,26 @@
         End If
 
     End Sub
+
+    Public Function isCameraConnected() As Boolean
+        If theSkyXObject Is Nothing Or camera Is Nothing Then
+            Return False
+        Else
+            Return True
+        End If
+    End Function
+
+    Public Function isFocuserConnected() As Boolean
+        If theSkyXObject Is Nothing Or camera Is Nothing Then
+            Return False
+        Else
+            If camera.focIsConnected = 0 Then
+                Return True
+            Else
+                Return False
+            End If
+        End If
+    End Function
 
     Public Function isSkyXInitialised() As Boolean
         Dim initialised As Boolean

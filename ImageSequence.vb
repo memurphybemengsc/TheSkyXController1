@@ -54,6 +54,7 @@
         'Public ditherYn As String
         Public repeats As String
         Public ditherEveryNImages As String
+        Public delay As String
         Public runOnPreviousSuccess As String
         Public runOnPreviousError As String
 
@@ -66,6 +67,7 @@
             'ditherYn = "N"
             repeats = "1"
             ditherEveryNImages = "0"
+            delay = "0"
             runOnPreviousSuccess = "Y"
             runOnPreviousError = "Y"
         End Sub
@@ -160,6 +162,8 @@
                     '    imageSequenceElement.ditherYn = sequenceLine.Substring(24, sequenceLine.Length - 24)
                 ElseIf sequenceLine.Substring(0, 27).CompareTo("Dither Every N Images    = ") = 0 Then
                     imageSequenceElement.ditherEveryNImages = sequenceLine.Substring(27, sequenceLine.Length - 27)
+                ElseIf sequenceLine.Substring(0, 27).CompareTo("Delay                    = ") = 0 Then
+                    imageSequenceElement.delay = sequenceLine.Substring(27, sequenceLine.Length - 27)
                 ElseIf sequenceLine.Substring(0, 27).CompareTo("Run on Previous Success  = ") = 0 Then
                     imageSequenceElement.runOnPreviousSuccess = sequenceLine.Substring(27, sequenceLine.Length - 27)
                 ElseIf sequenceLine.Substring(0, 27).CompareTo("Run on Previous Error    = ") = 0 Then
@@ -190,6 +194,7 @@
             file.WriteLine("Repeats                  = " & imageSequenceElement.repeats)
             'file.WriteLine("DitherYN              = " & imageSequenceElement.ditherYn)
             file.WriteLine("Dither Every N Images    = " & imageSequenceElement.ditherEveryNImages)
+            file.WriteLine("Delay                    = " & imageSequenceElement.delay)
             file.WriteLine("Run on Previous Success  = " & imageSequenceElement.runOnPreviousSuccess)
             file.WriteLine("Run on Previous Error    = " & imageSequenceElement.runOnPreviousError)
             file.WriteLine("; Sequence Footer")
@@ -407,6 +412,17 @@
         ditherEveryNImages.Location = New System.Drawing.Point(0, componentY)
         pnlComponents.Controls.Add(ditherEveryNImages)
         componentY += ditherEveryNImages.Size.Height
+
+        TheSkyXController.LblDelay.Location = New System.Drawing.Point(0, componentY)
+        Dim delay As New NumericUpDown()
+        delay.Value = imgSeqEl.delay
+        delay.Font = panelFont
+        delay.Name = "delay"
+        delay.Size = panelComponentSize
+        delay.TabIndex = 8
+        delay.Location = New System.Drawing.Point(0, componentY)
+        pnlComponents.Controls.Add(delay)
+        componentY += delay.Size.Height
 
         ' Error handling, Do we run this element if the previous element suceeded?
         TheSkyXController.LblRunPrevSuccess.Location = New System.Drawing.Point(0, componentY)
@@ -692,6 +708,12 @@
                     '    imgSeqEl.ditherYn = text
                 ElseIf name = "ditherEveryNImages" Then
                     imgSeqEl.ditherEveryNImages = text
+                ElseIf name = "delay" Then
+                    imgSeqEl.delay = text
+                ElseIf name = "runOnPreviousSuccess" Then
+                    imgSeqEl.runOnPreviousSuccess = text
+                ElseIf name = "runOnPreviousError" Then
+                    imgSeqEl.runOnPreviousError = text
                 End If
             Next
             imageSequenceElements.Add(imgSeqEl)

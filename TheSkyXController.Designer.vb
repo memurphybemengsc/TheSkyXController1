@@ -41,6 +41,7 @@ Partial Class TheSkyXController
         Me.LblFilter = New System.Windows.Forms.Label()
         Me.LblExposureType = New System.Windows.Forms.Label()
         Me.GroupBox2 = New System.Windows.Forms.GroupBox()
+        Me.BtnStopImaging = New System.Windows.Forms.Button()
         Me.BtnCalibrationFrames = New System.Windows.Forms.Button()
         Me.BtnStartImaging = New System.Windows.Forms.Button()
         Me.BtnPauseImaging = New System.Windows.Forms.Button()
@@ -52,8 +53,8 @@ Partial Class TheSkyXController
         Me.BtnTest = New System.Windows.Forms.Button()
         Me.BtnLoadGroup = New System.Windows.Forms.Button()
         Me.TmrImagingLoop = New System.Windows.Forms.Timer(Me.components)
-        Me.BtnStopImaging = New System.Windows.Forms.Button()
         Me.ToolTipStart = New System.Windows.Forms.ToolTip(Me.components)
+        Me.LblDelay = New System.Windows.Forms.Label()
         Me.PnlImageSeqTitles.SuspendLayout()
         Me.GroupBox2.SuspendLayout()
         Me.GroupBox1.SuspendLayout()
@@ -66,6 +67,7 @@ Partial Class TheSkyXController
         Me.BtnSkyX.Size = New System.Drawing.Size(75, 23)
         Me.BtnSkyX.TabIndex = 0
         Me.BtnSkyX.Text = "SkyX"
+        Me.ToolTipStart.SetToolTip(Me.BtnSkyX, "Connect to TheSkyX")
         Me.BtnSkyX.UseVisualStyleBackColor = True
         '
         'BtnPHD2
@@ -75,6 +77,7 @@ Partial Class TheSkyXController
         Me.BtnPHD2.Size = New System.Drawing.Size(75, 23)
         Me.BtnPHD2.TabIndex = 1
         Me.BtnPHD2.Text = "PHD2"
+        Me.ToolTipStart.SetToolTip(Me.BtnPHD2, "Connect to PHD2")
         Me.BtnPHD2.UseVisualStyleBackColor = True
         '
         'btnExit
@@ -84,6 +87,7 @@ Partial Class TheSkyXController
         Me.btnExit.Size = New System.Drawing.Size(75, 23)
         Me.btnExit.TabIndex = 11
         Me.btnExit.Text = "Exit"
+        Me.ToolTipStart.SetToolTip(Me.btnExit, "Exit the application")
         Me.btnExit.UseVisualStyleBackColor = True
         '
         'PnlImageSequence
@@ -91,38 +95,42 @@ Partial Class TheSkyXController
         Me.PnlImageSequence.AutoScroll = True
         Me.PnlImageSequence.Location = New System.Drawing.Point(352, 12)
         Me.PnlImageSequence.Name = "PnlImageSequence"
-        Me.PnlImageSequence.Size = New System.Drawing.Size(639, 236)
+        Me.PnlImageSequence.Size = New System.Drawing.Size(639, 250)
         Me.PnlImageSequence.TabIndex = 12
         '
         'BtnSequenceOpen
         '
-        Me.BtnSequenceOpen.Location = New System.Drawing.Point(352, 262)
+        Me.BtnSequenceOpen.Location = New System.Drawing.Point(352, 282)
         Me.BtnSequenceOpen.Name = "BtnSequenceOpen"
         Me.BtnSequenceOpen.Size = New System.Drawing.Size(75, 23)
         Me.BtnSequenceOpen.TabIndex = 13
         Me.BtnSequenceOpen.Text = "Open"
+        Me.ToolTipStart.SetToolTip(Me.BtnSequenceOpen, "Open a file containing an imaging sequence")
         Me.BtnSequenceOpen.UseVisualStyleBackColor = True
         '
         'BtnSeqenceAppend
         '
-        Me.BtnSeqenceAppend.Location = New System.Drawing.Point(448, 262)
+        Me.BtnSeqenceAppend.Location = New System.Drawing.Point(448, 282)
         Me.BtnSeqenceAppend.Name = "BtnSeqenceAppend"
         Me.BtnSeqenceAppend.Size = New System.Drawing.Size(75, 23)
         Me.BtnSeqenceAppend.TabIndex = 14
         Me.BtnSeqenceAppend.Text = "Append"
+        Me.ToolTipStart.SetToolTip(Me.BtnSeqenceAppend, "Open a file containing an imaging sequence and append it to the current sequence")
         Me.BtnSeqenceAppend.UseVisualStyleBackColor = True
         '
         'BtnSequenceSave
         '
-        Me.BtnSequenceSave.Location = New System.Drawing.Point(632, 262)
+        Me.BtnSequenceSave.Location = New System.Drawing.Point(632, 282)
         Me.BtnSequenceSave.Name = "BtnSequenceSave"
         Me.BtnSequenceSave.Size = New System.Drawing.Size(75, 23)
         Me.BtnSequenceSave.TabIndex = 15
         Me.BtnSequenceSave.Text = "Save"
+        Me.ToolTipStart.SetToolTip(Me.BtnSequenceSave, "Save a file with the current imaging sequence")
         Me.BtnSequenceSave.UseVisualStyleBackColor = True
         '
         'PnlImageSeqTitles
         '
+        Me.PnlImageSeqTitles.Controls.Add(Me.LblDelay)
         Me.PnlImageSeqTitles.Controls.Add(Me.LblRunPrevSuccess)
         Me.PnlImageSeqTitles.Controls.Add(Me.LblRunPrevError)
         Me.PnlImageSeqTitles.Controls.Add(Me.LblDitherEveryNImages)
@@ -134,14 +142,14 @@ Partial Class TheSkyXController
         Me.PnlImageSeqTitles.Controls.Add(Me.LblExposureType)
         Me.PnlImageSeqTitles.Location = New System.Drawing.Point(185, 12)
         Me.PnlImageSeqTitles.Name = "PnlImageSeqTitles"
-        Me.PnlImageSeqTitles.Size = New System.Drawing.Size(146, 236)
+        Me.PnlImageSeqTitles.Size = New System.Drawing.Size(146, 250)
         Me.PnlImageSeqTitles.TabIndex = 16
         '
         'LblRunPrevSuccess
         '
         Me.LblRunPrevSuccess.AutoSize = True
         Me.LblRunPrevSuccess.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.LblRunPrevSuccess.Location = New System.Drawing.Point(0, 98)
+        Me.LblRunPrevSuccess.Location = New System.Drawing.Point(0, 110)
         Me.LblRunPrevSuccess.Name = "LblRunPrevSuccess"
         Me.LblRunPrevSuccess.Size = New System.Drawing.Size(129, 13)
         Me.LblRunPrevSuccess.TabIndex = 8
@@ -151,7 +159,7 @@ Partial Class TheSkyXController
         '
         Me.LblRunPrevError.AutoSize = True
         Me.LblRunPrevError.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.LblRunPrevError.Location = New System.Drawing.Point(0, 111)
+        Me.LblRunPrevError.Location = New System.Drawing.Point(0, 123)
         Me.LblRunPrevError.Name = "LblRunPrevError"
         Me.LblRunPrevError.Size = New System.Drawing.Size(110, 13)
         Me.LblRunPrevError.TabIndex = 7
@@ -243,6 +251,16 @@ Partial Class TheSkyXController
         Me.GroupBox2.TabStop = False
         Me.GroupBox2.Text = "Imaging"
         '
+        'BtnStopImaging
+        '
+        Me.BtnStopImaging.Location = New System.Drawing.Point(31, 106)
+        Me.BtnStopImaging.Name = "BtnStopImaging"
+        Me.BtnStopImaging.Size = New System.Drawing.Size(75, 23)
+        Me.BtnStopImaging.TabIndex = 20
+        Me.BtnStopImaging.Text = "Stop"
+        Me.ToolTipStart.SetToolTip(Me.BtnStopImaging, "Stop the imaging process, the current image will be completed")
+        Me.BtnStopImaging.UseVisualStyleBackColor = True
+        '
         'BtnCalibrationFrames
         '
         Me.BtnCalibrationFrames.Location = New System.Drawing.Point(16, 164)
@@ -269,6 +287,7 @@ Partial Class TheSkyXController
         Me.BtnPauseImaging.Size = New System.Drawing.Size(75, 23)
         Me.BtnPauseImaging.TabIndex = 3
         Me.BtnPauseImaging.Text = "Pause"
+        Me.ToolTipStart.SetToolTip(Me.BtnPauseImaging, "Pause the imaging process, The curent image will complete")
         Me.BtnPauseImaging.UseVisualStyleBackColor = True
         '
         'BtnAbortImaging
@@ -278,6 +297,7 @@ Partial Class TheSkyXController
         Me.BtnAbortImaging.Size = New System.Drawing.Size(75, 23)
         Me.BtnAbortImaging.TabIndex = 4
         Me.BtnAbortImaging.Text = "Abort"
+        Me.ToolTipStart.SetToolTip(Me.BtnAbortImaging, "Abort the imaging process, the current image will be abandoned")
         Me.BtnAbortImaging.UseVisualStyleBackColor = True
         '
         'BtnSettingsImaging
@@ -329,24 +349,27 @@ Partial Class TheSkyXController
         '
         'BtnLoadGroup
         '
-        Me.BtnLoadGroup.Location = New System.Drawing.Point(541, 262)
+        Me.BtnLoadGroup.Location = New System.Drawing.Point(541, 282)
         Me.BtnLoadGroup.Name = "BtnLoadGroup"
         Me.BtnLoadGroup.Size = New System.Drawing.Size(75, 23)
         Me.BtnLoadGroup.TabIndex = 19
         Me.BtnLoadGroup.Text = "Load Group"
+        Me.ToolTipStart.SetToolTip(Me.BtnLoadGroup, "Open a file containing a group of imaging sequences")
         Me.BtnLoadGroup.UseVisualStyleBackColor = True
         '
         'TmrImagingLoop
         '
+        Me.TmrImagingLoop.Interval = 5000
         '
-        'BtnStopImaging
+        'LblDelay
         '
-        Me.BtnStopImaging.Location = New System.Drawing.Point(31, 106)
-        Me.BtnStopImaging.Name = "BtnStopImaging"
-        Me.BtnStopImaging.Size = New System.Drawing.Size(75, 23)
-        Me.BtnStopImaging.TabIndex = 20
-        Me.BtnStopImaging.Text = "Stop"
-        Me.BtnStopImaging.UseVisualStyleBackColor = True
+        Me.LblDelay.AutoSize = True
+        Me.LblDelay.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.LblDelay.Location = New System.Drawing.Point(0, 97)
+        Me.LblDelay.Name = "LblDelay"
+        Me.LblDelay.Size = New System.Drawing.Size(34, 13)
+        Me.LblDelay.TabIndex = 9
+        Me.LblDelay.Text = "Delay"
         '
         'TheSkyXController
         '
@@ -404,4 +427,5 @@ Partial Class TheSkyXController
     Friend WithEvents TmrImagingLoop As Timer
     Friend WithEvents BtnStopImaging As Button
     Friend WithEvents ToolTipStart As ToolTip
+    Friend WithEvents LblDelay As Label
 End Class

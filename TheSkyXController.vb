@@ -9,7 +9,8 @@
     Dim isSkyXConnected As Boolean = False
     Private imagingRunPaused As Boolean
     Private imagingRunAborted As Boolean
-    Private currentImagingLogo As Integer = ImagingStatus.notImaging
+    Private currentImagingStatus As Integer = ImagingStatus.notImaging
+    Private isTmrImagingLoopTicking As Boolean = False
 
     Private Enum ImagingStatus
         notImaging
@@ -23,6 +24,8 @@
         filterChangeInProgress
         runClosedLoopSlew
         meridianFlip
+        abort
+        halt
     End Enum
 
 
@@ -44,6 +47,7 @@
 
         fitsKeyCollection = New FitsKeyCollection
 
+        BtnStartImaging.Enabled = False
         BtnAbortImaging.Enabled = False
         BtnPauseImaging.Enabled = False
         BtnStopImaging.Enabled = False
@@ -56,6 +60,7 @@
                 skyXFunctions = New SkyXFunctions()
                 Me.PnlSkyXStatus.BackColor = Color.Green
                 isSkyXConnected = True
+                BtnStartImaging.Enabled = True
             Catch ex As Exception
                 MsgBox("SkyX is not running")
             End Try
@@ -157,12 +162,13 @@
 
     Private Sub BtnStartImaging_Click(sender As Object, e As EventArgs) Handles BtnStartImaging.Click
         ' Are we connected to SkyX?
-        If isSkyXConnected Then
+        If isSkyXConnected AndAlso skyXFunctions IsNot Nothing AndAlso skyXFunctions.isCameraConnected Then
             BtnAbortImaging.Enabled = True
             BtnPauseImaging.Enabled = True
             BtnStopImaging.Enabled = True
 
             ' Start the imaging timer
+            TmrImagingLoop.Start()
         Else
             MsgBox("SkyX is not connected")
         End If
@@ -171,22 +177,35 @@
     Private Sub BtnPauseImaging_Click(sender As Object, e As EventArgs) Handles BtnPauseImaging.Click
         ' Set the pause flag, the imaging loop still runs
         MsgBox("Pausing the imaging, the current image will complete")
+        TmrImagingLoop.Stop()
     End Sub
 
     Private Sub BtnAbortImaging_Click(sender As Object, e As EventArgs) Handles BtnAbortImaging.Click
         ' Abort the imaging run
         Dim result = MessageBox.Show("Image run is in progress, Are you sure you want to abort", "Abort Imaging Run", MessageBoxButtons.YesNo)
-        If result = DialogResult.No Then
+        If result = DialogResult.Yes Then
             ' abort current image and then stop timer.
             ' The timer function will need to abort and then stop itself
+            currentImagingStatus = ImagingStatus.abort
         End If
     End Sub
 
     Private Sub TmrImagingLoop_Tick(sender As Object, e As EventArgs) Handles TmrImagingLoop.Tick
-
+        If Not isTmrImagingLoopTicking Then
+            ' We have this boolean as the tick will be called even if the previous tick has not finished
+            isTmrImagingLoopTicking = True
+            MsgBox("Start of tick")
+            If currentImagingStatus = ImagingStatus.halt Then
+                TmrImagingLoop.Stop()
+            ElseIf currentImagingStatus = ImagingStatus.abort Then
+                TmrImagingLoop.Stop()
+            End If
+            MsgBox("End of tick")
+            isTmrImagingLoopTicking = False
+        End If
     End Sub
 
     Private Sub BtnStopImaging_Click(sender As Object, e As EventArgs) Handles BtnStopImaging.Click
-
+        currentImagingStatus = ImagingStatus.halt
     End Sub
 End Class
