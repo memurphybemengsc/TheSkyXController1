@@ -2,7 +2,7 @@
 
 Public Class TheSkyXController
     Public imageFileSequence As New ImageSequence()
-    Public defaultFilterWheelNames As New List(Of String)
+    Private defaultFilterWheelNames As List(Of String)
     Dim imagingSequenceInProgress As Boolean
     Dim isPhd2Connected As Boolean = False
     Public fitsKeyCollection As FitsKeyCollection
@@ -36,15 +36,7 @@ Public Class TheSkyXController
         InitializeComponent()
 
         ' Add any initialization after the InitializeComponent() call.
-        defaultFilterWheelNames.Add("Lum")
-        defaultFilterWheelNames.Add("Red")
-        defaultFilterWheelNames.Add("Green")
-        defaultFilterWheelNames.Add("Blue")
-        defaultFilterWheelNames.Add("Ha")
-        defaultFilterWheelNames.Add("O3")
-        defaultFilterWheelNames.Add("S2")
-        defaultFilterWheelNames.Add("Dark")
-
+        populateDefaultFilterWheelNames(Nothing)
         imagingSequenceInProgress = False
 
         fitsKeyCollection = New FitsKeyCollection
@@ -56,6 +48,25 @@ Public Class TheSkyXController
         BtnSettingsImaging.Enabled = False
 
     End Sub
+
+    Public Sub populateDefaultFilterWheelNames(fwNames As List(Of String))
+        defaultFilterWheelNames = New List(Of String)
+        If fwNames Is Nothing Then
+            defaultFilterWheelNames.Add("Lum")
+            defaultFilterWheelNames.Add("Red")
+            defaultFilterWheelNames.Add("Green")
+            defaultFilterWheelNames.Add("Blue")
+            defaultFilterWheelNames.Add("Ha")
+            defaultFilterWheelNames.Add("O3")
+            defaultFilterWheelNames.Add("S2")
+            defaultFilterWheelNames.Add("Dark")
+        Else
+            For Each name As String In fwNames
+                defaultFilterWheelNames.Add(name)
+            Next
+        End If
+    End Sub
+
     Private Sub BtnSkyX_Click(sender As Object, e As EventArgs) Handles BtnSkyX.Click
         If skyXFunctions Is Nothing Then
             ' We have not connected to SkyX

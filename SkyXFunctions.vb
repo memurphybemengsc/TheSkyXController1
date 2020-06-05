@@ -9,10 +9,11 @@ Public Class SkyXFunctions
     Private theSkyXObject As TheSkyXLib.Application = Nothing
     Private camera As TheSkyXLib.ccdsoftCamera = Nothing
     Private imageFolder As String = ""
+    Private filterNames As List(Of String) = Nothing
 
     Public Sub New()
         'Create the SkyX object and check that Skyx is present and initialised
-        connectToSkyX()
+        connectToSkyXTest()
         If theSkyXObject Is Nothing Then
             'SkyX is not running so throw exception
             Throw New System.Exception("SkyX is not running")
@@ -25,12 +26,40 @@ Public Class SkyXFunctions
         End If
 
         'Get the filter wheel filters and refresh the filters in the drop downs
+        ' Is there a filter wheel? Test connecting to a FW if there is not one connected.
+        If isFilterWheelPresent() Then
+            If Not isFilterWheelConnected() Then
+                Try
+                    camera.filterWheelConnect()
+                Catch ex As Exception
+                    ' What do we do here?
+                End Try
+            End If
+
+            ' Loop over filters and get names
+            Dim numberOfFilters = camera.lNumberFilters
+            Dim thisFilter As Integer = 0
+            filterNames = New List(Of String)
+            While thisFilter < numberOfFilters
+                filterNames.Add(camera.szFilterName(thisFilter))
+                thisFilter += 1
+            End While
+
+            TheSkyXController.populateDefaultFilterWheelNames(filterNames)
+        End If
+
     End Sub
 
     Public Sub cameraStatus()
         'MsgBox(camera.Status) '"Ready" when camera is idle
         'MsgBox(camera.State) ' '0' when idle ccdsoftCameraState.cdStateNone
         MsgBox("camera.szFilterName(0) " + camera.szFilterName(0))
+        If camera.filterWheelIsConnected = 1 Then
+            ' We are connected to a filter wheel
+            Dim thisFilter = camera.FilterIndexZeroBased
+
+        End If
+
     End Sub
 
     Public Sub setImageFolder(imgFldr As String)
@@ -59,6 +88,7 @@ Public Class SkyXFunctions
     Private Sub connectToSkyXTest()
         skyXVersion = "TEST"
         theSkyXObject = New Object()
+        camera = New Object()
         MsgBox(“TSX Version: “ & skyXVersion)
     End Sub
 
@@ -112,6 +142,23 @@ Public Class SkyXFunctions
             Else
                 Return False
             End If
+        End If
+    End Function
+
+    Public Function isFilterWheelPresent() As Boolean
+        ' Complete this fn
+        If camera.filterWheelIsConnected = 1 Then
+            Return True
+        Else
+            Return False
+        End If
+    End Function
+
+    Public Function isFilterWheelConnected() As Boolean
+        If camera.filterWheelIsConnected = 1 Then
+            Return True
+        Else
+            Return False
         End If
     End Function
 
