@@ -67,6 +67,10 @@ Public Class TheSkyXController
         End If
     End Sub
 
+    Public Function getFilterWheelNames() As List(Of String)
+        Return defaultFilterWheelNames
+    End Function
+
     Private Sub BtnSkyX_Click(sender As Object, e As EventArgs) Handles BtnSkyX.Click
         If skyXFunctions Is Nothing Then
             ' We have not connected to SkyX
@@ -77,7 +81,11 @@ Public Class TheSkyXController
                 BtnStartImaging.Enabled = True
                 BtnSettingsImaging.Enabled = True
             Catch ex As Exception
-                MsgBox("SkyX is not running")
+                If ex.Source = "TheSkyX.ccdsoftCamera" Then
+                    MsgBox("There was an error connecting to the camera")
+                Else
+                    MsgBox("SkyX is not present")
+                End If
             End Try
         Else
             ' We are disconnecting from SkyX, check are we guiding or imaging
@@ -158,7 +166,7 @@ Public Class TheSkyXController
 
     Private Sub BtnTest_Click(sender As Object, e As EventArgs) Handles BtnTest.Click
 
-        skyXFunctions.cameraStatus()
+        skyXFunctions.testFunction()
 
         'If phd2guiding IsNot Nothing Then
         '    phd2guiding.startGuiding()

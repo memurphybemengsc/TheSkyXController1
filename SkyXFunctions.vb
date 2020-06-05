@@ -1,4 +1,9 @@
-﻿Imports Microsoft.VisualBasic.CompilerServices
+﻿Imports System.Runtime.CompilerServices
+Imports System.Runtime.ExceptionServices
+Imports System.Runtime.Remoting.Channels
+Imports System.Runtime.Serialization
+Imports ASCOM.DriverAccess
+Imports Microsoft.VisualBasic.CompilerServices
 Imports TheSkyXLib
 
 Public Class SkyXFunctions
@@ -13,7 +18,7 @@ Public Class SkyXFunctions
 
     Public Sub New()
         'Create the SkyX object and check that Skyx is present and initialised
-        connectToSkyXTest()
+        connectToSkyX()
         If theSkyXObject Is Nothing Then
             'SkyX is not running so throw exception
             Throw New System.Exception("SkyX is not running")
@@ -23,33 +28,47 @@ Public Class SkyXFunctions
         connectToCamera()
         If camera Is Nothing Then
             Throw New System.Exception("Unable to connect to camera")
+        Else
+            TheSkyXController.LblCameraStatus.ForeColor = Color.Green
         End If
 
         'Get the filter wheel filters and refresh the filters in the drop downs
         ' Is there a filter wheel? Test connecting to a FW if there is not one connected.
         If isFilterWheelPresent() Then
-            If Not isFilterWheelConnected() Then
-                Try
-                    camera.filterWheelConnect()
-                Catch ex As Exception
-                    ' What do we do here?
-                End Try
-            End If
-
             ' Loop over filters and get names
-            Dim numberOfFilters = camera.lNumberFilters
-            Dim thisFilter As Integer = 0
-            filterNames = New List(Of String)
-            While thisFilter < numberOfFilters
-                filterNames.Add(camera.szFilterName(thisFilter))
-                thisFilter += 1
-            End While
-
+            TheSkyXController.LblFilterWheel.ForeColor = Color.Green
+            populateFilterNames()
             TheSkyXController.populateDefaultFilterWheelNames(filterNames)
         End If
 
     End Sub
 
+    Public Sub testFunction()
+        If isFocuserConnected() Then
+            MsgBox("Focuser is connected")
+        Else
+            MsgBox("Focuser is not  connected")
+        End If
+
+        If isFocuserPresent() Then
+            MsgBox("Focuser is present")
+        Else
+            MsgBox("focuser is Not present")
+        End If
+
+        '        MsgBox("camera.focIsConnected " + camera.focIsConnected.ToString)
+
+    End Sub
+
+    Private Sub populateFilterNames()
+        Dim numberOfFilters = camera.lNumberFilters
+        Dim thisFilter As Integer = 0
+        filterNames = New List(Of String)
+        While thisFilter < numberOfFilters
+            filterNames.Add(camera.szFilterName(thisFilter))
+            thisFilter += 1
+        End While
+    End Sub
     Public Sub cameraStatus()
         'MsgBox(camera.Status) '"Ready" when camera is idle
         'MsgBox(camera.State) ' '0' when idle ccdsoftCameraState.cdStateNone
@@ -111,17 +130,22 @@ Public Class SkyXFunctions
         Catch ex As Exception
             camera = Nothing
         End Try
-
-        Try
-            camera.Connect()
-        Catch ex As Exception
-            camera = Nothing
-        End Try
+        If camera IsNot Nothing Then
+            Try
+                camera.Connect()
+            Catch ex As Exception
+                camera = Nothing
+            End Try
+        End If
     End Sub
 
     Private Sub disconnectFromCamera()
         If camera IsNot Nothing Then
             camera.Disconnect()
+            camera = Nothing
+            TheSkyXController.LblCameraStatus.ForeColor = Color.Red
+            TheSkyXController.LblFilterWheel.ForeColor = Color.Red
+            TheSkyXController.LblFocuser.ForeColor = Color.Red
         End If
     End Sub
 
@@ -133,25 +157,53 @@ Public Class SkyXFunctions
         End If
     End Function
 
-    Public Function isFocuserConnected() As Boolean
-        If theSkyXObject Is Nothing Or camera Is Nothing Then
-            Return False
-        Else
-            If camera.focIsConnected = 0 Then
-                Return True
-            Else
-                Return False
-            End If
+    Public Function isFocuserPresentAndConnected() As Boolean
+        Dim retval As Boolean = True
+        If isFocuserPresent() AndAlso isFocuserConnected() Then
+            retval = True
         End If
+        Return retval
     End Function
 
-    Public Function isFilterWheelPresent() As Boolean
-        ' Complete this fn
-        If camera.filterWheelIsConnected = 1 Then
+    Public Function isFocuserPresent() As Boolean
+        Dim retval As Boolean = True
+        If Not isFocuserConnected() Then
+            retval = False
+            Try
+                camera.focConnect()
+            Catch ex As Exception
+                retval = False
+            End Try
+        End If
+        Return retval
+    End Function
+
+    Public Function isFocuserConnected() As Boolean
+        If camera IsNot Nothing AndAlso camera.focIsConnected = 1 Then
             Return True
         Else
             Return False
         End If
+    End Function
+
+    Public Function isFilterWheelPresentAndConnected() As Boolean
+        Dim retval As Boolean = False
+        If isFilterWheelPresent() AndAlso isFilterWheelConnected() Then
+            retval = True
+        End If
+        Return retval
+    End Function
+    Public Function isFilterWheelPresent() As Boolean
+        Dim retval As Boolean = True
+        If Not isFilterWheelConnected() Then
+            Try
+                camera.filterWheelConnect()
+            Catch ex As Exception
+                ' We treat an exception trying to connect as the filter wheel is not present
+                retval = False
+            End Try
+        End If
+        Return retval
     End Function
 
     Public Function isFilterWheelConnected() As Boolean

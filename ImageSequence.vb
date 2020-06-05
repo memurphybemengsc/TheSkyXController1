@@ -329,7 +329,7 @@
 
         TheSkyXController.LblFilter.Location = New System.Drawing.Point(0, componentY)
         Dim labFilter As New ComboBox()
-        For Each filter As String In TheSkyXController.defaultFilterWheelNames
+        For Each filter As String In TheSkyXController.getFilterWheelNames
             labFilter.Items.Add(filter)
         Next
         labFilter.Font = panelFont
