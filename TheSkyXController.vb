@@ -80,6 +80,17 @@ Public Class TheSkyXController
                 isSkyXConnected = True
                 BtnStartImaging.Enabled = True
                 BtnSettingsImaging.Enabled = True
+                LblCameraStatus.ForeColor = Color.Green
+
+                If skyXFunctions.isFilterWheelConnected Then
+                    LblFilterWheel.ForeColor = Color.Green
+                    populateDefaultFilterWheelNames(skyXFunctions.getFilterNames)
+                    imageFileSequence.buildPanel()
+                End If
+
+                If skyXFunctions.isFocuserConnected Then
+                    LblFocuser.ForeColor = Color.Green
+                End If
             Catch ex As Exception
                 If ex.Source = "TheSkyX.ccdsoftCamera" Then
                     MsgBox("There was an error connecting to the camera")
@@ -87,6 +98,7 @@ Public Class TheSkyXController
                     MsgBox("SkyX is not present")
                 End If
             End Try
+
         Else
             ' We are disconnecting from SkyX, check are we guiding or imaging
             Dim res = MsgBox("Imaging is in progress, do you wish to disconnect?", MsgBoxStyle.YesNo)
@@ -97,6 +109,9 @@ Public Class TheSkyXController
                 isSkyXConnected = False
                 BtnStartImaging.Enabled = False
                 BtnSettingsImaging.Enabled = False
+                LblCameraStatus.ForeColor = Color.Red
+                LblFilterWheel.ForeColor = Color.Red
+                LblFocuser.ForeColor = Color.Red
             End If
         End If
     End Sub

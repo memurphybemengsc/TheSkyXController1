@@ -7,10 +7,12 @@ Add code to handle Meridian flip.
 
 Auto Stop if Sun is higher than <x>.
 
-Analyse images to determine if guiding, locartion is OK.
+Analyse images to determine if guiding, location is OK.
 
 Analyse images to check for saturation.
 
 Add Target list
 
 Allow the grouping of sequence (i.e. focus group, CLS....)
+
+Need to add code for event that user disconnects camera/fw/foc from SkyX

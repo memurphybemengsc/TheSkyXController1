@@ -28,19 +28,19 @@ Public Class SkyXFunctions
         connectToCamera()
         If camera Is Nothing Then
             Throw New System.Exception("Unable to connect to camera")
-        Else
-            TheSkyXController.LblCameraStatus.ForeColor = Color.Green
         End If
 
         'Get the filter wheel filters and refresh the filters in the drop downs
         ' Is there a filter wheel? Test connecting to a FW if there is not one connected.
         If isFilterWheelPresent() Then
+            camera.filterWheelConnect()
             ' Loop over filters and get names
-            TheSkyXController.LblFilterWheel.ForeColor = Color.Green
             populateFilterNames()
-            TheSkyXController.populateDefaultFilterWheelNames(filterNames)
         End If
 
+        If isFocuserPresent() Then
+            camera.focConnect()
+        End If
     End Sub
 
     Public Sub testFunction()
@@ -59,6 +59,10 @@ Public Class SkyXFunctions
         '        MsgBox("camera.focIsConnected " + camera.focIsConnected.ToString)
 
     End Sub
+
+    Public Function getFilterNames() As List(Of String)
+        Return filterNames
+    End Function
 
     Private Sub populateFilterNames()
         Dim numberOfFilters = camera.lNumberFilters
@@ -143,9 +147,6 @@ Public Class SkyXFunctions
         If camera IsNot Nothing Then
             camera.Disconnect()
             camera = Nothing
-            TheSkyXController.LblCameraStatus.ForeColor = Color.Red
-            TheSkyXController.LblFilterWheel.ForeColor = Color.Red
-            TheSkyXController.LblFocuser.ForeColor = Color.Red
         End If
     End Sub
 
