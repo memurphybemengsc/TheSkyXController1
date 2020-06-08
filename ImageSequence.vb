@@ -4,6 +4,27 @@
     Private currentImageSequenceElement As Integer = 0
 
     ''' <summary>
+    ''' Get the current sequence. Returns the first element if there is no current one.
+    ''' </summary>
+    Public Function getCurrentImageSequenceElement() As ImageSequenceElement
+        Return getImageSequenceElement(currentImageSequenceElement)
+    End Function
+
+    ''' <summary>
+    ''' Get the current sequence index (zero based).
+    ''' </summary>
+    Public Function getCurrentImageSequenceIndex() As Integer
+        Return currentImageSequenceElement
+    End Function
+
+    ''' <summary>
+    ''' Get the last sequence index (zero based).
+    ''' </summary>
+    Public Function getLastImageSequenceindex() As Integer
+        Return imageSequenceElements.Count - 1
+    End Function
+
+    ''' <summary>
     ''' Get the first sequence. Returns Nothing if none.
     ''' </summary>
     Public Function getFirstImageSequenceElement() As ImageSequenceElement
@@ -317,6 +338,7 @@
         exposureType.Items.Add("Abort")
         exposureType.Items.Add("Park")
         exposureType.Items.Add("Shutdown")
+        exposureType.Items.Add("FTP")
         exposureType.Name = "exposureType"
         exposureType.Size = panelComponentSize
         exposureType.Text = imgSeqEl.exposureType

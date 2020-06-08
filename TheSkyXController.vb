@@ -80,6 +80,7 @@ Public Class TheSkyXController
                 isSkyXConnected = True
                 BtnStartImaging.Enabled = True
                 BtnSettingsImaging.Enabled = True
+                BtnTargetSearch.Enabled = True
                 LblCameraStatus.ForeColor = Color.Green
 
                 If skyXFunctions.isFilterWheelConnected Then
@@ -109,6 +110,7 @@ Public Class TheSkyXController
                 isSkyXConnected = False
                 BtnStartImaging.Enabled = False
                 BtnSettingsImaging.Enabled = False
+                BtnTargetSearch.Enabled = False
                 LblCameraStatus.ForeColor = Color.Red
                 LblFilterWheel.ForeColor = Color.Red
                 LblFocuser.ForeColor = Color.Red
@@ -181,7 +183,7 @@ Public Class TheSkyXController
 
     Private Sub BtnTest_Click(sender As Object, e As EventArgs) Handles BtnTest.Click
 
-        skyXFunctions.testFunction()
+        'skyXFunctions.testFunction()
 
         'If phd2guiding IsNot Nothing Then
         '    phd2guiding.startGuiding()
@@ -215,6 +217,10 @@ Public Class TheSkyXController
             BtnAbortImaging.Enabled = True
             BtnPauseImaging.Enabled = True
             BtnStopImaging.Enabled = True
+            currentImagingStatus = ImagingStatus.notImaging
+
+            ' Make sure any changes to the controls are reflected in the sequence elements
+            imageFileSequence.refreshElementsfromControls()
 
             ' Start the imaging timer
             TmrImagingLoop.Start()
@@ -243,15 +249,32 @@ Public Class TheSkyXController
         If Not isTmrImagingLoopTicking Then
             ' We have this boolean as the tick will be called even if the previous tick has not finished
             isTmrImagingLoopTicking = True
-            MsgBox("Start of tick")
-            If currentImagingStatus = ImagingStatus.halt Then
+            If currentImagingStatus = ImagingStatus.notImaging Then
+                If phd2guiding IsNot Nothing AndAlso Not phd2guiding.isPHDGuidingAndLockedOnStar Then
+                    ' PHD is not guiding so start guiding
+                    phd2guiding.startGuiding()
+                    currentImagingStatus = ImagingStatus.startGuiding
+                Else
+                    ' No PHD connection so start imaging
+                    currentImagingStatus = ImagingStatus.takeImage
+                End If
+            ElseIf currentImagingStatus = ImagingStatus.startGuiding Then
+                If phd2guiding IsNot Nothing AndAlso phd2guiding.isPHDGuidingAndLockedOnStar Then
+                    ' PHD is now guiding so take an image
+                    currentImagingStatus = ImagingStatus.takeImage
+                Else
+                    ' We should have a timeout
+                End If
+            ElseIf currentImagingStatus = ImagingStatus.takeImage Then
+                ' Get the next image sequence
+                Dim locBinX = imageFileSequence.getCurrentImageSequenceElement().binX
+            ElseIf currentImagingStatus = ImagingStatus.halt Then
                 TmrImagingLoop.Stop()
             ElseIf currentImagingStatus = ImagingStatus.abort Then
                 TmrImagingLoop.Stop()
             End If
-            MsgBox("End of tick")
             isTmrImagingLoopTicking = False
-        End If
+            End If
     End Sub
 
     Private Sub BtnStopImaging_Click(sender As Object, e As EventArgs) Handles BtnStopImaging.Click
@@ -260,5 +283,9 @@ Public Class TheSkyXController
 
     Private Sub BtnSettingsImaging_Click(sender As Object, e As EventArgs) Handles BtnSettingsImaging.Click
         ImagingSettings.Show()
+    End Sub
+
+    Private Sub BtnTargetSearch_Click(sender As Object, e As EventArgs) Handles BtnTargetSearch.Click
+        MsgBox("Functionality to be added")
     End Sub
 End Class

@@ -18,7 +18,7 @@ Public Class SkyXFunctions
 
     Public Sub New()
         'Create the SkyX object and check that Skyx is present and initialised
-        connectToSkyX()
+        connectToSkyXTest()
         If theSkyXObject Is Nothing Then
             'SkyX is not running so throw exception
             Throw New System.Exception("SkyX is not running")
@@ -73,6 +73,39 @@ Public Class SkyXFunctions
             thisFilter += 1
         End While
     End Sub
+
+    Private Sub moveToFilter(newFilter As String)
+        If camera.filterWheelIsConnected() = 0 Then
+            Return
+        End If
+
+        If filterNames Is Nothing Then
+            populateFilterNames()
+        End If
+
+        If getFilterIndexZeroBased(newFilter) <> -1 Then
+            camera.FilterIndexZeroBased = getFilterIndexZeroBased(newFilter)
+        End If
+    End Sub
+
+    Private Function getFilterIndexZeroBased(filterName As String) As Integer
+        Dim filterIndexZeroBased As Integer = 0
+        Dim filterNotFound As Boolean = True
+        For Each locFilterName As String In filterNames
+            If locFilterName = filterName Then
+                Exit For
+                filterNotFound = False
+            End If
+            filterIndexZeroBased += 1
+        Next
+
+        If filterNotFound Then
+            filterIndexZeroBased = -1
+        End If
+
+        Return filterIndexZeroBased
+    End Function
+
     Public Sub cameraStatus()
         'MsgBox(camera.Status) '"Ready" when camera is idle
         'MsgBox(camera.State) ' '0' when idle ccdsoftCameraState.cdStateNone
@@ -98,10 +131,7 @@ Public Class SkyXFunctions
     End Sub
 
     Public Sub setImageSettings(filter As String, exposure As Double, bx As Integer, by As Integer)
-        If camera.filterWheelIsConnected() = 1 Then
-            camera.szFilterName(0)
-        End If
-
+        moveToFilter(filter)
         camera.ExposureTime = exposure
         camera.BinX = bx
         camera.BinY = by
@@ -347,5 +377,12 @@ Public Class SkyXFunctions
         'ccdsoftInventoryIndex
     End Sub
 
+    Public Sub refreshCameraImageSettingsFromCurrentImageSequence()
+        Dim filter As String = TheSkyXController.imageFileSequence.getCurrentImageSequenceElement.filter
+        Dim bx As Double = TheSkyXController.imageFileSequence.getCurrentImageSequenceElement.binX
+        Dim by As Double = TheSkyXController.imageFileSequence.getCurrentImageSequenceElement.binY
+        Dim exposure As Double = TheSkyXController.imageFileSequence.getCurrentImageSequenceElement.exposureLength
+        setImageSettings(filter, exposure, bx, by)
+    End Sub
 
 End Class

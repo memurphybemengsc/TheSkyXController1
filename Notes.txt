@@ -15,4 +15,12 @@ Add Target list
 
 Allow the grouping of sequence (i.e. focus group, CLS....)
 
-Need to add code for event that user disconnects camera/fw/foc from SkyX
+Need to add code for event that user disconnects camera/fw/foc from SkyX.
+
+Add FTP option.
+
+We should disable changes to the imaging sequence once started.
+
+We should have a timeout in the imaging loop (timer tick) if PHD does not start guiding.
+
+Look at exceptions when changing filters and focusing.
