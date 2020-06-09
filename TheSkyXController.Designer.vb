@@ -55,6 +55,7 @@ Partial Class TheSkyXController
         Me.BtnLoadGroup = New System.Windows.Forms.Button()
         Me.TmrImagingLoop = New System.Windows.Forms.Timer(Me.components)
         Me.ToolTipStart = New System.Windows.Forms.ToolTip(Me.components)
+        Me.BtnTargetSearch = New System.Windows.Forms.Button()
         Me.LblImageFolder = New System.Windows.Forms.Label()
         Me.TxtImageFolder = New System.Windows.Forms.TextBox()
         Me.LblFocuser = New System.Windows.Forms.Label()
@@ -62,8 +63,8 @@ Partial Class TheSkyXController
         Me.LblCameraStatus = New System.Windows.Forms.Label()
         Me.LblTarget = New System.Windows.Forms.Label()
         Me.TxtTarget = New System.Windows.Forms.TextBox()
-        Me.BtnTargetSearch = New System.Windows.Forms.Button()
         Me.TxtTargetList = New System.Windows.Forms.TextBox()
+        Me.BtnSlewLimits = New System.Windows.Forms.Button()
         Me.PnlImageSeqTitles.SuspendLayout()
         Me.GroupBox2.SuspendLayout()
         Me.GroupBox1.SuspendLayout()
@@ -380,6 +381,17 @@ Partial Class TheSkyXController
         '
         Me.TmrImagingLoop.Interval = 5000
         '
+        'BtnTargetSearch
+        '
+        Me.BtnTargetSearch.Enabled = False
+        Me.BtnTargetSearch.Location = New System.Drawing.Point(508, 408)
+        Me.BtnTargetSearch.Name = "BtnTargetSearch"
+        Me.BtnTargetSearch.Size = New System.Drawing.Size(75, 23)
+        Me.BtnTargetSearch.TabIndex = 28
+        Me.BtnTargetSearch.Text = "Search"
+        Me.ToolTipStart.SetToolTip(Me.BtnTargetSearch, "Search the SkyX database for the target")
+        Me.BtnTargetSearch.UseVisualStyleBackColor = True
+        '
         'LblImageFolder
         '
         Me.LblImageFolder.AutoSize = True
@@ -394,7 +406,7 @@ Partial Class TheSkyXController
         '
         Me.TxtImageFolder.BackColor = System.Drawing.SystemColors.ControlLightLight
         Me.TxtImageFolder.Location = New System.Drawing.Point(422, 326)
-        Me.TxtImageFolder.Margin = New System.Windows.Forms.Padding(2, 2, 2, 2)
+        Me.TxtImageFolder.Margin = New System.Windows.Forms.Padding(2)
         Me.TxtImageFolder.Name = "TxtImageFolder"
         Me.TxtImageFolder.ReadOnly = True
         Me.TxtImageFolder.Size = New System.Drawing.Size(390, 20)
@@ -451,17 +463,6 @@ Partial Class TheSkyXController
         Me.TxtTarget.Size = New System.Drawing.Size(96, 20)
         Me.TxtTarget.TabIndex = 27
         '
-        'BtnTargetSearch
-        '
-        Me.BtnTargetSearch.Enabled = False
-        Me.BtnTargetSearch.Location = New System.Drawing.Point(508, 408)
-        Me.BtnTargetSearch.Name = "BtnTargetSearch"
-        Me.BtnTargetSearch.Size = New System.Drawing.Size(75, 23)
-        Me.BtnTargetSearch.TabIndex = 28
-        Me.BtnTargetSearch.Text = "Search"
-        Me.ToolTipStart.SetToolTip(Me.BtnTargetSearch, "Search the SkyX database for the target")
-        Me.BtnTargetSearch.UseVisualStyleBackColor = True
-        '
         'TxtTargetList
         '
         Me.TxtTargetList.BackColor = System.Drawing.SystemColors.ControlLightLight
@@ -472,11 +473,22 @@ Partial Class TheSkyXController
         Me.TxtTargetList.Size = New System.Drawing.Size(100, 125)
         Me.TxtTargetList.TabIndex = 29
         '
+        'BtnSlewLimits
+        '
+        Me.BtnSlewLimits.Location = New System.Drawing.Point(737, 411)
+        Me.BtnSlewLimits.Name = "BtnSlewLimits"
+        Me.BtnSlewLimits.Size = New System.Drawing.Size(75, 23)
+        Me.BtnSlewLimits.TabIndex = 21
+        Me.BtnSlewLimits.Text = "Slew Limits"
+        Me.ToolTipStart.SetToolTip(Me.BtnSlewLimits, "Start the Imaging Process" & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10))
+        Me.BtnSlewLimits.UseVisualStyleBackColor = True
+        '
         'TheSkyXController
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
         Me.ClientSize = New System.Drawing.Size(1064, 545)
+        Me.Controls.Add(Me.BtnSlewLimits)
         Me.Controls.Add(Me.TxtTargetList)
         Me.Controls.Add(Me.BtnTargetSearch)
         Me.Controls.Add(Me.TxtTarget)
@@ -548,4 +560,5 @@ Partial Class TheSkyXController
     Friend WithEvents TxtTarget As TextBox
     Friend WithEvents BtnTargetSearch As Button
     Friend WithEvents TxtTargetList As TextBox
+    Friend WithEvents BtnSlewLimits As Button
 End Class

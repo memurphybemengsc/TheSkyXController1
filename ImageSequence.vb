@@ -3,6 +3,28 @@
     Public componentPanel As Panel = Nothing
     Private currentImageSequenceElement As Integer = 0
 
+    Dim lightFrame As String = "Light"
+    Dim darkFrame As String = "Dark"
+    Dim flatPercentageFrame As String = "Flat (%)"
+    Dim flatSecondsFrame As String = "Flat (s)"
+    Dim biasFrame As String = "Bias"
+    Dim atFocus3 As String = "@Focus3"
+    Dim prompt As String = "Prompt"
+    Dim closeLoopSlew As String = "CLS"
+    Dim abort As String = "Abort"
+    Dim parkMount As String = "Park"
+    Dim shutdowm As String = "Shutdown"
+    Dim ftp As String = "FTP"
+
+    Dim allExposureTypes = New String() {lightFrame, darkFrame, flatPercentageFrame, flatSecondsFrame, biasFrame, atFocus3, prompt, closeLoopSlew, abort, parkMount, shutdowm, ftp}
+
+    Public Function isCurrentImageALightFrame() As Boolean
+        Dim retval As Boolean = False
+        If getCurrentImageSequenceElement.exposureType = lightFrame Then
+            retval = True
+        End If
+        Return retval
+    End Function
     ''' <summary>
     ''' Get the current sequence. Returns the first element if there is no current one.
     ''' </summary>
@@ -58,6 +80,19 @@
         Return imageSequenceElements.ElementAt(index)
     End Function
 
+    Public Sub initialiseSequenceImageCount()
+
+    End Sub
+    Public Sub incrementSequenceImageCount()
+
+    End Sub
+    Public Function isExecuteDitherSet() As Boolean
+        Dim retval As Boolean = False
+
+        ' we take the current image and compare to current dither count (we need to add the current image count and dither count!!!)
+
+        Return retval
+    End Function
 
     Enum ReadSequenceFileContext
         firstLineOfFile
@@ -327,18 +362,10 @@
 
         TheSkyXController.LblExposureType.Location = New System.Drawing.Point(0, componentY)
         Dim exposureType As New ComboBox()
-        exposureType.Items.Add("Light")
-        exposureType.Items.Add("Dark")
-        exposureType.Items.Add("Flat (s)")
-        exposureType.Items.Add("Flat (%)")
-        exposureType.Items.Add("Bias")
-        exposureType.Items.Add("@Focus3")
-        exposureType.Items.Add("Prompt")
-        exposureType.Items.Add("CLS")
-        exposureType.Items.Add("Abort")
-        exposureType.Items.Add("Park")
-        exposureType.Items.Add("Shutdown")
-        exposureType.Items.Add("FTP")
+        For Each exposure As String In allExposureTypes
+            exposureType.Items.Add(exposure)
+        Next
+
         exposureType.Name = "exposureType"
         exposureType.Size = panelComponentSize
         exposureType.Text = imgSeqEl.exposureType

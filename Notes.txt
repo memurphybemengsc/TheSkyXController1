@@ -24,3 +24,5 @@ We should disable changes to the imaging sequence once started.
 We should have a timeout in the imaging loop (timer tick) if PHD does not start guiding.
 
 Look at exceptions when changing filters and focusing.
+
+Telescope slew limits.  Define areas of sky not to image in.

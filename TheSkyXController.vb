@@ -20,8 +20,10 @@ Public Class TheSkyXController
         takeImage
         imageInProgress
         imageComplete
+        postImageComplete
         dither
         ditheringInProgress
+        ditherComplete
         changeFilter
         filterChangeInProgress
         runClosedLoopSlew
@@ -263,11 +265,29 @@ Public Class TheSkyXController
                     ' PHD is now guiding so take an image
                     currentImagingStatus = ImagingStatus.takeImage
                 Else
-                    ' We should have a timeout
+                    ' We should add a timeout
                 End If
             ElseIf currentImagingStatus = ImagingStatus.takeImage Then
                 ' Get the next image sequence
-                Dim locBinX = imageFileSequence.getCurrentImageSequenceElement().binX
+                If Not skyXFunctions.refreshCameraImageSettingsFromCurrentImageSequence() Then
+                    'we have an error, now what?
+                End If
+                If Not skyXFunctions.takeAnImageAsynchronously() Then
+                    'we have an error, now what?
+                End If
+
+                currentImagingStatus = ImagingStatus.imageInProgress
+            ElseIf currentImagingStatus = ImagingStatus.imageInProgress Then
+                ' We should check PHD is still guiding, possibly allow guigind failure for a certain amount of time
+                If Not skyXFunctions.isImagingInProgress Then
+                    currentImagingStatus = ImagingStatus.imageComplete
+                End If
+            ElseIf currentImagingStatus = ImagingStatus.imageComplete Then
+                ' We have the image. Save it.  Possibly check for focus.......
+                currentImagingStatus = ImagingStatus.postImageComplete
+            ElseIf currentImagingStatus = ImagingStatus.postImageComplete Then
+                ' check the sequence.  Do we dither?, Have we finished the sequence?
+                imageFileSequence.
             ElseIf currentImagingStatus = ImagingStatus.halt Then
                 TmrImagingLoop.Stop()
             ElseIf currentImagingStatus = ImagingStatus.abort Then
@@ -287,5 +307,9 @@ Public Class TheSkyXController
 
     Private Sub BtnTargetSearch_Click(sender As Object, e As EventArgs) Handles BtnTargetSearch.Click
         MsgBox("Functionality to be added")
+    End Sub
+
+    Private Sub BtnSlewLimits_Click(sender As Object, e As EventArgs) Handles BtnSlewLimits.Click
+        MsgBox("Define slew limits for scope, functionality to be added")
     End Sub
 End Class

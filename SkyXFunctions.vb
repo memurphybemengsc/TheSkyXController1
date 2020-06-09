@@ -130,12 +130,17 @@ Public Class SkyXFunctions
         disconnectFromCamera()
     End Sub
 
-    Public Sub setImageSettings(filter As String, exposure As Double, bx As Integer, by As Integer)
+    Public Function setImageSettings(imageType As Integer, filter As String, exposure As Double, bx As Integer, by As Integer) As Boolean
+        Dim retval As Boolean = True
+
         moveToFilter(filter)
         camera.ExposureTime = exposure
         camera.BinX = bx
         camera.BinY = by
-    End Sub
+        camera.ImageReduction = ccdsoftImageReduction.cdNone
+
+        Return retval
+    End Function
     ' Add a method to check for image saturation
 
     Private Sub connectToSkyXTest()
@@ -377,12 +382,47 @@ Public Class SkyXFunctions
         'ccdsoftInventoryIndex
     End Sub
 
-    Public Sub refreshCameraImageSettingsFromCurrentImageSequence()
+    Public Function refreshCameraImageSettingsFromCurrentImageSequence() As Boolean
+        Dim retval As Boolean = True
+
         Dim filter As String = TheSkyXController.imageFileSequence.getCurrentImageSequenceElement.filter
         Dim bx As Double = TheSkyXController.imageFileSequence.getCurrentImageSequenceElement.binX
         Dim by As Double = TheSkyXController.imageFileSequence.getCurrentImageSequenceElement.binY
         Dim exposure As Double = TheSkyXController.imageFileSequence.getCurrentImageSequenceElement.exposureLength
-        setImageSettings(filter, exposure, bx, by)
-    End Sub
+        Dim exposureType As Integer
+
+        If TheSkyXController.imageFileSequence.isCurrentImageALightFrame Then
+            exposureType = ccdsoftImageFrame.cdLight
+        End If
+
+        setImageSettings(exposureType, filter, exposure, bx, by)
+
+        Return retval
+    End Function
+
+    Public Function takeAnImageAsynchronously() As Boolean
+        Dim retval As Boolean = True
+
+        ' Set the camera to be asynchronous
+        camera.Asynchronous = 1
+        Try
+            camera.TakeImage()
+        Catch e As Exception
+            retval = False
+        End Try
+
+        Return retval
+    End Function
+
+    Public Function isImagingInProgress() As Boolean
+        Dim retval As Boolean = False
+
+        ' Set the camera to be asynchronous
+        If camera.IsExposureComplete = 1 Then
+            retval = True
+        End If
+
+        Return retval
+    End Function
 
 End Class
