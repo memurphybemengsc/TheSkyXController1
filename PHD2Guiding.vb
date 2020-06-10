@@ -9,6 +9,10 @@ Public Class PHD2Guiding
 
     Private tcpPort = 4300
     Private ditherAmount As Byte
+    Private ditherAmounts As String() = {"0.5 x dither scale", "1 x dither scale", "2 x dither scale", "3 x dither scale", "4 x dither scale"}
+    Private useJSON As Boolean
+    Private ditherSettleTimeInSeconds As Double
+    Private ditherTimer As Stopwatch = New Stopwatch() 'System.Timers.Timer = New System.Timers.Timer()
 
     Public Sub New()
 
@@ -16,6 +20,12 @@ Public Class PHD2Guiding
         InitializeComponent()
 
         ' Add any initialization after the InitializeComponent() call.
+
+        For Each ditherText As String In ditherAmounts
+            ListBoxDitherBy.Items.Add(ditherText)
+        Next
+        ListBoxDitherBy.Text = ditherAmounts(0)
+
         ShowDialog() ' Show the form as a modal dialog so we pause until the dialog closes
 
         ' We have now set the port, Check PHD is running
@@ -556,18 +566,39 @@ Public Class PHD2Guiding
 
     Private Sub BtnConnect_Click(sender As Object, e As EventArgs) Handles BtnConnect.Click
         tcpPort = Me.NumUDTcpPort.Value
+
+        ditherAmount = 0
+        For Each ditherText As String In ditherAmounts
+            ditherAmount += 1
+            If ditherText = ListBoxDitherBy.Text Then
+                Exit For
+            End If
+        Next
+
+        useJSON = CheckBoxUseJSON.Checked
+        ditherSettleTimeInSeconds = NumUDSettleTimeInSecs.Value
+
         Me.Hide()
     End Sub
 
     Public Sub ditherMount()
+        ditherTimer.Reset()
+        ditherTimer.Start()
         dither(ditherAmount)
     End Sub
 
     ''' <summary>
     ''' Check dither is complete<br/>
-    ''' Needs to be implemented
+    ''' JSON needs to be implemented
     ''' </summary>
     Public Function isDitherComplete() As Boolean
-        Return True
+        If useJSON Then
+            ' we need to add JSON code
+        End If
+        If ditherTimer.ElapsedMilliseconds > ditherSettleTimeInSeconds * 1000 Then
+            ditherTimer.Stop()
+            Return True
+        End If
+        Return False
     End Function
 End Class

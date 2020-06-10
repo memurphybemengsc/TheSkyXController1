@@ -270,7 +270,7 @@ Public Class TheSkyXController
                     ' PHD is now guiding so take an image
                     currentImagingStatus = ImagingStatus.takeImage
                 Else
-                    ' We should add a timeout
+                    ' We should add a timeout, possibly reuse the stop watch
                 End If
             ElseIf currentImagingStatus = ImagingStatus.dither Then
                 If phd2guiding IsNot Nothing AndAlso phd2guiding.isPHDGuidingAndLockedOnStar Then
