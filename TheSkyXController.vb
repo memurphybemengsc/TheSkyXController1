@@ -15,6 +15,7 @@ Public Class TheSkyXController
     Private isTmrImagingLoopTicking As Boolean = False
 
     Private Enum ImagingStatus
+        start
         notImaging
         startGuiding
         takeImage
@@ -251,7 +252,11 @@ Public Class TheSkyXController
         If Not isTmrImagingLoopTicking Then
             ' We have this boolean as the tick will be called even if the previous tick has not finished
             isTmrImagingLoopTicking = True
-            If currentImagingStatus = ImagingStatus.notImaging Then
+            If currentImagingStatus = ImagingStatus.start Then
+                ' initialise the various counters
+                imageFileSequence.initialiseImageRun()
+                currentImagingStatus = ImagingStatus.notImaging
+            ElseIf currentImagingStatus = ImagingStatus.notImaging Then
                 If phd2guiding IsNot Nothing AndAlso Not phd2guiding.isPHDGuidingAndLockedOnStar Then
                     ' PHD is not guiding so start guiding
                     phd2guiding.startGuiding()
@@ -267,6 +272,18 @@ Public Class TheSkyXController
                 Else
                     ' We should add a timeout
                 End If
+            ElseIf currentImagingStatus = ImagingStatus.dither Then
+                If phd2guiding IsNot Nothing AndAlso phd2guiding.isPHDGuidingAndLockedOnStar Then
+                    ' PHD is now guiding so take an image
+                    phd2guiding.ditherMount()
+                    currentImagingStatus = ImagingStatus.ditheringInProgress
+                End If
+            ElseIf currentImagingStatus = ImagingStatus.ditheringInProgress Then
+                If phd2guiding.isDitherComplete Then
+                    currentImagingStatus = ImagingStatus.ditherComplete
+                End If
+            ElseIf currentImagingStatus = ImagingStatus.ditherComplete Then
+                currentImagingStatus = ImagingStatus.takeImage
             ElseIf currentImagingStatus = ImagingStatus.takeImage Then
                 ' Get the next image sequence
                 If Not skyXFunctions.refreshCameraImageSettingsFromCurrentImageSequence() Then
@@ -278,7 +295,7 @@ Public Class TheSkyXController
 
                 currentImagingStatus = ImagingStatus.imageInProgress
             ElseIf currentImagingStatus = ImagingStatus.imageInProgress Then
-                ' We should check PHD is still guiding, possibly allow guigind failure for a certain amount of time
+                ' We should check PHD is still guiding, possibly allow guiding failure for a certain amount of time
                 If Not skyXFunctions.isImagingInProgress Then
                     currentImagingStatus = ImagingStatus.imageComplete
                 End If
@@ -286,13 +303,30 @@ Public Class TheSkyXController
                 ' We have the image. Save it.  Possibly check for focus.......
                 currentImagingStatus = ImagingStatus.postImageComplete
             ElseIf currentImagingStatus = ImagingStatus.postImageComplete Then
-                ' check the sequence.  Do we dither?, Have we finished the sequence?
-                imageFileSequence.
+                imageFileSequence.incrementSequenceImageCount()
+
+                ' Are we finished?
+                If imageFileSequence.isSequenceComplete Then
+                    currentImagingStatus = ImagingStatus.halt
+                ElseIf imageFileSequence.isExecuteDitherSet Then
+                    currentImagingStatus = ImagingStatus.dither
+                End If
+
             ElseIf currentImagingStatus = ImagingStatus.halt Then
+                BtnStartImaging.Enabled = True
+                BtnAbortImaging.Enabled = False
+                BtnPauseImaging.Enabled = False
+                BtnStopImaging.Enabled = False
                 TmrImagingLoop.Stop()
+
             ElseIf currentImagingStatus = ImagingStatus.abort Then
+                BtnStartImaging.Enabled = True
+                BtnAbortImaging.Enabled = False
+                BtnPauseImaging.Enabled = False
+                BtnStopImaging.Enabled = False
                 TmrImagingLoop.Stop()
             End If
+
             isTmrImagingLoopTicking = False
             End If
     End Sub

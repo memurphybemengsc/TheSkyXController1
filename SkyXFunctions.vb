@@ -391,7 +391,7 @@ Public Class SkyXFunctions
         Dim exposure As Double = TheSkyXController.imageFileSequence.getCurrentImageSequenceElement.exposureLength
         Dim exposureType As Integer
 
-        If TheSkyXController.imageFileSequence.isCurrentImageALightFrame Then
+        If TheSkyXController.imageFileSequence.isCurrentExposureTypeALightFrame Then
             exposureType = ccdsoftImageFrame.cdLight
         End If
 

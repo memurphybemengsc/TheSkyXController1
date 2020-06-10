@@ -26,6 +26,7 @@ Partial Class PHD2Guiding
         Me.NumUDTcpPort = New System.Windows.Forms.NumericUpDown()
         Me.BtnConnect = New System.Windows.Forms.Button()
         Me.Label2 = New System.Windows.Forms.Label()
+        Me.Label3 = New System.Windows.Forms.Label()
         CType(Me.NumUDTcpPort, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.SuspendLayout()
         '
@@ -66,11 +67,21 @@ Partial Class PHD2Guiding
         Me.Label2.TabIndex = 3
         Me.Label2.Text = "If you are using a second instance of PHD," & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & "you will need to change the port"
         '
+        'Label3
+        '
+        Me.Label3.AutoSize = True
+        Me.Label3.Location = New System.Drawing.Point(60, 167)
+        Me.Label3.Name = "Label3"
+        Me.Label3.Size = New System.Drawing.Size(138, 13)
+        Me.Label3.TabIndex = 4
+        Me.Label3.Text = "Add dither factor drop down"
+        '
         'PHD2Guiding
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
-        Me.ClientSize = New System.Drawing.Size(282, 163)
+        Me.ClientSize = New System.Drawing.Size(282, 202)
+        Me.Controls.Add(Me.Label3)
         Me.Controls.Add(Me.Label2)
         Me.Controls.Add(Me.BtnConnect)
         Me.Controls.Add(Me.NumUDTcpPort)
@@ -87,4 +98,5 @@ Partial Class PHD2Guiding
     Friend WithEvents NumUDTcpPort As NumericUpDown
     Friend WithEvents BtnConnect As Button
     Friend WithEvents Label2 As Label
+    Friend WithEvents Label3 As Label
 End Class

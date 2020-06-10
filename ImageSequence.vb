@@ -2,6 +2,11 @@
     Dim sequenceFileValue As String = ""
     Public componentPanel As Panel = Nothing
     Private currentImageSequenceElement As Integer = 0
+    Private currentExposureCount As Integer = 0
+    Private currentDitherCount As Integer = 0
+
+    Private dither As Boolean = False
+    Private imageRunComplete As Boolean = False
 
     Dim lightFrame As String = "Light"
     Dim darkFrame As String = "Dark"
@@ -10,21 +15,118 @@
     Dim biasFrame As String = "Bias"
     Dim atFocus3 As String = "@Focus3"
     Dim prompt As String = "Prompt"
-    Dim closeLoopSlew As String = "CLS"
+    Dim closedLoopSlew As String = "CLS"
     Dim abort As String = "Abort"
     Dim parkMount As String = "Park"
-    Dim shutdowm As String = "Shutdown"
+    Dim shutdown As String = "Shutdown"
     Dim ftp As String = "FTP"
 
-    Dim allExposureTypes = New String() {lightFrame, darkFrame, flatPercentageFrame, flatSecondsFrame, biasFrame, atFocus3, prompt, closeLoopSlew, abort, parkMount, shutdowm, ftp}
+    Dim allExposureTypes = New String() {lightFrame, darkFrame, flatPercentageFrame, flatSecondsFrame, biasFrame, atFocus3, prompt, closedLoopSlew, abort, parkMount, shutdown, ftp}
 
-    Public Function isCurrentImageALightFrame() As Boolean
+    Public Function isCurrentExposureTypeFTP() As Boolean
+        Dim retval As Boolean = False
+        If getCurrentImageSequenceElement.exposureType = ftp Then
+            retval = True
+        End If
+        Return retval
+    End Function
+
+    Public Function isCurrentExposureTypeShutdown() As Boolean
+        Dim retval As Boolean = False
+        If getCurrentImageSequenceElement.exposureType = shutdown Then
+            retval = True
+        End If
+        Return retval
+    End Function
+
+    Public Function isCurrentExposureTypeParkMount() As Boolean
+        Dim retval As Boolean = False
+        If getCurrentImageSequenceElement.exposureType = parkMount Then
+            retval = True
+        End If
+        Return retval
+    End Function
+
+    Public Function isCurrentExposureTypeAbort() As Boolean
+        Dim retval As Boolean = False
+        If getCurrentImageSequenceElement.exposureType = abort Then
+            retval = True
+        End If
+        Return retval
+    End Function
+
+    Public Function isCurrentExposureTypeClosedLoopSlew() As Boolean
+        Dim retval As Boolean = False
+        If getCurrentImageSequenceElement.exposureType = closedLoopSlew Then
+            retval = True
+        End If
+        Return retval
+    End Function
+
+    Public Function isCurrentExposureTypePrompt() As Boolean
+        Dim retval As Boolean = False
+        If getCurrentImageSequenceElement.exposureType = prompt Then
+            retval = True
+        End If
+        Return retval
+    End Function
+
+    Public Function isCurrentExposureTypeAtFocus3() As Boolean
+        Dim retval As Boolean = False
+        If getCurrentImageSequenceElement.exposureType = atFocus3 Then
+            retval = True
+        End If
+        Return retval
+    End Function
+
+    Public Function isCurrentExposureTypeALightFrame() As Boolean
         Dim retval As Boolean = False
         If getCurrentImageSequenceElement.exposureType = lightFrame Then
             retval = True
         End If
         Return retval
     End Function
+
+    Public Function isCurrentExposureTypeADarkFrame() As Boolean
+        Dim retval As Boolean = False
+        If getCurrentImageSequenceElement.exposureType = darkFrame Then
+            retval = True
+        End If
+        Return retval
+    End Function
+
+    Public Function isCurrentExposureTypeAFlatPercentageFrame() As Boolean
+        Dim retval As Boolean = False
+        If getCurrentImageSequenceElement.exposureType = flatPercentageFrame Then
+            retval = True
+        End If
+        Return retval
+    End Function
+
+    Public Function isCurrentExposureTypeAFlatSecondsFrame() As Boolean
+        Dim retval As Boolean = False
+        If getCurrentImageSequenceElement.exposureType = flatSecondsFrame Then
+            retval = True
+        End If
+        Return retval
+    End Function
+
+    Public Function isCurrentExposureTypeABiasFrame() As Boolean
+        Dim retval As Boolean = False
+        If getCurrentImageSequenceElement.exposureType = biasFrame Then
+            retval = True
+        End If
+        Return retval
+    End Function
+
+    Public Sub initialiseImageRun()
+        currentImageSequenceElement = 0
+        currentDitherCount = 0
+        currentExposureCount = 0
+        dither = False
+        imageRunComplete = False
+    End Sub
+
     ''' <summary>
     ''' Get the current sequence. Returns the first element if there is no current one.
     ''' </summary>
@@ -80,19 +182,45 @@
         Return imageSequenceElements.ElementAt(index)
     End Function
 
-    Public Sub initialiseSequenceImageCount()
-
-    End Sub
+    ''' <summary>
+    ''' Neeed a proper name for this function.  It sets up pointers etc. for the next image.<br/>
+    ''' It will set dither flag and also whether imaging is complete
+    ''' </summary>
     Public Sub incrementSequenceImageCount()
+        currentExposureCount += 1
+        currentDitherCount += 1
 
+        If currentExposureCount > getCurrentImageSequenceElement.repeats Then
+            If getNextImageSequenceElement() Is Nothing Then
+                imageRunComplete = True
+            End If
+        Else
+            If currentDitherCount > getCurrentImageSequenceElement.ditherEveryNImages Then
+                dither = True
+                currentDitherCount = 1
+            End If
+        End If
     End Sub
-    Public Function isExecuteDitherSet() As Boolean
-        Dim retval As Boolean = False
 
-        ' we take the current image and compare to current dither count (we need to add the current image count and dither count!!!)
-
-        Return retval
+    Public Function isImageRunComplete() As Boolean
+        Return imageRunComplete
     End Function
+
+    Public Function isSequenceComplete() As Boolean
+        If currentExposureCount > getCurrentImageSequenceElement.repeats Then
+            Return True
+        Else
+            Return False
+        End If
+    End Function
+
+    Public Function isExecuteDitherSet() As Boolean
+        Return dither
+    End Function
+
+    Public Sub clearDither()
+        dither = False
+    End Sub
 
     Enum ReadSequenceFileContext
         firstLineOfFile

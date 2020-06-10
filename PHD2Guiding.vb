@@ -8,6 +8,7 @@ Public Class PHD2Guiding
     Private binWriter As BinaryWriter
 
     Private tcpPort = 4300
+    Private ditherAmount As Byte
 
     Public Sub New()
 
@@ -557,4 +558,16 @@ Public Class PHD2Guiding
         tcpPort = Me.NumUDTcpPort.Value
         Me.Hide()
     End Sub
+
+    Public Sub ditherMount()
+        dither(ditherAmount)
+    End Sub
+
+    ''' <summary>
+    ''' Check dither is complete<br/>
+    ''' Needs to be implemented
+    ''' </summary>
+    Public Function isDitherComplete() As Boolean
+        Return True
+    End Function
 End Class
