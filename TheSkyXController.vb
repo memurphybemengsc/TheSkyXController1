@@ -13,11 +13,13 @@ Public Class TheSkyXController
     Private imagingRunAborted As Boolean
     Private currentImagingStatus As Integer = ImagingStatus.notImaging
     Private isTmrImagingLoopTicking As Boolean = False
+    Private guidingStoppedStopwatch As Stopwatch = New Stopwatch()
 
     Private Enum ImagingStatus
         start
         notImaging
         startGuiding
+        guidingHasStopped
         takeImage
         imageInProgress
         imageComplete
@@ -295,9 +297,30 @@ Public Class TheSkyXController
 
                 currentImagingStatus = ImagingStatus.imageInProgress
             ElseIf currentImagingStatus = ImagingStatus.imageInProgress Then
-                ' We should check PHD is still guiding, possibly allow guiding failure for a certain amount of time
+                If phd2guiding IsNot Nothing AndAlso Not phd2guiding.isPHDGuidingAndLockedOnStar Then
+                    If guidingStoppedStopwatch.IsRunning Then
+                        If phd2guiding IsNot Nothing AndAlso phd2guiding.hasTimeoutBeenExceeded(guidingStoppedStopwatch.ElapsedMilliseconds) Then
+                            ' Guiding has stopped for longer then we would like so abort image
+                            currentImagingStatus = ImagingStatus.guidingHasStopped
+                            guidingStoppedStopwatch.Stop()
+                        End If
+                    Else
+                        'We are not guiding, start stopwatch
+                        guidingStoppedStopwatch.Reset()
+                        guidingStoppedStopwatch.Start()
+                    End If
+                End If
                 If Not skyXFunctions.isImagingInProgress Then
                     currentImagingStatus = ImagingStatus.imageComplete
+                End If
+            ElseIf currentImagingStatus = ImagingStatus.guidingHasStopped Then
+                If skyXFunctions.abortImage Then
+                    ' Imaging has aborted.  What to do now? Wait for a bit and re-try???
+                    ' We might need to CLS back to target.
+                    currentImagingStatus = ImagingStatus.halt ' halt for now
+                Else
+                    'imaging has not aborted.  What to do now?  Give up?
+                    currentImagingStatus = ImagingStatus.halt ' halt for now
                 End If
             ElseIf currentImagingStatus = ImagingStatus.imageComplete Then
                 ' We have the image. Save it.  Possibly check for focus.......

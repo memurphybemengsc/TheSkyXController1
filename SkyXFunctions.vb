@@ -15,7 +15,7 @@ Public Class SkyXFunctions
     Private camera As TheSkyXLib.ccdsoftCamera = Nothing
     Private imageFolder As String = ""
     Private filterNames As List(Of String) = Nothing
-
+    Private currentImage As TheSkyXLib.ccdsoftImage
     Public Sub New()
         'Create the SkyX object and check that Skyx is present and initialised
         connectToSkyXTest()
@@ -270,38 +270,38 @@ Public Class SkyXFunctions
         Dim success As Boolean = False
         Return success
     End Function
-    Sub TakeImage()
-        Dim tsxo = CreateObject(“TheSkyX.ccdsoftCamera”)
-        Dim status = tsxo.Connect()
+    'Sub TakeImage()
+    '    Dim tsxo = CreateObject(“TheSkyX.ccdsoftCamera”)
+    '    Dim status = tsxo.Connect()
 
-        Console.WriteLine("Status is " & status.ToString)
-        tsxo.ExposureTime = 10
-        ' takes two photos for some reason
-        tsxo.Frame = 1 ' 1 = light, 2 = bias, 3 = dark, 4 = flat
-        tsxo.ImageReduction = 0 ' enum  	ccdsoftImageReduction { cdNone, cdAutoDark, cdBiasDarkFlat }
-        tsxo.AutoSaveOn = 1
-        status = tsxo.TakeImage()
-        tsxo.Disconnect()
-        MsgBox(“Image Done”)
-    End Sub
+    '    Console.WriteLine("Status is " & status.ToString)
+    '    tsxo.ExposureTime = 10
+    '    ' takes two photos for some reason
+    '    tsxo.Frame = 1 ' 1 = light, 2 = bias, 3 = dark, 4 = flat
+    '    tsxo.ImageReduction = 0 ' enum  	ccdsoftImageReduction { cdNone, cdAutoDark, cdBiasDarkFlat }
+    '    tsxo.AutoSaveOn = 1
+    '    status = tsxo.TakeImage()
+    '    tsxo.Disconnect()
+    '    MsgBox(“Image Done”)
+    'End Sub
 
-    Sub TakeImage1()
-        Dim tsxo = New TheSkyXLib.ccdsoftCamera
-        Dim status = tsxo.Connect()
+    'Sub TakeImage1()
+    '    Dim tsxo = New TheSkyXLib.ccdsoftCamera
+    '    Dim status = tsxo.Connect()
 
-        Console.WriteLine("Status is " & status.ToString)
-        tsxo.ExposureTime = 10
-        ' takes two photos for some reason
-        tsxo.Frame = 1 ' 1 = light, 2 = bias, 3 = dark, 4 = flat
-        tsxo.ImageReduction = 0 ' enum  	ccdsoftImageReduction { cdNone, cdAutoDark, cdBiasDarkFlat }
-        tsxo.AutoSaveOn = 1
-        status = tsxo.TakeImage()
-        Dim focPos As Integer = tsxo.focPosition
-        Dim fwPos As Integer = tsxo.FilterIndexZeroBased
+    '    Console.WriteLine("Status is " & status.ToString)
+    '    tsxo.ExposureTime = 10
+    '    ' takes two photos for some reason
+    '    tsxo.Frame = 1 ' 1 = light, 2 = bias, 3 = dark, 4 = flat
+    '    tsxo.ImageReduction = 0 ' enum  	ccdsoftImageReduction { cdNone, cdAutoDark, cdBiasDarkFlat }
+    '    tsxo.AutoSaveOn = 1
+    '    status = tsxo.TakeImage()
+    '    Dim focPos As Integer = tsxo.focPosition
+    '    Dim fwPos As Integer = tsxo.FilterIndexZeroBased
 
-        tsxo.Disconnect()
-        MsgBox(“Image Done”)
-    End Sub
+    '    tsxo.Disconnect()
+    '    MsgBox(“Image Done”)
+    'End Sub
 
     Sub FindTarget(target As String)
         Dim tsxs = CreateObject("TheSkyX.sky6StarChart")
@@ -325,6 +325,7 @@ Public Class SkyXFunctions
     Sub AnalyseImage()
 
         Dim image = New TheSkyXLib.ccdsoftImage
+
 
         For Each fitsFile As String In My.Computer.FileSystem.GetFiles(My.Computer.FileSystem.SpecialDirectories.MyPictures)
             Dim fitsInfo = My.Computer.FileSystem.GetFileInfo(fitsFile)
@@ -414,6 +415,26 @@ Public Class SkyXFunctions
         Return retval
     End Function
 
+    ''' <summary>
+    ''' Abort the image, returns true of successful, false if unsuccessful
+    ''' </summary>
+    Public Function abortImage() As Boolean
+        Dim retval As Boolean = False
+        If isImagingInProgress() Then
+            Try
+                If camera.Abort() = 0 Then
+                    retval = True
+                Else
+                    retval = False
+                End If
+            Catch e As Exception
+                retval = False
+            End Try
+        End If
+
+        Return retval
+    End Function
+
     Public Function isImagingInProgress() As Boolean
         Dim retval As Boolean = False
 
@@ -421,6 +442,15 @@ Public Class SkyXFunctions
         If camera.IsExposureComplete = 1 Then
             retval = True
         End If
+
+        Return retval
+    End Function
+
+    Public Function atachCurrentImage() As Boolean
+        Dim retval As Boolean = True
+
+        currentImage = New ccdsoftImage()
+        currentImage.AttachToActive()
 
         Return retval
     End Function

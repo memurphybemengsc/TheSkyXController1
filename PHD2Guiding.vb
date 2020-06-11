@@ -13,6 +13,7 @@ Public Class PHD2Guiding
     Private useJSON As Boolean
     Private ditherSettleTimeInSeconds As Double
     Private ditherTimer As Stopwatch = New Stopwatch() 'System.Timers.Timer = New System.Timers.Timer()
+    Private generalTimeoutInSeconds As Double
 
     Public Sub New()
 
@@ -577,6 +578,7 @@ Public Class PHD2Guiding
 
         useJSON = CheckBoxUseJSON.Checked
         ditherSettleTimeInSeconds = NumUDSettleTimeInSecs.Value
+        generalTimeoutInSeconds = NumUDGeneralTimeoutInSeconds.Value
 
         Me.Hide()
     End Sub
@@ -601,4 +603,16 @@ Public Class PHD2Guiding
         End If
         Return False
     End Function
+
+    ''' <summary>
+    ''' Compare the time against the general PHD timeout and return true if greater else false
+    ''' </summary>
+    Public Function hasTimeoutBeenExceeded(timeInMilliseconds As Integer) As Boolean
+        If timeInMilliseconds > generalTimeoutInSeconds * 1000 Then
+            Return True
+        Else
+            Return False
+        End If
+    End Function
+
 End Class
