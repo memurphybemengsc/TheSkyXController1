@@ -16,9 +16,23 @@ Public Class SkyXFunctions
     Private imageFolder As String = ""
     Private filterNames As List(Of String) = Nothing
     Private currentImage As TheSkyXLib.ccdsoftImage
+    Private mount As TheSkyXLib.sky6RASCOMTele
+
+    Enum ccdsoftInventoryIndex
+        cdInventoryX
+        cdInventoryY
+        cdInventoryMagnitude
+        cdInventoryClass
+        cdInventoryFWHM
+        cdInventoryMajorAxis
+        cdInventoryMinorAxis
+        cdInventoryTheta
+        cdInventoryEllipticity
+    End Enum
+
     Public Sub New()
         'Create the SkyX object and check that Skyx is present and initialised
-        connectToSkyXTest()
+        connectToSkyX()
         If theSkyXObject Is Nothing Then
             'SkyX is not running so throw exception
             Throw New System.Exception("SkyX is not running")
@@ -44,19 +58,7 @@ Public Class SkyXFunctions
     End Sub
 
     Public Sub testFunction()
-        If isFocuserConnected() Then
-            MsgBox("Focuser is connected")
-        Else
-            MsgBox("Focuser is not  connected")
-        End If
-
-        If isFocuserPresent() Then
-            MsgBox("Focuser is present")
-        Else
-            MsgBox("focuser is Not present")
-        End If
-
-        '        MsgBox("camera.focIsConnected " + camera.focIsConnected.ToString)
+        atachCurrentImage()
 
     End Sub
 
@@ -450,7 +452,35 @@ Public Class SkyXFunctions
         Dim retval As Boolean = True
 
         currentImage = New ccdsoftImage()
-        currentImage.AttachToActive()
+        'currentImage.AttachToActive()
+        'currentImage.AttachToActiveImager()  'This ataches to the most recent image captured
+        'currentImage.ccdsoftInventoryIndex.cdinventoryfwhm
+        '.currentImage.cdInventoryFWHM
+        'ccdsoftInventoryIndex.
+
+        Dim testFile As System.IO.FileInfo
+        testFile = My.Computer.FileSystem.GetFileInfo("C:\Users\murph\source\repos\memurphybemengsc\TheSkyXController1\Leo Triplet 20200415.fit")
+
+        currentImage.Path = "C:\Users\murph\source\repos\memurphybemengsc\TheSkyXController1\Leo Triplet 20200415.fit"
+        currentImage.Open()
+        'currentImage.SetActive()
+
+        Dim mypath As String = currentImage.Path
+        Dim avpv As Double = currentImage.averagePixelValue()
+
+        currentImage.ShowInventory()
+
+        'Dim obj As List(Of Double) = currentImage.InventoryArray(ccdsoftInventoryIndex.cdInventoryFWHM)
+        Dim obj As Object = currentImage.InventoryArray(ccdsoftInventoryIndex.cdInventoryFWHM)
+
+        For Each db As Double In obj
+            Console.WriteLine(db)
+        Next
+
+        currentImage.Close()
+
+
+        MsgBox("x")
 
         Return retval
     End Function

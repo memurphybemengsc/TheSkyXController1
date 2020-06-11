@@ -188,7 +188,7 @@ Public Class TheSkyXController
 
     Private Sub BtnTest_Click(sender As Object, e As EventArgs) Handles BtnTest.Click
 
-        'skyXFunctions.testFunction()
+        skyXFunctions.testFunction()
 
         'If phd2guiding IsNot Nothing Then
         '    phd2guiding.startGuiding()
