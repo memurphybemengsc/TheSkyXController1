@@ -17,6 +17,12 @@ Public Class SkyXFunctions
     Private filterNames As List(Of String) = Nothing
     Private currentImage As TheSkyXLib.ccdsoftImage
     Private mount As TheSkyXLib.sky6RASCOMTele
+    Private imageLinkSettings As TheSkyXLib.AutomatedImageLinkSettings
+    Private closedLoopSlew As TheSkyXLib.ClosedLoopSlew
+    Private imageLink As TheSkyXLib.ImageLink
+    Private imageLinkResults As TheSkyXLib.ImageLinkResults
+    Private astroTargetInformation As TheSkyXLib.sky6ObjectInformation
+    Private starChart As TheSkyXLib.sky6StarChart
 
     Enum ccdsoftInventoryIndex
         cdInventoryX
@@ -58,7 +64,7 @@ Public Class SkyXFunctions
     End Sub
 
     Public Sub testFunction()
-        atachCurrentImage()
+        attachCurrentImage()
 
     End Sub
 
@@ -260,14 +266,6 @@ Public Class SkyXFunctions
         Return initialised
     End Function
 
-    Public Function findObject(obj As String) As Boolean
-        Dim objectFound As Boolean
-
-        objectFound = False
-
-        Return objectFound
-    End Function
-
     Public Function slewTocurrentObject() As Boolean
         Dim success As Boolean = False
         Return success
@@ -448,12 +446,12 @@ Public Class SkyXFunctions
         Return retval
     End Function
 
-    Public Function atachCurrentImage() As Boolean
+    Public Function attachCurrentImage() As Boolean
         Dim retval As Boolean = True
 
         currentImage = New ccdsoftImage()
         'currentImage.AttachToActive()
-        'currentImage.AttachToActiveImager()  'This ataches to the most recent image captured
+        'currentImage.AttachToActiveImager()  'This attaches to the most recent image captured
         'currentImage.ccdsoftInventoryIndex.cdinventoryfwhm
         '.currentImage.cdInventoryFWHM
         'ccdsoftInventoryIndex.
@@ -483,6 +481,176 @@ Public Class SkyXFunctions
         MsgBox("x")
 
         Return retval
+    End Function
+
+    ''' <summary>
+    ''' Attaches the current image object to the image most recently captured by the camera.<br/>
+    ''' Returns true if OK else false.
+    ''' </summary>
+    Public Function attachCurrentImageToActiveImager() As Boolean
+        Dim retval As Boolean = True
+
+        If currentImage Is Nothing Then
+            currentImage.AttachToActiveImager() ' ******  Test this function if no image  ****************
+        End If
+
+        Return retval
+    End Function
+
+    ''' <summary>
+    ''' Attaches the current image object to the image most recently captured by the camera.<br/>
+    ''' Returns true if OK else false.
+    ''' </summary>
+    Public Function attachCurrentImageToActiveImagerAndShowInventory() As Boolean
+        Dim retval As Boolean = False
+
+        If attachCurrentImageToActiveImager() Then
+            currentImage.ShowInventory()
+            retval = True
+        Else
+            retval = False
+        End If
+
+        Return retval
+    End Function
+
+    Public Sub setCurrentImagetoNothing()
+        currentImage = Nothing
+    End Sub
+
+    ''' <summary>
+    ''' Return the average FWHM for the image.<br/>
+    ''' Will return a -1 if an error.
+    ''' </summary>
+    Public Function getAverageFWHMForCurrentImage() As Double
+        Dim averageFWHM As Double = -1
+
+        If attachCurrentImageToActiveImagerAndShowInventory() Then
+            Dim obj As Object = currentImage.InventoryArray(ccdsoftInventoryIndex.cdInventoryFWHM)
+            Dim counter As Integer = 0
+            Dim totalFWHN As Double = 0
+            For Each db As Double In obj
+                totalFWHN += db
+                counter += 1
+            Next
+            If counter > 0 Then
+                averageFWHM = totalFWHN / counter
+            Else
+                averageFWHM = -1
+            End If
+        Else
+            averageFWHM = -1 ' Flag error
+        End If
+
+        Return averageFWHM
+    End Function
+
+    ''' <summary>
+    ''' Return the average Ellipticity for the image.<br/>
+    ''' Will return a -1 if an error.
+    ''' </summary>
+    Public Function getAverageEllipticityForCurrentImage() As Double
+        Dim averageEllipticity As Double = -1
+
+        If attachCurrentImageToActiveImagerAndShowInventory() Then
+            Dim obj As Object = currentImage.InventoryArray(ccdsoftInventoryIndex.cdInventoryEllipticity)
+            Dim counter As Integer = 0
+            Dim totalEllipticity As Double = 0
+            For Each db As Double In obj
+                totalEllipticity += db
+                counter += 1
+            Next
+            If counter > 0 Then
+                averageEllipticity = totalEllipticity / counter
+            Else
+                averageEllipticity = -1
+            End If
+        Else
+            averageEllipticity = -1 ' Flag error
+        End If
+
+        Return averageEllipticity
+    End Function
+
+    Private Sub connectToMount()
+        If mount Is Nothing Then
+            mount = New TheSkyXLib.sky6RASCOMTele
+            mount.Connect() ' ************************  TEST FOR ERROR
+        End If
+    End Sub
+
+    Public Function slewMount(ra As Double, dec As Double, target As String) As Boolean
+        Dim retval As Boolean = False
+
+        If mount IsNot Nothing Then
+            mount.SlewToRaDec(ra, dec, target)
+
+        End If
+
+        Return retval
+    End Function
+
+    Public Function isMountParked() As Boolean
+        If mount Is Nothing Then
+            Return True
+        Else
+            Return mount.IsParked() ' ************************  TEST FOR ERROR
+        End If
+    End Function
+
+    Public Function isMountPresent() As Boolean
+        Dim retval As Boolean = False
+
+        connectToMount()
+        If mount Is Nothing Then
+            retval = False
+        Else
+            retval = True
+        End If
+
+        Return retval
+    End Function
+
+    Public Function imageLinkUsingImage(fullImageLinkImagePath As String) As Boolean
+        Dim retval As Boolean = False
+
+        If imageLink Is Nothing Then
+            imageLink = New TheSkyXLib.ImageLink
+        End If
+        If imageLinkResults Is Nothing Then
+            imageLinkResults = New ImageLinkResults
+        End If
+
+        imageLink.pathToFITS = fullImageLinkImagePath
+        imageLink.scale = 2 ' We set this to 2 as documentation suggests we use best guess
+        imageLink.unknownScale = 1
+        imageLink.execute()
+
+        ' how do you get the results???
+
+        ' imageLinkResults
+
+        Return retval
+    End Function
+
+    Public Function findObject(obj As String) As Boolean
+        Dim objectFound As Boolean
+
+        If starChart IsNot Nothing Then
+            starChart = New TheSkyXLib.sky6StarChart()
+        End If
+        If astroTargetInformation IsNot Nothing Then
+            astroTargetInformation = New sky6ObjectInformation
+        End If
+
+        starChart.Find(obj)  '  ***************  Test for error
+
+
+        astroTargetInformation.Property(1) ' *******  how is info object populated???
+
+        objectFound = False
+
+        Return objectFound
     End Function
 
 End Class
