@@ -63,11 +63,6 @@ Public Class SkyXFunctions
         End If
     End Sub
 
-    Public Sub testFunction()
-        attachCurrentImage()
-
-    End Sub
-
     Public Function getFilterNames() As List(Of String)
         Return filterNames
     End Function
@@ -415,11 +410,26 @@ Public Class SkyXFunctions
         Return retval
     End Function
 
+    Public Function takeAnImageSynchronously() As Boolean
+        Dim retval As Boolean = True
+
+        ' Set the camera to be asynchronous
+        camera.Asynchronous = 0
+        Try
+            camera.TakeImage()
+        Catch e As Exception
+            retval = False
+        End Try
+
+        Return retval
+    End Function
+
     ''' <summary>
     ''' Abort the image, returns true of successful, false if unsuccessful
     ''' </summary>
     Public Function abortImage() As Boolean
         Dim retval As Boolean = False
+
         If isImagingInProgress() Then
             Try
                 If camera.Abort() = 0 Then
@@ -449,19 +459,17 @@ Public Class SkyXFunctions
     Public Function attachCurrentImage() As Boolean
         Dim retval As Boolean = True
 
-        currentImage = New ccdsoftImage()
+        If currentImage Is Nothing Then
+            currentImage = New ccdsoftImage()
+        End If
         'currentImage.AttachToActive()
-        'currentImage.AttachToActiveImager()  'This attaches to the most recent image captured
+        currentImage.AttachToActiveImager()  'This attaches to the most recent image captured
         'currentImage.ccdsoftInventoryIndex.cdinventoryfwhm
         '.currentImage.cdInventoryFWHM
         'ccdsoftInventoryIndex.
 
-        Dim testFile As System.IO.FileInfo
-        testFile = My.Computer.FileSystem.GetFileInfo("C:\Users\murph\source\repos\memurphybemengsc\TheSkyXController1\Leo Triplet 20200415.fit")
-
-        currentImage.Path = "C:\Users\murph\source\repos\memurphybemengsc\TheSkyXController1\Leo Triplet 20200415.fit"
-        currentImage.Open()
-        'currentImage.SetActive()
+        'currentImage.Path = "C:\Users\murph\source\repos\memurphybemengsc\TheSkyXController1\Leo Triplet 20200415.fit"
+        'currentImage.Open()
 
         Dim mypath As String = currentImage.Path
         Dim avpv As Double = currentImage.averagePixelValue()
@@ -475,10 +483,10 @@ Public Class SkyXFunctions
             Console.WriteLine(db)
         Next
 
-        currentImage.Close()
+        'currentImage.Close()
 
 
-        MsgBox("x")
+        'MsgBox("x")
 
         Return retval
     End Function
@@ -575,7 +583,13 @@ Public Class SkyXFunctions
     Private Sub connectToMount()
         If mount Is Nothing Then
             mount = New TheSkyXLib.sky6RASCOMTele
-            mount.Connect() ' ************************  TEST FOR ERROR
+            Try
+                mount.Connect()
+            Catch e As Exception
+                If e.Message.Contains("Error: Command failed") Then
+                    mount = Nothing
+                End If
+            End Try
         End If
     End Sub
 
@@ -594,7 +608,7 @@ Public Class SkyXFunctions
         If mount Is Nothing Then
             Return True
         Else
-            Return mount.IsParked() ' ************************  TEST FOR ERROR
+            Return mount.IsParked()
         End If
     End Function
 
@@ -624,11 +638,17 @@ Public Class SkyXFunctions
         imageLink.pathToFITS = fullImageLinkImagePath
         imageLink.scale = 2 ' We set this to 2 as documentation suggests we use best guess
         imageLink.unknownScale = 1
-        imageLink.execute()
+        Try
+            imageLink.execute()
+            ' how do you get the results???
+            Dim ra As Double = imageLinkResults.imageCenterRAJ2000
+            Dim dec As Double = imageLinkResults.imageCenterDecJ2000
 
-        ' how do you get the results???
+            ' imageLinkResults
+        Catch e As Exception
+            retval = False
+        End Try
 
-        ' imageLinkResults
 
         Return retval
     End Function
@@ -636,21 +656,63 @@ Public Class SkyXFunctions
     Public Function findObject(obj As String) As Boolean
         Dim objectFound As Boolean
 
-        If starChart IsNot Nothing Then
+        If starChart Is Nothing Then
             starChart = New TheSkyXLib.sky6StarChart()
         End If
-        If astroTargetInformation IsNot Nothing Then
+        If astroTargetInformation Is Nothing Then
             astroTargetInformation = New sky6ObjectInformation
         End If
 
-        starChart.Find(obj)  '  ***************  Test for error
+        Try
+            starChart.Find(obj)
+        Catch e As Exception
+            Dim s As String = e.Message ' is 'Object not found'
+            If s.Contains("Object not found") Then
+                s = "bob"
+            End If
+        End Try
+
+        'Sk6ObjectInformationProperty.sk6ObjInfoProp_TRANSIT_TIME
+        astroTargetInformation.Property(Sk6ObjectInformationProperty.sk6ObjInfoProp_TRANSIT_TIME) ' h.mmmmmm
+        Dim out As String = astroTargetInformation.ObjInfoPropOut.ToString()
+
+        astroTargetInformation.Property(Sk6ObjectInformationProperty.sk6ObjInfoProp_RISE_TIME) ' h.mmmmmm
+        out = astroTargetInformation.ObjInfoPropOut.ToString()
+
+        astroTargetInformation.Property(Sk6ObjectInformationProperty.sk6ObjInfoProp_SET_TIME) ' h.mmmmmm
+        out = astroTargetInformation.ObjInfoPropOut.ToString()
+
+        Dim timDbl As Double
+        Double.TryParse(out, timDbl)
+        timDbl = timDbl - 7
+        timDbl = timDbl * 60
 
 
-        astroTargetInformation.Property(1) ' *******  how is info object populated???
+        astroTargetInformation.Property(Sk6ObjectInformationProperty.sk6ObjInfoProp_ACTIVE)
+        out = astroTargetInformation.ObjInfoPropOut.ToString()
+
+        astroTargetInformation.Property(Sk6ObjectInformationProperty.sk6ObjInfoProp_ALT)
+        out = astroTargetInformation.ObjInfoPropOut.ToString()
+
+        astroTargetInformation.Property(Sk6ObjectInformationProperty.sk6ObjInfoProp_RISE_SET_INFO)
+        out = astroTargetInformation.ObjInfoPropOut.ToString()
 
         objectFound = False
 
         Return objectFound
     End Function
+
+    Public Sub testFunction()
+        isMountPresent()
+        isCameraConnected()
+        takeAnImageSynchronously()
+        attachCurrentImage()
+
+        imageLinkUsingImage(currentImage.Path)
+
+        slewMount(imageLinkResults.imageCenterRAJ2000, imageLinkResults.imageCenterDecJ2000, "")
+
+        Dim s As String
+    End Sub
 
 End Class
