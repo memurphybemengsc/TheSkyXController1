@@ -612,6 +612,17 @@ Public Class SkyXFunctions
         End If
     End Function
 
+    Public Function isMountpresentAndConnected() As Boolean
+        Dim retval As Boolean = False
+
+        If isMountPresent() AndAlso isMountConnected() Then
+            retval = True
+        Else
+            retval = False
+        End If
+
+        Return retval
+    End Function
     Public Function isMountPresent() As Boolean
         Dim retval As Boolean = False
 
@@ -620,6 +631,42 @@ Public Class SkyXFunctions
             retval = False
         Else
             retval = True
+        End If
+
+        Return retval
+    End Function
+
+    Public Function isMountConnected() As Boolean
+        Dim retval As Boolean = False
+
+        If mount Is Nothing Then
+            retval = False
+        Else
+            If mount.IsConnected = 0 Then
+                retval = False
+            Else
+                retval = True
+            End If
+        End If
+
+        Return retval
+    End Function
+
+    ''' <summary>
+    ''' This function may not work with the EQMOD driver. It does not do so with the simulator.<br/>
+    ''' If it doesn't I will need to use the Ascom driver directly.
+    ''' </summary>
+    ''' <param name="ra"></param>
+    ''' <param name="dec"></param>
+    ''' <returns></returns>
+    Public Function syncMount(ra As Double, dec As Double) As Boolean
+        Dim retval As Boolean = False
+
+        If isMountpresentAndConnected() Then
+            mount.Sync(ra, dec, "")
+            retval = True
+        Else
+            retval = False
         End If
 
         Return retval
@@ -636,11 +683,11 @@ Public Class SkyXFunctions
         End If
 
         imageLink.pathToFITS = fullImageLinkImagePath
-        imageLink.scale = 2 ' We set this to 2 as documentation suggests we use best guess
+        imageLink.scale = 2.219 ' We set this to 2.219 as this the setting for my Atik
         imageLink.unknownScale = 1
         Try
             imageLink.execute()
-            ' how do you get the results???
+            retval = True
             Dim ra As Double = imageLinkResults.imageCenterRAJ2000
             Dim dec As Double = imageLinkResults.imageCenterDecJ2000
 
@@ -708,9 +755,11 @@ Public Class SkyXFunctions
         takeAnImageSynchronously()
         attachCurrentImage()
 
-        imageLinkUsingImage(currentImage.Path)
+        If imageLinkUsingImage(currentImage.Path) Then
+            syncMount(imageLinkResults.imageCenterRAJ2000, imageLinkResults.imageCenterDecJ2000)
+        End If
 
-        slewMount(imageLinkResults.imageCenterRAJ2000, imageLinkResults.imageCenterDecJ2000, "")
+        currentImage.Close()
 
         Dim s As String
     End Sub

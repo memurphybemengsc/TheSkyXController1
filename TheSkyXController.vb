@@ -97,6 +97,10 @@ Public Class TheSkyXController
                 If skyXFunctions.isFocuserConnected Then
                     LblFocuser.ForeColor = Color.Green
                 End If
+
+                If skyXFunctions.isMountpresentAndConnected Then
+                    LblMount.ForeColor = Color.Green
+                End If
             Catch ex As Exception
                 If ex.Source = "TheSkyX.ccdsoftCamera" Then
                     MsgBox("There was an error connecting to the camera")
@@ -119,6 +123,7 @@ Public Class TheSkyXController
                 LblCameraStatus.ForeColor = Color.Red
                 LblFilterWheel.ForeColor = Color.Red
                 LblFocuser.ForeColor = Color.Red
+                LblMount.ForeColor = Color.Red
             End If
         End If
     End Sub
