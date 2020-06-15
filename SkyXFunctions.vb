@@ -17,7 +17,7 @@ Public Class SkyXFunctions
     Private filterNames As List(Of String) = Nothing
     Private currentImage As TheSkyXLib.ccdsoftImage
     Private mount As TheSkyXLib.sky6RASCOMTele
-    Private imageLinkSettings As TheSkyXLib.AutomatedImageLinkSettings
+    Private automatedImageLinkSettings As TheSkyXLib.AutomatedImageLinkSettings
     Private closedLoopSlew As TheSkyXLib.ClosedLoopSlew
     Private imageLink As TheSkyXLib.ImageLink
     Private imageLinkResults As TheSkyXLib.ImageLinkResults
@@ -685,6 +685,9 @@ Public Class SkyXFunctions
         imageLink.pathToFITS = fullImageLinkImagePath
         imageLink.scale = 2.219 ' We set this to 2.219 as this the setting for my Atik
         imageLink.unknownScale = 1
+
+        setDefaultAutomatedImageLinkSettings()
+
         Try
             imageLink.execute()
             retval = True
@@ -749,11 +752,31 @@ Public Class SkyXFunctions
         Return objectFound
     End Function
 
+    Sub setDefaultAutomatedImageLinkSettings()
+
+        If automatedImageLinkSettings Is Nothing Then
+            automatedImageLinkSettings = New AutomatedImageLinkSettings
+        End If
+
+        automatedImageLinkSettings.exposureTimeAILS = 10
+        automatedImageLinkSettings.filterNameAILS = ""
+        automatedImageLinkSettings.fovsToSearch = 10
+        automatedImageLinkSettings.imageScale = 2.2
+        automatedImageLinkSettings.retries = 2
+
+    End Sub
+
+    Sub clearDefaultAutomatedImageLinkSettings()
+        automatedImageLinkSettings = Nothing
+    End Sub
+
     Public Sub testFunction()
         isMountPresent()
         isCameraConnected()
         takeAnImageSynchronously()
         attachCurrentImage()
+
+        'mount.
 
         If imageLinkUsingImage(currentImage.Path) Then
             syncMount(imageLinkResults.imageCenterRAJ2000, imageLinkResults.imageCenterDecJ2000)

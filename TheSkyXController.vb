@@ -8,6 +8,7 @@ Public Class TheSkyXController
     Public fitsKeyCollection As FitsKeyCollection
     Public phd2guiding As PHD2Guiding = Nothing
     Public skyXFunctions As SkyXFunctions = Nothing
+    Public myAscomUtilities As AscomUtilities = Nothing
     Dim isSkyXConnected As Boolean = False
     Private imagingRunPaused As Boolean
     Private imagingRunAborted As Boolean
@@ -51,6 +52,8 @@ Public Class TheSkyXController
         BtnPauseImaging.Enabled = False
         BtnStopImaging.Enabled = False
         BtnSettingsImaging.Enabled = False
+
+        myAscomUtilities = New AscomUtilities
 
     End Sub
 
@@ -193,7 +196,14 @@ Public Class TheSkyXController
 
     Private Sub BtnTest_Click(sender As Object, e As EventArgs) Handles BtnTest.Click
 
-        skyXFunctions.testFunction()
+        myAscomUtilities.chooseAndConnectToMount()
+        If myAscomUtilities.shouldWeFlipMount() Then
+            MsgBox("Flip Mount")
+        Else
+            MsgBox("Don't Flip Mount")
+        End If
+
+        'skyXFunctions.testFunction()
 
         'If phd2guiding IsNot Nothing Then
         '    phd2guiding.startGuiding()
