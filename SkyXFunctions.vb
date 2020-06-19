@@ -24,6 +24,14 @@ Public Class SkyXFunctions
     Private astroTargetInformation As TheSkyXLib.sky6ObjectInformation
     Private starChart As TheSkyXLib.sky6StarChart
 
+    Enum MountPointingPosition
+        noPosition
+        mountEast
+        mountWest
+    End Enum
+
+    Private mountEastWest As MountPointingPosition
+
     Enum ccdsoftInventoryIndex
         cdInventoryX
         cdInventoryY
@@ -61,6 +69,8 @@ Public Class SkyXFunctions
         If isFocuserPresent() Then
             camera.focConnect()
         End If
+
+        mountEastWest = MountPointingPosition.noPosition
     End Sub
 
     Public Function getFilterNames() As List(Of String)
@@ -770,13 +780,85 @@ Public Class SkyXFunctions
         automatedImageLinkSettings = Nothing
     End Sub
 
+    Public Sub setMountPositionToNoPosition()
+        mountEastWest = MountPointingPosition.noPosition
+    End Sub
+
+    Public Sub setMountPositionToEast()
+        mountEastWest = MountPointingPosition.mountEast
+    End Sub
+
+    Public Sub setMountPositionToWest()
+        mountEastWest = MountPointingPosition.mountWest
+    End Sub
+
+    Public Sub setMountPointingPosition()
+        mount.GetAzAlt()
+        Dim azimuth As Double = mount.dAz
+        Dim altitide As Double = mount.dAlt
+
+        If azimuth >= 0 And azimuth <= 180 Then
+            setMountPositionToEast()
+        Else
+            setMountPositionToWest()
+        End If
+
+        'mount.GetRaDec()
+        'Dim ascension As Double = mount.dRa
+        'Dim declination As Double = mount.dDec
+
+    End Sub
+
+    Public Function updateMountPointingPositionAndReturnMeridianFlip() As Boolean
+        Dim retval As Boolean = False
+
+        Dim prevMountEastWest As MountPointingPosition = mountEastWest
+
+        setMountPointingPosition()
+
+        If prevMountEastWest = MountPointingPosition.noPosition Then
+            prevMountEastWest = mountEastWest
+        End If
+
+        If prevMountEastWest = mountEastWest Then
+            retval = False
+        Else
+            retval = True
+        End If
+
+        Return retval
+    End Function
+
+    Public Function closedLoopSlewToMountPosition() As Boolean
+        Dim retval As Boolean = True
+
+        mount.GetRaDec()
+        mount.Asynchronous = 0 ' Set to synchronous, wait until finished
+        mount.SlewToRaDec(mount.dRa, mount.dDec, "")
+        Dim slewComplete As Integer = mount.IsSlewComplete
+
+
+        closedLoopSlew = New ClosedLoopSlew
+        setDefaultAutomatedImageLinkSettings()
+
+
+        closedLoopSlew.Asynchronous = 0 ' Set to synchronous, wait until finished
+
+        ' What is the 'current target' ?  if I can't code CLS, then repeat slew, imagelink.....
+        ' Perform a closed loop slew to the current target identified in TheSky.
+        closedLoopSlew.exec()
+
+        Dim slewError As Double = mount.LastSlewError
+
+        Return retval
+    End Function
+
     Public Sub testFunction()
         isMountPresent()
         isCameraConnected()
         takeAnImageSynchronously()
         attachCurrentImage()
 
-        'mount.
 
         If imageLinkUsingImage(currentImage.Path) Then
             syncMount(imageLinkResults.imageCenterRAJ2000, imageLinkResults.imageCenterDecJ2000)

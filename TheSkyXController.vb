@@ -13,6 +13,7 @@ Public Class TheSkyXController
     Private imagingRunPaused As Boolean
     Private imagingRunAborted As Boolean
     Private currentImagingStatus As Integer = ImagingStatus.notImaging
+    Private overrideImagingStatus As Integer = ImagingStatus.notImaging
     Private isTmrImagingLoopTicking As Boolean = False
     Private guidingStoppedStopwatch As Stopwatch = New Stopwatch()
 
@@ -21,6 +22,7 @@ Public Class TheSkyXController
         notImaging
         startGuiding
         guidingHasStopped
+        preTakeImage
         takeImage
         imageInProgress
         imageComplete
@@ -30,7 +32,9 @@ Public Class TheSkyXController
         ditherComplete
         changeFilter
         filterChangeInProgress
+        preClosedLoopSlew
         runClosedLoopSlew
+        postClosedLoopSlew
         meridianFlip
         abort
         halt
@@ -272,6 +276,8 @@ Public Class TheSkyXController
             If currentImagingStatus = ImagingStatus.start Then
                 ' initialise the various counters
                 imageFileSequence.initialiseImageRun()
+                skyXFunctions.setMountPointingPosition()
+
                 currentImagingStatus = ImagingStatus.notImaging
             ElseIf currentImagingStatus = ImagingStatus.notImaging Then
                 If phd2guiding IsNot Nothing AndAlso Not phd2guiding.isPHDGuidingAndLockedOnStar Then
@@ -289,6 +295,13 @@ Public Class TheSkyXController
                 Else
                     ' We should add a timeout, possibly reuse the stop watch
                 End If
+            ElseIf currentImagingStatus = ImagingStatus.meridianFlip Then
+                ' We assume that the mount has gone past the meredian and a simple goto will make the mount goto the same Ra & Dec
+                ' but with the correct mount orientation
+                If Not skyXFunctions.closedLoopSlewToMountPosition() Then
+                    ' Slew failed.  What now???
+                End If
+                currentImagingStatus = ImagingStatus.takeImage
             ElseIf currentImagingStatus = ImagingStatus.dither Then
                 If phd2guiding IsNot Nothing AndAlso phd2guiding.isPHDGuidingAndLockedOnStar Then
                     ' PHD is now guiding so take an image
@@ -300,12 +313,16 @@ Public Class TheSkyXController
                     currentImagingStatus = ImagingStatus.ditherComplete
                 End If
             ElseIf currentImagingStatus = ImagingStatus.ditherComplete Then
-                currentImagingStatus = ImagingStatus.takeImage
-            ElseIf currentImagingStatus = ImagingStatus.takeImage Then
+                currentImagingStatus = ImagingStatus.preTakeImage
+            ElseIf currentImagingStatus = ImagingStatus.preTakeImage Then
+                ' Still have to figure out how to determine if mount needs to be flipped.
+                ' Do we keep the last few positions just in case we have an odd situation where the mount flips in the middle of doing stuff?
                 ' Get the next image sequence
                 If Not skyXFunctions.refreshCameraImageSettingsFromCurrentImageSequence() Then
                     'we have an error, now what?
                 End If
+                currentImagingStatus = ImagingStatus.takeImage
+            ElseIf currentImagingStatus = ImagingStatus.takeImage Then
                 If Not skyXFunctions.takeAnImageAsynchronously() Then
                     'we have an error, now what?
                 End If
@@ -320,7 +337,7 @@ Public Class TheSkyXController
                             guidingStoppedStopwatch.Stop()
                         End If
                     Else
-                        'We are not guiding, start stopwatch
+                        'We have stopped guiding, start stopwatch
                         guidingStoppedStopwatch.Reset()
                         guidingStoppedStopwatch.Start()
                     End If
@@ -339,6 +356,7 @@ Public Class TheSkyXController
                 End If
             ElseIf currentImagingStatus = ImagingStatus.imageComplete Then
                 ' We have the image. Save it.  Possibly check for focus.......
+
                 currentImagingStatus = ImagingStatus.postImageComplete
             ElseIf currentImagingStatus = ImagingStatus.postImageComplete Then
                 imageFileSequence.incrementSequenceImageCount()
@@ -346,6 +364,10 @@ Public Class TheSkyXController
                 ' Are we finished?
                 If imageFileSequence.isSequenceComplete Then
                     currentImagingStatus = ImagingStatus.halt
+                ElseIf skyXFunctions.updateMountPointingPositionAndReturnMeridianFlip() Then
+                    ' We need to perform a meridian flip
+                    ' It is possible that the mount could pass through the meridian after imaging complete but before take image !!!!!!!
+                    currentImagingStatus = ImagingStatus.meridianFlip
                 ElseIf imageFileSequence.isExecuteDitherSet Then
                     currentImagingStatus = ImagingStatus.dither
                 End If
