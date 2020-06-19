@@ -200,14 +200,14 @@ Public Class TheSkyXController
 
     Private Sub BtnTest_Click(sender As Object, e As EventArgs) Handles BtnTest.Click
 
-        myAscomUtilities.chooseAndConnectToMount()
-        If myAscomUtilities.shouldWeFlipMount() Then
-            MsgBox("Flip Mount")
-        Else
-            MsgBox("Don't Flip Mount")
-        End If
+        'myAscomUtilities.chooseAndConnectToMount()
+        'If myAscomUtilities.shouldWeFlipMount() Then
+        '    MsgBox("Flip Mount")
+        'Else
+        '    MsgBox("Don't Flip Mount")
+        'End If
 
-        'skyXFunctions.testFunction()
+        skyXFunctions.testFunction()
 
         'If phd2guiding IsNot Nothing Then
         '    phd2guiding.startGuiding()
