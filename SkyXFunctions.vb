@@ -468,6 +468,19 @@ Public Class SkyXFunctions
         Return retval
     End Function
 
+    Public Function attachImage(fullPathToImage As String) As Boolean
+        Dim retval As Boolean = True
+
+        If currentImage Is Nothing Then
+            currentImage = New ccdsoftImage()
+        End If
+        currentImage.Path = fullPathToImage
+        currentImage.Open()
+        'AttachToActiveImager()  'This attaches to the most recent image captured
+
+        Return retval
+    End Function
+
     Public Function attachCurrentImage() As Boolean
         Dim retval As Boolean = True
 
@@ -935,19 +948,34 @@ Public Class SkyXFunctions
         Dim ra2 As Double
         Dim dec2 As Double
 
-        findObject("M13")
-        ra1 = getCurrentObjectRa()
-        dec1 = getCurrentObjectDec()
-        slewMount(ra1, dec1, "")
+        Dim file1 As String = "C:\Users\murph\source\repos\memurphybemengsc\TheSkyXController1\M1_Ha_1x1_300.000secs_Image_Drift_00002871.fit"
 
-        findObject("eta her")
-        ra2 = getCurrentObjectRa()
-        dec2 = getCurrentObjectDec()
-        slewMount(ra2, dec2, "")
+        'imageLinkUsingImage(file1)
 
-        skyUtils = New sky6Utils
-        skyUtils.ComputeAngularSeparation(ra1, dec1, ra2, dec2)
-        Dim dSepInDecimalDegrees As Double = skyUtils.dOut0
+        attachImage(file1)
+        ra1 = getAverageEllipticityForCurrentImage()
+        ra2 = getAverageFWHMForCurrentImage()
+
+        Dim file2 As String = "C:\Users\murph\source\repos\memurphybemengsc\TheSkyXController1\Leo_Triplet_20200415.fit"
+        attachImage(file2)
+
+        dec1 = getAverageEllipticityForCurrentImage()
+        dec2 = getAverageFWHMForCurrentImage()
+
+
+        'findObject("M13")
+        'ra1 = getCurrentObjectRa()
+        'dec1 = getCurrentObjectDec()
+        'slewMount(ra1, dec1, "")
+
+        'findObject("eta her")
+        'ra2 = getCurrentObjectRa()
+        'dec2 = getCurrentObjectDec()
+        'slewMount(ra2, dec2, "")
+
+        'skyUtils = New sky6Utils
+        'skyUtils.ComputeAngularSeparation(ra1, dec1, ra2, dec2)
+        'Dim dSepInDecimalDegrees As Double = skyUtils.dOut0
 
 
         'closedLoopSlewToMountPosition()
