@@ -2,6 +2,7 @@
 Imports System.Runtime.ExceptionServices
 Imports System.Runtime.Remoting.Channels
 Imports System.Runtime.Serialization
+Imports System.Security.Cryptography
 Imports ASCOM.DriverAccess
 Imports Microsoft.VisualBasic.CompilerServices
 Imports TheSkyXLib
@@ -23,6 +24,7 @@ Public Class SkyXFunctions
     Private imageLinkResults As TheSkyXLib.ImageLinkResults
     Private astroTargetInformation As TheSkyXLib.sky6ObjectInformation
     Private starChart As TheSkyXLib.sky6StarChart
+    Private skyUtils As TheSkyXLib.Isky6Utils
 
     Enum MountPointingPosition
         noPosition
@@ -472,6 +474,17 @@ Public Class SkyXFunctions
         If currentImage Is Nothing Then
             currentImage = New ccdsoftImage()
         End If
+        currentImage.AttachToActiveImager()  'This attaches to the most recent image captured
+
+        Return retval
+    End Function
+
+    Public Function attachCurrentImage0() As Boolean
+        Dim retval As Boolean = True
+
+        If currentImage Is Nothing Then
+            currentImage = New ccdsoftImage()
+        End If
         'currentImage.AttachToActive()
         currentImage.AttachToActiveImager()  'This attaches to the most recent image captured
         'currentImage.ccdsoftInventoryIndex.cdinventoryfwhm
@@ -762,6 +775,26 @@ Public Class SkyXFunctions
         Return objectFound
     End Function
 
+    Private Function getCurrentObjectRa() As Double
+        Dim raString As String
+        Dim ra As Double
+        astroTargetInformation.Property(Sk6ObjectInformationProperty.sk6ObjInfoProp_RA_NOW)
+        raString = astroTargetInformation.ObjInfoPropOut.ToString
+        Double.TryParse(raString, ra)
+
+        Return ra
+    End Function
+
+    Private Function getCurrentObjectDec() As Double
+        Dim decString As String
+        Dim dec As Double
+        astroTargetInformation.Property(Sk6ObjectInformationProperty.sk6ObjInfoProp_DEC_NOW)
+        decString = astroTargetInformation.ObjInfoPropOut.ToString
+        Double.TryParse(decString, dec)
+
+        Return dec
+    End Function
+
     Sub setDefaultAutomatedImageLinkSettings()
 
         If automatedImageLinkSettings Is Nothing Then
@@ -841,8 +874,10 @@ Public Class SkyXFunctions
         closedLoopSlew = New ClosedLoopSlew
         setDefaultAutomatedImageLinkSettings()
 
+        ' Looks like CLS wont work. Develop a routine to slew, imagelink, sync repeat until done.
 
-        closedLoopSlew.Asynchronous = 0 ' Set to synchronous, wait until finished
+
+        'closedLoopSlew.Asynchronous = 0 ' Set to synchronous, wait until finished
 
         ' What is the 'current target' ?  if I can't code CLS, then repeat slew, imagelink.....
         ' Perform a closed loop slew to the current target identified in TheSky.
@@ -853,20 +888,83 @@ Public Class SkyXFunctions
         Return retval
     End Function
 
-    Public Sub testFunction()
-        isMountPresent()
-        isCameraConnected()
-        takeAnImageSynchronously()
-        attachCurrentImage()
+    Public Function closedLoopSlewToPosition(ra As Double, dec As Double) As Boolean
+        Dim retval As Boolean = False
+        Dim localRa As Double
+        Dim localDec As Double
 
+        Do
+            retval = slewMount(ra, dec, "")
 
-        If imageLinkUsingImage(currentImage.Path) Then
-            syncMount(imageLinkResults.imageCenterRAJ2000, imageLinkResults.imageCenterDecJ2000)
+            If retval Then
+                retval = takeAnImageSynchronouslyImageLinkAndSyncMount()
+            End If
+
+            If retval Then
+                mount.GetRaDec()
+                localRa = mount.dRa
+                localDec = mount.dDec
+
+                skyUtils.ComputeAngularSeparation(ra, dec, mount.dRa, mount.dDec)
+                Dim dSep As Double = skyUtils.dOut0
+
+            End If
+        Loop While retval
+
+        Return retval
+    End Function
+
+    Public Function takeAnImageSynchronouslyImageLinkAndSyncMount() As Boolean
+        Dim retval As Boolean = False
+
+        retval = takeAnImageSynchronously()
+
+        If retval Then
+            attachCurrentImage()
+
+            If imageLinkUsingImage(currentImage.Path) Then
+                syncMount(imageLinkResults.imageCenterRAJ2000, imageLinkResults.imageCenterDecJ2000)
+            End If
         End If
 
-        currentImage.Close()
+        Return retval
+    End Function
+    Public Sub testFunction()
+        Dim ra1 As Double
+        Dim dec1 As Double
+        Dim ra2 As Double
+        Dim dec2 As Double
 
-        Dim s As String
+        findObject("M13")
+        ra1 = getCurrentObjectRa()
+        dec1 = getCurrentObjectDec()
+        slewMount(ra1, dec1, "")
+
+        findObject("eta her")
+        ra2 = getCurrentObjectRa()
+        dec2 = getCurrentObjectDec()
+        slewMount(ra2, dec2, "")
+
+        skyUtils = New sky6Utils
+        skyUtils.ComputeAngularSeparation(ra1, dec1, ra2, dec2)
+        Dim dSepInDecimalDegrees As Double = skyUtils.dOut0
+
+
+        'closedLoopSlewToMountPosition()
+
+        'isMountPresent()
+        'isCameraConnected()
+        'takeAnImageSynchronously()
+        'attachCurrentImage()
+
+
+        'If imageLinkUsingImage(currentImage.Path) Then
+        '    syncMount(imageLinkResults.imageCenterRAJ2000, imageLinkResults.imageCenterDecJ2000)
+        'End If
+
+        'currentImage.Close()
+
+        'Dim s As String
     End Sub
 
 End Class
