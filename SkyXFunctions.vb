@@ -950,18 +950,36 @@ Public Class SkyXFunctions
 
         Dim file1 As String = "C:\Users\murph\source\repos\memurphybemengsc\TheSkyXController1\M1_Ha_1x1_300.000secs_Image_Drift_00002871.fit"
 
-        'imageLinkUsingImage(file1)
+        imageLinkUsingImage(file1)
 
         attachImage(file1)
         ra1 = getAverageEllipticityForCurrentImage()
         ra2 = getAverageFWHMForCurrentImage()
+        setCurrentImagetoNothing()
 
-        Dim file2 As String = "C:\Users\murph\source\repos\memurphybemengsc\TheSkyXController1\Leo_Triplet_20200415.fit"
+
+        'C:\Users\murph\Source\Repos\memurphybemengsc\TheSkyXController1\Leo_Triplet_20200415.fit
+        Dim file2 As String = "C:\Users\murph\Source\Repos\memurphybemengsc\TheSkyXController1\Leo_Triplet_20200415.fit"
         attachImage(file2)
 
         dec1 = getAverageEllipticityForCurrentImage()
         dec2 = getAverageFWHMForCurrentImage()
+        setCurrentImagetoNothing()
 
+        'C:\Users\murph\Source\Repos\memurphybemengsc\TheSkyXController1\M 27_OK_1x1_120.000secs_Lum_Light_00000815.fit
+        Dim file3 As String = "C:\Users\murph\source\repos\memurphybemengsc\TheSkyXController1\M 27_OK_1x1_120.000secs_Lum_Light_00000815.fit"
+        attachImage(file3)
+
+        dec1 = getAverageEllipticityForCurrentImage()
+        dec2 = getAverageFWHMForCurrentImage()
+        setCurrentImagetoNothing()
+
+        Dim file4 As String = "C:\Users\murph\source\repos\memurphybemengsc\TheSkyXController1\M51_000.fit"
+        attachImage(file4)
+
+        dec1 = getAverageEllipticityForCurrentImage()
+        dec2 = getAverageFWHMForCurrentImage()
+        setCurrentImagetoNothing()
 
         'findObject("M13")
         'ra1 = getCurrentObjectRa()
