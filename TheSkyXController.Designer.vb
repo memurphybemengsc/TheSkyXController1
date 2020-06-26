@@ -57,6 +57,7 @@ Partial Class TheSkyXController
         Me.ToolTipStart = New System.Windows.Forms.ToolTip(Me.components)
         Me.BtnTargetSearch = New System.Windows.Forms.Button()
         Me.BtnSlewLimits = New System.Windows.Forms.Button()
+        Me.BtnSelectImage = New System.Windows.Forms.Button()
         Me.LblImageFolder = New System.Windows.Forms.Label()
         Me.TxtImageFolder = New System.Windows.Forms.TextBox()
         Me.LblFocuser = New System.Windows.Forms.Label()
@@ -66,6 +67,7 @@ Partial Class TheSkyXController
         Me.TxtTarget = New System.Windows.Forms.TextBox()
         Me.TxtTargetList = New System.Windows.Forms.TextBox()
         Me.LblMount = New System.Windows.Forms.Label()
+        Me.Label1 = New System.Windows.Forms.Label()
         Me.PnlImageSeqTitles.SuspendLayout()
         Me.GroupBox2.SuspendLayout()
         Me.GroupBox1.SuspendLayout()
@@ -73,10 +75,9 @@ Partial Class TheSkyXController
         '
         'BtnSkyX
         '
-        Me.BtnSkyX.Location = New System.Drawing.Point(21, 23)
-        Me.BtnSkyX.Margin = New System.Windows.Forms.Padding(4, 4, 4, 4)
+        Me.BtnSkyX.Location = New System.Drawing.Point(16, 19)
         Me.BtnSkyX.Name = "BtnSkyX"
-        Me.BtnSkyX.Size = New System.Drawing.Size(100, 28)
+        Me.BtnSkyX.Size = New System.Drawing.Size(75, 23)
         Me.BtnSkyX.TabIndex = 0
         Me.BtnSkyX.Text = "SkyX"
         Me.ToolTipStart.SetToolTip(Me.BtnSkyX, "Connect to TheSkyX")
@@ -84,10 +85,9 @@ Partial Class TheSkyXController
         '
         'BtnPHD2
         '
-        Me.BtnPHD2.Location = New System.Drawing.Point(21, 68)
-        Me.BtnPHD2.Margin = New System.Windows.Forms.Padding(4, 4, 4, 4)
+        Me.BtnPHD2.Location = New System.Drawing.Point(16, 55)
         Me.BtnPHD2.Name = "BtnPHD2"
-        Me.BtnPHD2.Size = New System.Drawing.Size(100, 28)
+        Me.BtnPHD2.Size = New System.Drawing.Size(75, 23)
         Me.BtnPHD2.TabIndex = 1
         Me.BtnPHD2.Text = "PHD2"
         Me.ToolTipStart.SetToolTip(Me.BtnPHD2, "Connect to PHD2")
@@ -95,10 +95,9 @@ Partial Class TheSkyXController
         '
         'btnExit
         '
-        Me.btnExit.Location = New System.Drawing.Point(57, 545)
-        Me.btnExit.Margin = New System.Windows.Forms.Padding(4, 4, 4, 4)
+        Me.btnExit.Location = New System.Drawing.Point(43, 443)
         Me.btnExit.Name = "btnExit"
-        Me.btnExit.Size = New System.Drawing.Size(100, 28)
+        Me.btnExit.Size = New System.Drawing.Size(75, 23)
         Me.btnExit.TabIndex = 11
         Me.btnExit.Text = "Exit"
         Me.ToolTipStart.SetToolTip(Me.btnExit, "Exit the application")
@@ -107,18 +106,16 @@ Partial Class TheSkyXController
         'PnlImageSequence
         '
         Me.PnlImageSequence.AutoScroll = True
-        Me.PnlImageSequence.Location = New System.Drawing.Point(469, 15)
-        Me.PnlImageSequence.Margin = New System.Windows.Forms.Padding(4, 4, 4, 4)
+        Me.PnlImageSequence.Location = New System.Drawing.Point(352, 12)
         Me.PnlImageSequence.Name = "PnlImageSequence"
-        Me.PnlImageSequence.Size = New System.Drawing.Size(852, 308)
+        Me.PnlImageSequence.Size = New System.Drawing.Size(639, 250)
         Me.PnlImageSequence.TabIndex = 12
         '
         'BtnSequenceOpen
         '
-        Me.BtnSequenceOpen.Location = New System.Drawing.Point(469, 347)
-        Me.BtnSequenceOpen.Margin = New System.Windows.Forms.Padding(4, 4, 4, 4)
+        Me.BtnSequenceOpen.Location = New System.Drawing.Point(352, 282)
         Me.BtnSequenceOpen.Name = "BtnSequenceOpen"
-        Me.BtnSequenceOpen.Size = New System.Drawing.Size(100, 28)
+        Me.BtnSequenceOpen.Size = New System.Drawing.Size(75, 23)
         Me.BtnSequenceOpen.TabIndex = 13
         Me.BtnSequenceOpen.Text = "Open"
         Me.ToolTipStart.SetToolTip(Me.BtnSequenceOpen, "Open a file containing an imaging sequence")
@@ -126,10 +123,9 @@ Partial Class TheSkyXController
         '
         'BtnSeqenceAppend
         '
-        Me.BtnSeqenceAppend.Location = New System.Drawing.Point(597, 347)
-        Me.BtnSeqenceAppend.Margin = New System.Windows.Forms.Padding(4, 4, 4, 4)
+        Me.BtnSeqenceAppend.Location = New System.Drawing.Point(448, 282)
         Me.BtnSeqenceAppend.Name = "BtnSeqenceAppend"
-        Me.BtnSeqenceAppend.Size = New System.Drawing.Size(100, 28)
+        Me.BtnSeqenceAppend.Size = New System.Drawing.Size(75, 23)
         Me.BtnSeqenceAppend.TabIndex = 14
         Me.BtnSeqenceAppend.Text = "Append"
         Me.ToolTipStart.SetToolTip(Me.BtnSeqenceAppend, "Open a file containing an imaging sequence and append it to the current sequence")
@@ -137,10 +133,9 @@ Partial Class TheSkyXController
         '
         'BtnSequenceSave
         '
-        Me.BtnSequenceSave.Location = New System.Drawing.Point(843, 347)
-        Me.BtnSequenceSave.Margin = New System.Windows.Forms.Padding(4, 4, 4, 4)
+        Me.BtnSequenceSave.Location = New System.Drawing.Point(632, 282)
         Me.BtnSequenceSave.Name = "BtnSequenceSave"
-        Me.BtnSequenceSave.Size = New System.Drawing.Size(100, 28)
+        Me.BtnSequenceSave.Size = New System.Drawing.Size(75, 23)
         Me.BtnSequenceSave.TabIndex = 15
         Me.BtnSequenceSave.Text = "Save"
         Me.ToolTipStart.SetToolTip(Me.BtnSequenceSave, "Save a file with the current imaging sequence")
@@ -158,20 +153,18 @@ Partial Class TheSkyXController
         Me.PnlImageSeqTitles.Controls.Add(Me.LblExposureLength)
         Me.PnlImageSeqTitles.Controls.Add(Me.LblFilter)
         Me.PnlImageSeqTitles.Controls.Add(Me.LblExposureType)
-        Me.PnlImageSeqTitles.Location = New System.Drawing.Point(247, 15)
-        Me.PnlImageSeqTitles.Margin = New System.Windows.Forms.Padding(4, 4, 4, 4)
+        Me.PnlImageSeqTitles.Location = New System.Drawing.Point(185, 12)
         Me.PnlImageSeqTitles.Name = "PnlImageSeqTitles"
-        Me.PnlImageSeqTitles.Size = New System.Drawing.Size(195, 308)
+        Me.PnlImageSeqTitles.Size = New System.Drawing.Size(146, 250)
         Me.PnlImageSeqTitles.TabIndex = 16
         '
         'LblDelay
         '
         Me.LblDelay.AutoSize = True
         Me.LblDelay.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.LblDelay.Location = New System.Drawing.Point(0, 119)
-        Me.LblDelay.Margin = New System.Windows.Forms.Padding(4, 0, 4, 0)
+        Me.LblDelay.Location = New System.Drawing.Point(0, 97)
         Me.LblDelay.Name = "LblDelay"
-        Me.LblDelay.Size = New System.Drawing.Size(44, 17)
+        Me.LblDelay.Size = New System.Drawing.Size(34, 13)
         Me.LblDelay.TabIndex = 9
         Me.LblDelay.Text = "Delay"
         '
@@ -179,10 +172,9 @@ Partial Class TheSkyXController
         '
         Me.LblRunPrevSuccess.AutoSize = True
         Me.LblRunPrevSuccess.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.LblRunPrevSuccess.Location = New System.Drawing.Point(0, 135)
-        Me.LblRunPrevSuccess.Margin = New System.Windows.Forms.Padding(4, 0, 4, 0)
+        Me.LblRunPrevSuccess.Location = New System.Drawing.Point(0, 110)
         Me.LblRunPrevSuccess.Name = "LblRunPrevSuccess"
-        Me.LblRunPrevSuccess.Size = New System.Drawing.Size(169, 17)
+        Me.LblRunPrevSuccess.Size = New System.Drawing.Size(129, 13)
         Me.LblRunPrevSuccess.TabIndex = 8
         Me.LblRunPrevSuccess.Text = "Run on previous Success"
         '
@@ -190,10 +182,9 @@ Partial Class TheSkyXController
         '
         Me.LblRunPrevError.AutoSize = True
         Me.LblRunPrevError.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.LblRunPrevError.Location = New System.Drawing.Point(0, 151)
-        Me.LblRunPrevError.Margin = New System.Windows.Forms.Padding(4, 0, 4, 0)
+        Me.LblRunPrevError.Location = New System.Drawing.Point(0, 123)
         Me.LblRunPrevError.Name = "LblRunPrevError"
-        Me.LblRunPrevError.Size = New System.Drawing.Size(148, 17)
+        Me.LblRunPrevError.Size = New System.Drawing.Size(110, 13)
         Me.LblRunPrevError.TabIndex = 7
         Me.LblRunPrevError.Text = "Run on previous Error"
         '
@@ -201,10 +192,9 @@ Partial Class TheSkyXController
         '
         Me.LblDitherEveryNImages.AutoSize = True
         Me.LblDitherEveryNImages.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.LblDitherEveryNImages.Location = New System.Drawing.Point(0, 103)
-        Me.LblDitherEveryNImages.Margin = New System.Windows.Forms.Padding(4, 0, 4, 0)
+        Me.LblDitherEveryNImages.Location = New System.Drawing.Point(0, 84)
         Me.LblDitherEveryNImages.Name = "LblDitherEveryNImages"
-        Me.LblDitherEveryNImages.Size = New System.Drawing.Size(149, 17)
+        Me.LblDitherEveryNImages.Size = New System.Drawing.Size(113, 13)
         Me.LblDitherEveryNImages.TabIndex = 6
         Me.LblDitherEveryNImages.Text = "Dither Every N Images"
         '
@@ -212,10 +202,9 @@ Partial Class TheSkyXController
         '
         Me.LblRepeats.AutoSize = True
         Me.LblRepeats.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.LblRepeats.Location = New System.Drawing.Point(0, 86)
-        Me.LblRepeats.Margin = New System.Windows.Forms.Padding(4, 0, 4, 0)
+        Me.LblRepeats.Location = New System.Drawing.Point(0, 70)
         Me.LblRepeats.Name = "LblRepeats"
-        Me.LblRepeats.Size = New System.Drawing.Size(61, 17)
+        Me.LblRepeats.Size = New System.Drawing.Size(47, 13)
         Me.LblRepeats.TabIndex = 5
         Me.LblRepeats.Text = "Repeats"
         '
@@ -223,10 +212,9 @@ Partial Class TheSkyXController
         '
         Me.LblBinY.AutoSize = True
         Me.LblBinY.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.LblBinY.Location = New System.Drawing.Point(0, 69)
-        Me.LblBinY.Margin = New System.Windows.Forms.Padding(4, 0, 4, 0)
+        Me.LblBinY.Location = New System.Drawing.Point(0, 56)
         Me.LblBinY.Name = "LblBinY"
-        Me.LblBinY.Size = New System.Drawing.Size(41, 17)
+        Me.LblBinY.Size = New System.Drawing.Size(32, 13)
         Me.LblBinY.TabIndex = 4
         Me.LblBinY.Text = "Bin Y"
         '
@@ -234,10 +222,9 @@ Partial Class TheSkyXController
         '
         Me.LblBinX.AutoSize = True
         Me.LblBinX.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.LblBinX.Location = New System.Drawing.Point(0, 52)
-        Me.LblBinX.Margin = New System.Windows.Forms.Padding(4, 0, 4, 0)
+        Me.LblBinX.Location = New System.Drawing.Point(0, 42)
         Me.LblBinX.Name = "LblBinX"
-        Me.LblBinX.Size = New System.Drawing.Size(41, 17)
+        Me.LblBinX.Size = New System.Drawing.Size(32, 13)
         Me.LblBinX.TabIndex = 3
         Me.LblBinX.Text = "Bin X"
         '
@@ -245,10 +232,9 @@ Partial Class TheSkyXController
         '
         Me.LblExposureLength.AutoSize = True
         Me.LblExposureLength.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.LblExposureLength.Location = New System.Drawing.Point(0, 34)
-        Me.LblExposureLength.Margin = New System.Windows.Forms.Padding(4, 0, 4, 0)
+        Me.LblExposureLength.Location = New System.Drawing.Point(0, 28)
         Me.LblExposureLength.Name = "LblExposureLength"
-        Me.LblExposureLength.Size = New System.Drawing.Size(115, 17)
+        Me.LblExposureLength.Size = New System.Drawing.Size(87, 13)
         Me.LblExposureLength.TabIndex = 2
         Me.LblExposureLength.Text = "Exposure Length"
         '
@@ -256,10 +242,9 @@ Partial Class TheSkyXController
         '
         Me.LblFilter.AutoSize = True
         Me.LblFilter.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.LblFilter.Location = New System.Drawing.Point(0, 17)
-        Me.LblFilter.Margin = New System.Windows.Forms.Padding(4, 0, 4, 0)
+        Me.LblFilter.Location = New System.Drawing.Point(0, 14)
         Me.LblFilter.Name = "LblFilter"
-        Me.LblFilter.Size = New System.Drawing.Size(39, 17)
+        Me.LblFilter.Size = New System.Drawing.Size(29, 13)
         Me.LblFilter.TabIndex = 1
         Me.LblFilter.Text = "Filter"
         '
@@ -270,7 +255,7 @@ Partial Class TheSkyXController
         Me.LblExposureType.Location = New System.Drawing.Point(0, 0)
         Me.LblExposureType.Margin = New System.Windows.Forms.Padding(0)
         Me.LblExposureType.Name = "LblExposureType"
-        Me.LblExposureType.Size = New System.Drawing.Size(103, 17)
+        Me.LblExposureType.Size = New System.Drawing.Size(78, 13)
         Me.LblExposureType.TabIndex = 0
         Me.LblExposureType.Text = "Exposure Type"
         '
@@ -282,21 +267,18 @@ Partial Class TheSkyXController
         Me.GroupBox2.Controls.Add(Me.BtnPauseImaging)
         Me.GroupBox2.Controls.Add(Me.BtnAbortImaging)
         Me.GroupBox2.Controls.Add(Me.BtnSettingsImaging)
-        Me.GroupBox2.Location = New System.Drawing.Point(16, 193)
-        Me.GroupBox2.Margin = New System.Windows.Forms.Padding(4, 4, 4, 4)
+        Me.GroupBox2.Location = New System.Drawing.Point(12, 157)
         Me.GroupBox2.Name = "GroupBox2"
-        Me.GroupBox2.Padding = New System.Windows.Forms.Padding(4, 4, 4, 4)
-        Me.GroupBox2.Size = New System.Drawing.Size(192, 249)
+        Me.GroupBox2.Size = New System.Drawing.Size(144, 202)
         Me.GroupBox2.TabIndex = 17
         Me.GroupBox2.TabStop = False
         Me.GroupBox2.Text = "Imaging"
         '
         'BtnStopImaging
         '
-        Me.BtnStopImaging.Location = New System.Drawing.Point(41, 130)
-        Me.BtnStopImaging.Margin = New System.Windows.Forms.Padding(4, 4, 4, 4)
+        Me.BtnStopImaging.Location = New System.Drawing.Point(31, 106)
         Me.BtnStopImaging.Name = "BtnStopImaging"
-        Me.BtnStopImaging.Size = New System.Drawing.Size(100, 28)
+        Me.BtnStopImaging.Size = New System.Drawing.Size(75, 23)
         Me.BtnStopImaging.TabIndex = 20
         Me.BtnStopImaging.Text = "Stop"
         Me.ToolTipStart.SetToolTip(Me.BtnStopImaging, "Stop the imaging process, the current image will be completed")
@@ -304,20 +286,18 @@ Partial Class TheSkyXController
         '
         'BtnCalibrationFrames
         '
-        Me.BtnCalibrationFrames.Location = New System.Drawing.Point(21, 202)
-        Me.BtnCalibrationFrames.Margin = New System.Windows.Forms.Padding(4, 4, 4, 4)
+        Me.BtnCalibrationFrames.Location = New System.Drawing.Point(16, 164)
         Me.BtnCalibrationFrames.Name = "BtnCalibrationFrames"
-        Me.BtnCalibrationFrames.Size = New System.Drawing.Size(156, 28)
+        Me.BtnCalibrationFrames.Size = New System.Drawing.Size(117, 23)
         Me.BtnCalibrationFrames.TabIndex = 9
         Me.BtnCalibrationFrames.Text = "Calibration Frames"
         Me.BtnCalibrationFrames.UseVisualStyleBackColor = True
         '
         'BtnStartImaging
         '
-        Me.BtnStartImaging.Location = New System.Drawing.Point(41, 23)
-        Me.BtnStartImaging.Margin = New System.Windows.Forms.Padding(4, 4, 4, 4)
+        Me.BtnStartImaging.Location = New System.Drawing.Point(31, 19)
         Me.BtnStartImaging.Name = "BtnStartImaging"
-        Me.BtnStartImaging.Size = New System.Drawing.Size(100, 28)
+        Me.BtnStartImaging.Size = New System.Drawing.Size(75, 23)
         Me.BtnStartImaging.TabIndex = 2
         Me.BtnStartImaging.Text = "Start"
         Me.ToolTipStart.SetToolTip(Me.BtnStartImaging, "Start the Imaging Process" & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10))
@@ -325,10 +305,9 @@ Partial Class TheSkyXController
         '
         'BtnPauseImaging
         '
-        Me.BtnPauseImaging.Location = New System.Drawing.Point(41, 59)
-        Me.BtnPauseImaging.Margin = New System.Windows.Forms.Padding(4, 4, 4, 4)
+        Me.BtnPauseImaging.Location = New System.Drawing.Point(31, 48)
         Me.BtnPauseImaging.Name = "BtnPauseImaging"
-        Me.BtnPauseImaging.Size = New System.Drawing.Size(100, 28)
+        Me.BtnPauseImaging.Size = New System.Drawing.Size(75, 23)
         Me.BtnPauseImaging.TabIndex = 3
         Me.BtnPauseImaging.Text = "Pause"
         Me.ToolTipStart.SetToolTip(Me.BtnPauseImaging, "Pause the imaging process, The curent image will complete")
@@ -336,10 +315,9 @@ Partial Class TheSkyXController
         '
         'BtnAbortImaging
         '
-        Me.BtnAbortImaging.Location = New System.Drawing.Point(41, 95)
-        Me.BtnAbortImaging.Margin = New System.Windows.Forms.Padding(4, 4, 4, 4)
+        Me.BtnAbortImaging.Location = New System.Drawing.Point(31, 77)
         Me.BtnAbortImaging.Name = "BtnAbortImaging"
-        Me.BtnAbortImaging.Size = New System.Drawing.Size(100, 28)
+        Me.BtnAbortImaging.Size = New System.Drawing.Size(75, 23)
         Me.BtnAbortImaging.TabIndex = 4
         Me.BtnAbortImaging.Text = "Abort"
         Me.ToolTipStart.SetToolTip(Me.BtnAbortImaging, "Abort the imaging process, the current image will be abandoned")
@@ -347,10 +325,9 @@ Partial Class TheSkyXController
         '
         'BtnSettingsImaging
         '
-        Me.BtnSettingsImaging.Location = New System.Drawing.Point(41, 166)
-        Me.BtnSettingsImaging.Margin = New System.Windows.Forms.Padding(4, 4, 4, 4)
+        Me.BtnSettingsImaging.Location = New System.Drawing.Point(31, 135)
         Me.BtnSettingsImaging.Name = "BtnSettingsImaging"
-        Me.BtnSettingsImaging.Size = New System.Drawing.Size(100, 28)
+        Me.BtnSettingsImaging.Size = New System.Drawing.Size(75, 23)
         Me.BtnSettingsImaging.TabIndex = 5
         Me.BtnSettingsImaging.Text = "Settings"
         Me.BtnSettingsImaging.UseVisualStyleBackColor = True
@@ -361,11 +338,9 @@ Partial Class TheSkyXController
         Me.GroupBox1.Controls.Add(Me.PnlSkyXStatus)
         Me.GroupBox1.Controls.Add(Me.BtnPHD2)
         Me.GroupBox1.Controls.Add(Me.BtnSkyX)
-        Me.GroupBox1.Location = New System.Drawing.Point(16, 9)
-        Me.GroupBox1.Margin = New System.Windows.Forms.Padding(4, 4, 4, 4)
+        Me.GroupBox1.Location = New System.Drawing.Point(12, 7)
         Me.GroupBox1.Name = "GroupBox1"
-        Me.GroupBox1.Padding = New System.Windows.Forms.Padding(4, 4, 4, 4)
-        Me.GroupBox1.Size = New System.Drawing.Size(192, 123)
+        Me.GroupBox1.Size = New System.Drawing.Size(144, 100)
         Me.GroupBox1.TabIndex = 18
         Me.GroupBox1.TabStop = False
         Me.GroupBox1.Text = "Connect"
@@ -373,37 +348,33 @@ Partial Class TheSkyXController
         'PnlPhd2Status
         '
         Me.PnlPhd2Status.BackColor = System.Drawing.Color.Red
-        Me.PnlPhd2Status.Location = New System.Drawing.Point(137, 68)
-        Me.PnlPhd2Status.Margin = New System.Windows.Forms.Padding(4, 4, 4, 4)
+        Me.PnlPhd2Status.Location = New System.Drawing.Point(103, 55)
         Me.PnlPhd2Status.Name = "PnlPhd2Status"
-        Me.PnlPhd2Status.Size = New System.Drawing.Size(33, 28)
+        Me.PnlPhd2Status.Size = New System.Drawing.Size(25, 23)
         Me.PnlPhd2Status.TabIndex = 10
         '
         'PnlSkyXStatus
         '
         Me.PnlSkyXStatus.BackColor = System.Drawing.Color.Red
-        Me.PnlSkyXStatus.Location = New System.Drawing.Point(137, 23)
-        Me.PnlSkyXStatus.Margin = New System.Windows.Forms.Padding(4, 4, 4, 4)
+        Me.PnlSkyXStatus.Location = New System.Drawing.Point(103, 19)
         Me.PnlSkyXStatus.Name = "PnlSkyXStatus"
-        Me.PnlSkyXStatus.Size = New System.Drawing.Size(33, 28)
+        Me.PnlSkyXStatus.Size = New System.Drawing.Size(25, 23)
         Me.PnlSkyXStatus.TabIndex = 9
         '
         'BtnTest
         '
-        Me.BtnTest.Location = New System.Drawing.Point(57, 610)
-        Me.BtnTest.Margin = New System.Windows.Forms.Padding(4, 4, 4, 4)
+        Me.BtnTest.Location = New System.Drawing.Point(43, 496)
         Me.BtnTest.Name = "BtnTest"
-        Me.BtnTest.Size = New System.Drawing.Size(100, 28)
+        Me.BtnTest.Size = New System.Drawing.Size(75, 23)
         Me.BtnTest.TabIndex = 11
         Me.BtnTest.Text = "Test"
         Me.BtnTest.UseVisualStyleBackColor = True
         '
         'BtnLoadGroup
         '
-        Me.BtnLoadGroup.Location = New System.Drawing.Point(721, 347)
-        Me.BtnLoadGroup.Margin = New System.Windows.Forms.Padding(4, 4, 4, 4)
+        Me.BtnLoadGroup.Location = New System.Drawing.Point(541, 282)
         Me.BtnLoadGroup.Name = "BtnLoadGroup"
-        Me.BtnLoadGroup.Size = New System.Drawing.Size(100, 28)
+        Me.BtnLoadGroup.Size = New System.Drawing.Size(75, 23)
         Me.BtnLoadGroup.TabIndex = 19
         Me.BtnLoadGroup.Text = "Load Group"
         Me.ToolTipStart.SetToolTip(Me.BtnLoadGroup, "Open a file containing a group of imaging sequences")
@@ -416,10 +387,9 @@ Partial Class TheSkyXController
         'BtnTargetSearch
         '
         Me.BtnTargetSearch.Enabled = False
-        Me.BtnTargetSearch.Location = New System.Drawing.Point(677, 502)
-        Me.BtnTargetSearch.Margin = New System.Windows.Forms.Padding(4, 4, 4, 4)
+        Me.BtnTargetSearch.Location = New System.Drawing.Point(508, 408)
         Me.BtnTargetSearch.Name = "BtnTargetSearch"
-        Me.BtnTargetSearch.Size = New System.Drawing.Size(100, 28)
+        Me.BtnTargetSearch.Size = New System.Drawing.Size(75, 23)
         Me.BtnTargetSearch.TabIndex = 28
         Me.BtnTargetSearch.Text = "Search"
         Me.ToolTipStart.SetToolTip(Me.BtnTargetSearch, "Search the SkyX database for the target")
@@ -427,41 +397,53 @@ Partial Class TheSkyXController
         '
         'BtnSlewLimits
         '
-        Me.BtnSlewLimits.Location = New System.Drawing.Point(983, 506)
-        Me.BtnSlewLimits.Margin = New System.Windows.Forms.Padding(4, 4, 4, 4)
+        Me.BtnSlewLimits.Location = New System.Drawing.Point(508, 484)
         Me.BtnSlewLimits.Name = "BtnSlewLimits"
-        Me.BtnSlewLimits.Size = New System.Drawing.Size(100, 28)
+        Me.BtnSlewLimits.Size = New System.Drawing.Size(75, 23)
         Me.BtnSlewLimits.TabIndex = 21
         Me.BtnSlewLimits.Text = "Slew Limits"
         Me.ToolTipStart.SetToolTip(Me.BtnSlewLimits, "Start the Imaging Process" & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10))
         Me.BtnSlewLimits.UseVisualStyleBackColor = True
         '
+        'BtnSelectImage
+        '
+        Me.BtnSelectImage.Enabled = False
+        Me.BtnSelectImage.Location = New System.Drawing.Point(508, 443)
+        Me.BtnSelectImage.Name = "BtnSelectImage"
+        Me.BtnSelectImage.Size = New System.Drawing.Size(75, 23)
+        Me.BtnSelectImage.TabIndex = 32
+        Me.BtnSelectImage.Text = "Image"
+        Me.ToolTipStart.SetToolTip(Me.BtnSelectImage, "Search the SkyX database for the target")
+        Me.BtnSelectImage.UseVisualStyleBackColor = True
+        '
         'LblImageFolder
         '
         Me.LblImageFolder.AutoSize = True
-        Me.LblImageFolder.Location = New System.Drawing.Point(467, 401)
+        Me.LblImageFolder.Location = New System.Drawing.Point(350, 326)
+        Me.LblImageFolder.Margin = New System.Windows.Forms.Padding(2, 0, 2, 0)
         Me.LblImageFolder.Name = "LblImageFolder"
-        Me.LblImageFolder.Size = New System.Drawing.Size(90, 17)
+        Me.LblImageFolder.Size = New System.Drawing.Size(68, 13)
         Me.LblImageFolder.TabIndex = 21
         Me.LblImageFolder.Text = "Image Folder"
         '
         'TxtImageFolder
         '
         Me.TxtImageFolder.BackColor = System.Drawing.SystemColors.ControlLightLight
-        Me.TxtImageFolder.Location = New System.Drawing.Point(563, 401)
-        Me.TxtImageFolder.Margin = New System.Windows.Forms.Padding(3, 2, 3, 2)
+        Me.TxtImageFolder.Location = New System.Drawing.Point(422, 326)
+        Me.TxtImageFolder.Margin = New System.Windows.Forms.Padding(2)
         Me.TxtImageFolder.Name = "TxtImageFolder"
         Me.TxtImageFolder.ReadOnly = True
-        Me.TxtImageFolder.Size = New System.Drawing.Size(519, 22)
+        Me.TxtImageFolder.Size = New System.Drawing.Size(390, 20)
         Me.TxtImageFolder.TabIndex = 22
         '
         'LblFocuser
         '
         Me.LblFocuser.AutoSize = True
         Me.LblFocuser.ForeColor = System.Drawing.Color.Red
-        Me.LblFocuser.Location = New System.Drawing.Point(717, 444)
+        Me.LblFocuser.Location = New System.Drawing.Point(538, 361)
+        Me.LblFocuser.Margin = New System.Windows.Forms.Padding(2, 0, 2, 0)
         Me.LblFocuser.Name = "LblFocuser"
-        Me.LblFocuser.Size = New System.Drawing.Size(59, 17)
+        Me.LblFocuser.Size = New System.Drawing.Size(45, 13)
         Me.LblFocuser.TabIndex = 23
         Me.LblFocuser.Text = "Focuser"
         '
@@ -469,9 +451,10 @@ Partial Class TheSkyXController
         '
         Me.LblFilterWheel.AutoSize = True
         Me.LblFilterWheel.ForeColor = System.Drawing.Color.Red
-        Me.LblFilterWheel.Location = New System.Drawing.Point(595, 444)
+        Me.LblFilterWheel.Location = New System.Drawing.Point(446, 361)
+        Me.LblFilterWheel.Margin = New System.Windows.Forms.Padding(2, 0, 2, 0)
         Me.LblFilterWheel.Name = "LblFilterWheel"
-        Me.LblFilterWheel.Size = New System.Drawing.Size(83, 17)
+        Me.LblFilterWheel.Size = New System.Drawing.Size(63, 13)
         Me.LblFilterWheel.TabIndex = 24
         Me.LblFilterWheel.Text = "Filter Wheel"
         '
@@ -479,57 +462,68 @@ Partial Class TheSkyXController
         '
         Me.LblCameraStatus.AutoSize = True
         Me.LblCameraStatus.ForeColor = System.Drawing.Color.Red
-        Me.LblCameraStatus.Location = New System.Drawing.Point(467, 444)
+        Me.LblCameraStatus.Location = New System.Drawing.Point(350, 361)
+        Me.LblCameraStatus.Margin = New System.Windows.Forms.Padding(2, 0, 2, 0)
         Me.LblCameraStatus.Name = "LblCameraStatus"
-        Me.LblCameraStatus.Size = New System.Drawing.Size(57, 17)
+        Me.LblCameraStatus.Size = New System.Drawing.Size(43, 13)
         Me.LblCameraStatus.TabIndex = 25
         Me.LblCameraStatus.Text = "Camera"
         '
         'LblTarget
         '
         Me.LblTarget.AutoSize = True
-        Me.LblTarget.Location = New System.Drawing.Point(472, 506)
-        Me.LblTarget.Margin = New System.Windows.Forms.Padding(4, 0, 4, 0)
+        Me.LblTarget.Location = New System.Drawing.Point(354, 411)
         Me.LblTarget.Name = "LblTarget"
-        Me.LblTarget.Size = New System.Drawing.Size(50, 17)
+        Me.LblTarget.Size = New System.Drawing.Size(38, 13)
         Me.LblTarget.TabIndex = 26
         Me.LblTarget.Text = "Target"
         '
         'TxtTarget
         '
         Me.TxtTarget.BackColor = System.Drawing.SystemColors.ControlLightLight
-        Me.TxtTarget.Location = New System.Drawing.Point(529, 502)
-        Me.TxtTarget.Margin = New System.Windows.Forms.Padding(3, 2, 3, 2)
+        Me.TxtTarget.Location = New System.Drawing.Point(397, 408)
+        Me.TxtTarget.Margin = New System.Windows.Forms.Padding(2)
         Me.TxtTarget.Name = "TxtTarget"
-        Me.TxtTarget.Size = New System.Drawing.Size(127, 22)
+        Me.TxtTarget.Size = New System.Drawing.Size(96, 20)
         Me.TxtTarget.TabIndex = 27
         '
         'TxtTargetList
         '
         Me.TxtTargetList.BackColor = System.Drawing.SystemColors.ControlLightLight
-        Me.TxtTargetList.Location = New System.Drawing.Point(785, 502)
-        Me.TxtTargetList.Margin = New System.Windows.Forms.Padding(4, 4, 4, 4)
+        Me.TxtTargetList.Location = New System.Drawing.Point(589, 408)
         Me.TxtTargetList.Multiline = True
         Me.TxtTargetList.Name = "TxtTargetList"
         Me.TxtTargetList.ReadOnly = True
-        Me.TxtTargetList.Size = New System.Drawing.Size(132, 153)
+        Me.TxtTargetList.Size = New System.Drawing.Size(402, 125)
         Me.TxtTargetList.TabIndex = 29
         '
         'LblMount
         '
         Me.LblMount.AutoSize = True
         Me.LblMount.ForeColor = System.Drawing.Color.Red
-        Me.LblMount.Location = New System.Drawing.Point(799, 444)
+        Me.LblMount.Location = New System.Drawing.Point(599, 361)
+        Me.LblMount.Margin = New System.Windows.Forms.Padding(2, 0, 2, 0)
         Me.LblMount.Name = "LblMount"
-        Me.LblMount.Size = New System.Drawing.Size(47, 17)
+        Me.LblMount.Size = New System.Drawing.Size(37, 13)
         Me.LblMount.TabIndex = 30
         Me.LblMount.Text = "Mount"
         '
+        'Label1
+        '
+        Me.Label1.AutoSize = True
+        Me.Label1.Location = New System.Drawing.Point(355, 443)
+        Me.Label1.Name = "Label1"
+        Me.Label1.Size = New System.Drawing.Size(140, 13)
+        Me.Label1.TabIndex = 31
+        Me.Label1.Text = "Get Ra and Dec from Image"
+        '
         'TheSkyXController
         '
-        Me.AutoScaleDimensions = New System.Drawing.SizeF(8.0!, 16.0!)
+        Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
-        Me.ClientSize = New System.Drawing.Size(1419, 671)
+        Me.ClientSize = New System.Drawing.Size(1064, 545)
+        Me.Controls.Add(Me.BtnSelectImage)
+        Me.Controls.Add(Me.Label1)
         Me.Controls.Add(Me.LblMount)
         Me.Controls.Add(Me.BtnSlewLimits)
         Me.Controls.Add(Me.TxtTargetList)
@@ -551,7 +545,6 @@ Partial Class TheSkyXController
         Me.Controls.Add(Me.BtnSequenceOpen)
         Me.Controls.Add(Me.PnlImageSequence)
         Me.Controls.Add(Me.btnExit)
-        Me.Margin = New System.Windows.Forms.Padding(4, 4, 4, 4)
         Me.Name = "TheSkyXController"
         Me.Text = "TheSkyXController"
         Me.PnlImageSeqTitles.ResumeLayout(False)
@@ -606,4 +599,6 @@ Partial Class TheSkyXController
     Friend WithEvents TxtTargetList As TextBox
     Friend WithEvents BtnSlewLimits As Button
     Friend WithEvents LblMount As Label
+    Friend WithEvents Label1 As Label
+    Friend WithEvents BtnSelectImage As Button
 End Class

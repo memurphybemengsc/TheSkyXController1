@@ -16,6 +16,8 @@ Public Class TheSkyXController
     Private overrideImagingStatus As Integer = ImagingStatus.notImaging
     Private isTmrImagingLoopTicking As Boolean = False
     Private guidingStoppedStopwatch As Stopwatch = New Stopwatch()
+    Private imageSelectionForTargets As OpenFileDialog = Nothing
+    Private imageSelectionForTargets_init_folder As String = ""
 
     Private Enum ImagingStatus
         start
@@ -56,6 +58,7 @@ Public Class TheSkyXController
         BtnPauseImaging.Enabled = False
         BtnStopImaging.Enabled = False
         BtnSettingsImaging.Enabled = False
+        BtnSelectImage.Enabled = True
 
         myAscomUtilities = New AscomUtilities
 
@@ -406,4 +409,31 @@ Public Class TheSkyXController
     Private Sub BtnSlewLimits_Click(sender As Object, e As EventArgs) Handles BtnSlewLimits.Click
         MsgBox("Define slew limits for scope, functionality to be added")
     End Sub
+
+    Private Sub BtnSelectImage_Click(sender As Object, e As EventArgs) Handles BtnSelectImage.Click
+
+        If imageSelectionForTargets Is Nothing Then
+            imageSelectionForTargets = New OpenFileDialog()
+            imageSelectionForTargets.Title = "Select Image to Solve"
+            imageSelectionForTargets.InitialDirectory = "C:\"
+            imageSelectionForTargets.Filter = "Fits (*.fit*)|*.fit*|All files (*.*)|*.*"
+            imageSelectionForTargets.FilterIndex = 1
+            imageSelectionForTargets.RestoreDirectory = False
+        Else
+            imageSelectionForTargets.FileName = ""
+            imageSelectionForTargets.InitialDirectory = imageSelectionForTargets_init_folder
+        End If
+
+        If imageSelectionForTargets.ShowDialog() = DialogResult.OK Then
+            imageSelectionForTargets_init_folder = imageSelectionForTargets.InitialDirectory
+            'If skyXFunctions.imageLinkUsingImage(imageSelectionForTargets.FileName) Then
+            If True Then
+                ' put image in box
+                TxtTargetList.Text = TxtTargetList.Text + imageSelectionForTargets.FileName + vbCrLf
+            Else
+                MsgBox("Unable to solve image")
+            End If
+        End If
+    End Sub
+
 End Class
