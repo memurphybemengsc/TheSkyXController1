@@ -18,10 +18,14 @@ Public Class TheSkyXController
     Private guidingStoppedStopwatch As Stopwatch = New Stopwatch()
     Private imageSelectionForTargets As OpenFileDialog = Nothing
     Private imageSelectionForTargets_init_folder As String = ""
+    Private targetLabels As List(Of Label) = Nothing
+    Private currentTargetFromList As Integer = 0
 
     Private Enum ImagingStatus
         start
         notImaging
+        acqireTarget
+        gotoTarget
         startGuiding
         guidingHasStopped
         preTakeImage
@@ -62,6 +66,8 @@ Public Class TheSkyXController
 
         myAscomUtilities = New AscomUtilities
 
+        clearTargetListText()
+
     End Sub
 
     Public Sub populateDefaultFilterWheelNames(fwNames As List(Of String))
@@ -95,7 +101,6 @@ Public Class TheSkyXController
                 isSkyXConnected = True
                 BtnStartImaging.Enabled = True
                 BtnSettingsImaging.Enabled = True
-                BtnTargetSearch.Enabled = True
                 LblCameraStatus.ForeColor = Color.Green
 
                 If skyXFunctions.isFilterWheelConnected Then
@@ -129,7 +134,6 @@ Public Class TheSkyXController
                 isSkyXConnected = False
                 BtnStartImaging.Enabled = False
                 BtnSettingsImaging.Enabled = False
-                BtnTargetSearch.Enabled = False
                 LblCameraStatus.ForeColor = Color.Red
                 LblFilterWheel.ForeColor = Color.Red
                 LblFocuser.ForeColor = Color.Red
@@ -249,6 +253,8 @@ Public Class TheSkyXController
             ' Make sure any changes to the controls are reflected in the sequence elements
             imageFileSequence.refreshElementsfromControls()
 
+            clearCurrentTargetFromList()
+
             ' Start the imaging timer
             TmrImagingLoop.Start()
         Else
@@ -281,7 +287,58 @@ Public Class TheSkyXController
                 imageFileSequence.initialiseImageRun()
                 skyXFunctions.setMountPointingPosition()
 
-                currentImagingStatus = ImagingStatus.notImaging
+                If isTargetListPopulated() Then
+                    currentImagingStatus = ImagingStatus.acqireTarget
+                Else
+                    currentImagingStatus = ImagingStatus.notImaging
+                End If
+            ElseIf currentImagingStatus = ImagingStatus.acqireTarget Then
+                Dim tgt As String = getNextTargetFromList(getCurrrentTargetFromList())
+                Dim tgt_type = tgt.Substring(0, 1)
+                Dim tgt_name = tgt.Substring(2)
+
+                If tgt = "" Then
+                    ' We have reached the end of the loop (Possibly replace with an exception)
+                    currentImagingStatus = ImagingStatus.halt
+                End If
+
+                If tgt_type = "N" Then
+                    If skyXFunctions.findObject(tgt_name) = False Then
+                        ' Target object is not valid so abort
+                        currentImagingStatus = ImagingStatus.abort
+                    Else
+                        If skyXFunctions.isCurrentdObjectVisible = True Then
+                            skyXFunctions.setRaAndDecFromObject()
+                            currentImagingStatus = ImagingStatus.gotoTarget
+                        Else
+                            ' Object is not visible so go to the next one
+                            currentImagingStatus = ImagingStatus.acqireTarget
+                        End If
+                    End If
+                ElseIf tgt_type = "I" Then
+                    ' Plate solve the image
+                    If skyXFunctions.imageLinkUsingImage(tgt_name) = False Then
+                        ' Unable to image link so abort
+                        currentImagingStatus = ImagingStatus.abort
+                    Else
+                        If skyXFunctions.isLastImageLinkVisible Then
+                            skyXFunctions.setRaAndDecFromImageLink()
+                            currentImagingStatus = ImagingStatus.gotoTarget
+                        Else
+                            ' Object is not visible so go to the next one
+                            currentImagingStatus = ImagingStatus.acqireTarget
+                        End If
+                    End If
+                    ' Something odd happened, abort
+                    currentImagingStatus = ImagingStatus.abort
+                End If
+            ElseIf currentImagingStatus = ImagingStatus.gotoTarget Then
+                If skyXFunctions.closedLoopSlewToTarget() = False Then
+                    ' Something odd happened, abort
+                    currentImagingStatus = ImagingStatus.abort
+                Else
+                    currentImagingStatus = ImagingStatus.notImaging
+                End If
             ElseIf currentImagingStatus = ImagingStatus.notImaging Then
                 If phd2guiding IsNot Nothing AndAlso Not phd2guiding.isPHDGuidingAndLockedOnStar Then
                     ' PHD is not guiding so start guiding
@@ -391,7 +448,7 @@ Public Class TheSkyXController
             End If
 
             isTmrImagingLoopTicking = False
-            End If
+        End If
     End Sub
 
     Private Sub BtnStopImaging_Click(sender As Object, e As EventArgs) Handles BtnStopImaging.Click
@@ -403,7 +460,25 @@ Public Class TheSkyXController
     End Sub
 
     Private Sub BtnTargetSearch_Click(sender As Object, e As EventArgs) Handles BtnTargetSearch.Click
-        MsgBox("Functionality to be added")
+        searchForTargetAndAddToList()
+    End Sub
+
+    Private Sub TxtTarget_KeyDown(sender As Object, e As KeyEventArgs) Handles TxtTarget.KeyDown
+        If e.KeyCode = Keys.Enter Then
+            searchForTargetAndAddToList()
+        End If
+    End Sub
+
+    Private Sub searchForTargetAndAddToList()
+        Dim targetFound As Boolean = True 'skyXFunctions.findObject(TxtTarget.Text)
+        If TxtTarget.Text = "" Then
+            targetFound = False
+        End If
+        ' If search target is found add to targets panel and clear search box
+        If targetFound Then
+            addToNextTarget("N " & TxtTarget.Text.ToUpper)
+            TxtTarget.Text = ""
+        End If
     End Sub
 
     Private Sub BtnSlewLimits_Click(sender As Object, e As EventArgs) Handles BtnSlewLimits.Click
@@ -429,11 +504,233 @@ Public Class TheSkyXController
             'If skyXFunctions.imageLinkUsingImage(imageSelectionForTargets.FileName) Then
             If True Then
                 ' put image in box
-                TxtTargetList.Text = TxtTargetList.Text + imageSelectionForTargets.FileName + vbCrLf
+                addToNextTarget("I " & imageSelectionForTargets.FileName)
             Else
                 MsgBox("Unable to solve image")
             End If
         End If
     End Sub
+
+    Private Sub BtnRemoveTarget_Click(sender As Object, e As EventArgs) Handles BtnRemoveTarget.Click
+        removeHighlightedTarget()
+        reorderTargetList()
+    End Sub
+
+    Private Sub LblTargetListItem1_Click(sender As Object, e As EventArgs) Handles LblTargetListItem1.Click
+        clearBordersOnAllTargets()
+        If LblTargetListItem1.BorderStyle = BorderStyle.None Then
+            LblTargetListItem1.BorderStyle = BorderStyle.FixedSingle
+        Else
+            LblTargetListItem1.BorderStyle = BorderStyle.None
+        End If
+    End Sub
+
+    Private Sub LblTargetListItem2_Click(sender As Object, e As EventArgs) Handles LblTargetListItem2.Click
+        clearBordersOnAllTargets()
+        If LblTargetListItem2.BorderStyle = BorderStyle.None Then
+            LblTargetListItem2.BorderStyle = BorderStyle.FixedSingle
+        Else
+            LblTargetListItem2.BorderStyle = BorderStyle.None
+        End If
+    End Sub
+
+    Private Sub LblTargetListItem3_Click(sender As Object, e As EventArgs) Handles LblTargetListItem3.Click
+        clearBordersOnAllTargets()
+        If LblTargetListItem3.BorderStyle = BorderStyle.None Then
+            LblTargetListItem3.BorderStyle = BorderStyle.FixedSingle
+        Else
+            LblTargetListItem3.BorderStyle = BorderStyle.None
+        End If
+    End Sub
+
+    Private Sub LblTargetListItem4_Click(sender As Object, e As EventArgs) Handles LblTargetListItem4.Click
+        clearBordersOnAllTargets()
+        If LblTargetListItem4.BorderStyle = BorderStyle.None Then
+            LblTargetListItem4.BorderStyle = BorderStyle.FixedSingle
+        Else
+            LblTargetListItem4.BorderStyle = BorderStyle.None
+        End If
+    End Sub
+
+    Private Sub LblTargetListItem5_Click(sender As Object, e As EventArgs) Handles LblTargetListItem5.Click
+        clearBordersOnAllTargets()
+        If LblTargetListItem5.BorderStyle = BorderStyle.None Then
+            LblTargetListItem5.BorderStyle = BorderStyle.FixedSingle
+        Else
+            LblTargetListItem5.BorderStyle = BorderStyle.None
+        End If
+    End Sub
+
+    Private Sub LblTargetListItem6_Click(sender As Object, e As EventArgs) Handles LblTargetListItem6.Click
+        clearBordersOnAllTargets()
+        If LblTargetListItem6.BorderStyle = BorderStyle.None Then
+            LblTargetListItem6.BorderStyle = BorderStyle.FixedSingle
+        Else
+            LblTargetListItem6.BorderStyle = BorderStyle.None
+        End If
+    End Sub
+
+    Private Sub clearBordersOnAllTargets()
+        LblTargetListItem1.BorderStyle = BorderStyle.None
+        LblTargetListItem2.BorderStyle = BorderStyle.None
+        LblTargetListItem3.BorderStyle = BorderStyle.None
+        LblTargetListItem4.BorderStyle = BorderStyle.None
+        LblTargetListItem5.BorderStyle = BorderStyle.None
+        LblTargetListItem6.BorderStyle = BorderStyle.None
+    End Sub
+
+    Private Function addToNextTarget(nextTarget As String) As Boolean
+        If isTargetAlreadyPresent(nextTarget) = True Then
+            Return True
+        End If
+
+        For Each targetLabel As Label In getListOfTargets()
+            If targetLabel.Text = "" Then
+                targetLabel.Text = nextTarget
+                Exit For
+            End If
+        Next
+        Return True
+    End Function
+
+    Private Function isTargetAlreadyPresent(newTarget As String) As Boolean
+        Dim targetIsPresent As Boolean = False
+        For Each tgt As Label In getListOfTargets()
+            If tgt.Text = newTarget Then
+                targetIsPresent = True
+                Exit For
+            End If
+        Next
+        Return targetIsPresent
+    End Function
+
+    Private Function removeHighlightedTarget() As Boolean
+        If LblTargetListItem1.BorderStyle = BorderStyle.FixedSingle Then
+            LblTargetListItem1.BorderStyle = BorderStyle.None
+            LblTargetListItem1.Text = ""
+        End If
+        If LblTargetListItem2.BorderStyle = BorderStyle.FixedSingle Then
+            LblTargetListItem2.BorderStyle = BorderStyle.None
+            LblTargetListItem2.Text = ""
+        End If
+        If LblTargetListItem3.BorderStyle = BorderStyle.FixedSingle Then
+            LblTargetListItem3.BorderStyle = BorderStyle.None
+            LblTargetListItem3.Text = ""
+        End If
+        If LblTargetListItem4.BorderStyle = BorderStyle.FixedSingle Then
+            LblTargetListItem4.BorderStyle = BorderStyle.None
+            LblTargetListItem4.Text = ""
+        End If
+        If LblTargetListItem5.BorderStyle = BorderStyle.FixedSingle Then
+            LblTargetListItem5.BorderStyle = BorderStyle.None
+            LblTargetListItem5.Text = ""
+        End If
+        If LblTargetListItem6.BorderStyle = BorderStyle.FixedSingle Then
+            LblTargetListItem6.BorderStyle = BorderStyle.None
+            LblTargetListItem6.Text = ""
+        End If
+        Return True
+    End Function
+
+    Private Function reorderTargetList() As Boolean
+        Dim targetLabelsText As New List(Of String)
+        Dim targetLabels As List(Of Label) = getListOfTargets()
+
+        For Each targetLabel As Label In targetLabels
+            If targetLabel.Text <> "" Then
+                targetLabelsText.Add(targetLabel.Text)
+            End If
+        Next
+
+        clearTargetListText()
+
+        Dim index As Integer = 0
+        For Each targetText As String In targetLabelsText
+            If targetText <> "" Then
+                targetLabels.ElementAt(index).Text = targetText
+            End If
+            index += 1
+        Next
+
+        Return True
+    End Function
+
+    Private Function clearTargetListText() As Boolean
+        Dim targetLabelsText As New List(Of String)
+
+        For Each targetLabel As Label In getListOfTargets()
+            targetLabel.Text = ""
+        Next
+
+        Return True
+    End Function
+
+    Private Function getListOfTargets() As List(Of Label)
+        If targetLabels Is Nothing Then
+            targetLabels = New List(Of Label)
+            targetLabels.Add(LblTargetListItem1)
+            targetLabels.Add(LblTargetListItem2)
+            targetLabels.Add(LblTargetListItem3)
+            targetLabels.Add(LblTargetListItem4)
+            targetLabels.Add(LblTargetListItem5)
+            targetLabels.Add(LblTargetListItem6)
+        End If
+        Return targetLabels
+    End Function
+
+    Private Function getNextTargetFromList(currentTarget As String) As String
+        Dim nextTarget As String = ""
+        Dim useNextTarget As Boolean = False
+
+        If currentTarget = "" Then
+            useNextTarget = True
+        End If
+
+        For Each tgt As Label In getListOfTargets()
+            If useNextTarget = True Then
+                nextTarget = tgt.Text
+                tgt.ForeColor = Color.Red
+                Exit For
+            End If
+            If currentTarget = tgt.Text Then
+                tgt.ForeColor = Color.Black
+                useNextTarget = True
+            End If
+        Next
+        Return nextTarget
+    End Function
+
+    Private Function getCurrrentTargetFromList() As String
+        Dim currentTarget As String = ""
+
+        For Each tgt As Label In getListOfTargets()
+            If tgt.ForeColor = Color.Red Then
+                currentTarget = tgt.Text
+                Exit For
+            End If
+        Next
+
+        Return currentTarget
+    End Function
+
+    Private Sub clearCurrentTargetFromList()
+        For Each tgt As Label In getListOfTargets()
+            tgt.ForeColor = Color.Black
+        Next
+    End Sub
+
+
+    Private Function isTargetListPopulated() As Boolean
+        Dim isListPopulated As Boolean = False
+
+        For Each targetLabel As Label In getListOfTargets()
+            If targetLabel.Text <> "" Then
+                isListPopulated = True
+                Exit For
+            End If
+        Next
+
+        Return isListPopulated
+    End Function
 
 End Class

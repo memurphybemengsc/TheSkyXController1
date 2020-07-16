@@ -26,6 +26,9 @@ Public Class SkyXFunctions
     Private starChart As TheSkyXLib.sky6StarChart
     Private skyUtils As TheSkyXLib.Isky6Utils
 
+    Private tgtRa As Double
+    Private tgtDec As Double
+
     Enum MountPointingPosition
         noPosition
         mountEast
@@ -309,25 +312,6 @@ Public Class SkyXFunctions
     '    tsxo.Disconnect()
     '    MsgBox(“Image Done”)
     'End Sub
-
-    Sub FindTarget(target As String)
-        Dim tsxs = CreateObject("TheSkyX.sky6StarChart")
-        Dim status = tsxs.Find(target)
-        Dim tsxo = CreateObject("TheSkyX.sky6ObjectInformation")
-        'Console.WriteLine("enum is " & tsxo.Sk6ObjectInformationProperty.sk6ObjInfoProp_NAME1)
-        tsxo.Index = 0
-        Console.WriteLine("Number of objects found " & tsxo.Count)
-        status = tsxo.Property(54)
-        Dim tgtRA = tsxo.ObjInfoPropOut
-        status = tsxo.Property(55)
-        Dim tgtDec = tsxo.ObjInfoPropOut
-        status = tsxo.Property(58)
-        Dim tgtAZ = tsxo.ObjInfoPropOut
-        status = tsxo.Property(59)
-        Dim tgtALT = tsxo.ObjInfoPropOut
-        Console.WriteLine("RA is " & tgtRA.ToString & " Dec is " & tgtDec.ToString)
-        Console.WriteLine("ALT is " & tgtALT.ToString & " AZ is " & tgtAZ.ToString)
-    End Sub
 
     Sub AnalyseImage()
 
@@ -739,6 +723,48 @@ Public Class SkyXFunctions
         Return retval
     End Function
 
+    Public Function isLastImageLinkVisible() As Boolean
+        Return isRaAndDecVisible(getImageLinkResultsRAJ2000, getImageLinkResultsDecJ2000)
+    End Function
+
+    Public Function getImageLinkResultsRAJ2000() As Double
+        Dim ra As Double
+
+        If imageLinkResults IsNot Nothing Then
+            ra = imageLinkResults.imageCenterRAJ2000
+        Else
+            ra = -1
+        End If
+
+        Return ra
+    End Function
+
+    Public Function getImageLinkResultsDecJ2000() As Double
+        Dim dec As Double
+
+        If imageLinkResults IsNot Nothing Then
+            dec = imageLinkResults.imageCenterDecJ2000
+        Else
+            dec = -1
+        End If
+
+        Return dec
+    End Function
+
+    Public Function isRaAndDecVisible(ra As Double, dec As Double) As Boolean
+        Dim visible As Boolean = False
+
+        skyUtils.ConvertRADecToAzAlt(ra, dec)
+        Dim az As Double = skyUtils.dOut0
+        Dim alt As Double = skyUtils.dOut1
+
+        If alt > 0 Then
+            visible = True
+        End If
+
+        Return visible
+    End Function
+
     Public Function findObject(obj As String) As Boolean
         Dim objectFound As Boolean
 
@@ -807,6 +833,36 @@ Public Class SkyXFunctions
 
         Return dec
     End Function
+
+    Public Sub setRaAndDecFromObject()
+        tgtRa = getCurrentObjectRa()
+        tgtDec = getCurrentObjectDec()
+    End Sub
+
+    Public Sub setRaAndDecFromImageLink()
+        tgtRa = getImageLinkResultsRAJ2000()
+        tgtDec = getImageLinkResultsDecJ2000()
+    End Sub
+
+    Public Function isCurrentdObjectVisible() As Boolean
+        Dim isObjectVisible As Boolean = False
+
+        If astroTargetInformation Is Nothing Then
+            isObjectVisible = False
+        Else
+            astroTargetInformation.Property(Sk6ObjectInformationProperty.sk6ObjInfoProp_ALT)
+            Dim out As String = astroTargetInformation.ObjInfoPropOut.ToString()
+            Dim tgtAltitude As Double
+            Double.TryParse(out, tgtAltitude)
+
+            If tgtAltitude > 0 Then
+                isObjectVisible = True
+            End If
+        End If
+
+        Return isObjectVisible
+    End Function
+
 
     Sub setDefaultAutomatedImageLinkSettings()
 
@@ -919,6 +975,28 @@ Public Class SkyXFunctions
                 localDec = mount.dDec
 
                 skyUtils.ComputeAngularSeparation(ra, dec, mount.dRa, mount.dDec)
+                Dim dSep As Double = skyUtils.dOut0
+
+            End If
+        Loop While retval
+
+        Return retval
+    End Function
+
+    Public Function closedLoopSlewToTarget() As Boolean
+        Dim retval As Boolean = False
+
+        Do
+            retval = slewMount(tgtRa, tgtDec, "")
+
+            If retval Then
+                retval = takeAnImageSynchronouslyImageLinkAndSyncMount()
+            End If
+
+            If retval Then
+                mount.GetRaDec()
+
+                skyUtils.ComputeAngularSeparation(tgtRa, tgtDec, mount.dRa, mount.dDec)
                 Dim dSep As Double = skyUtils.dOut0
 
             End If
