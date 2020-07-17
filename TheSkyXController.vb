@@ -293,7 +293,7 @@ Public Class TheSkyXController
                     currentImagingStatus = ImagingStatus.notImaging
                 End If
             ElseIf currentImagingStatus = ImagingStatus.acqireTarget Then
-                Dim tgt As String = getNextTargetFromList(getCurrrentTargetFromList())
+                Dim tgt As String = getNextTargetFromList()
                 Dim tgt_type = tgt.Substring(0, 1)
                 Dim tgt_name = tgt.Substring(2)
 
@@ -678,7 +678,8 @@ Public Class TheSkyXController
         Return targetLabels
     End Function
 
-    Private Function getNextTargetFromList(currentTarget As String) As String
+    Private Function getNextTargetFromList() As String
+        Dim currentTarget As String = getCurrrentTargetFromList()
         Dim nextTarget As String = ""
         Dim useNextTarget As Boolean = False
 

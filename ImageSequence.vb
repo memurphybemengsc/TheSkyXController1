@@ -8,20 +8,20 @@
     Private dither As Boolean = False
     Private imageRunComplete As Boolean = False
 
-    Dim lightFrame As String = "Light"
-    Dim darkFrame As String = "Dark"
-    Dim flatPercentageFrame As String = "Flat (%)"
-    Dim flatSecondsFrame As String = "Flat (s)"
-    Dim biasFrame As String = "Bias"
-    Dim atFocus3 As String = "@Focus3"
-    Dim prompt As String = "Prompt"
-    Dim closedLoopSlew As String = "CLS"
-    Dim abort As String = "Abort"
-    Dim parkMount As String = "Park"
-    Dim shutdown As String = "Shutdown"
-    Dim ftp As String = "FTP"
+    ReadOnly lightFrame As String = "Light"
+    ReadOnly darkFrame As String = "Dark"
+    ReadOnly flatPercentageFrame As String = "Flat (%)"
+    ReadOnly flatSecondsFrame As String = "Flat (s)"
+    ReadOnly biasFrame As String = "Bias"
+    ReadOnly atFocus3 As String = "@Focus3"
+    ReadOnly prompt As String = "Prompt"
+    ReadOnly closedLoopSlew As String = "CLS"
+    ReadOnly abort As String = "Abort"
+    ReadOnly parkMount As String = "Park"
+    ReadOnly shutdown As String = "Shutdown"
+    ReadOnly ftp As String = "FTP"
 
-    Dim allExposureTypes = New String() {lightFrame, darkFrame, flatPercentageFrame, flatSecondsFrame, biasFrame, atFocus3, prompt, closedLoopSlew, abort, parkMount, shutdown, ftp}
+    ReadOnly allExposureTypes = New String() {lightFrame, darkFrame, flatPercentageFrame, flatSecondsFrame, biasFrame, atFocus3, prompt, closedLoopSlew, abort, parkMount, shutdown, ftp}
 
     Public Function isCurrentExposureTypeFTP() As Boolean
         Dim retval As Boolean = False
@@ -856,7 +856,7 @@
             newPanel.Size = New Size(newPanel.Size.Width, componentPanel.Size.Height)
             componentPanel.Controls.Add(newPanel)
             xPos = xPos + newPanel.Size.Width + xSpacing
-            counter = counter + 1
+            counter += 1
         Next
     End Sub
 
