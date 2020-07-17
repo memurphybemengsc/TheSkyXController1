@@ -15,6 +15,7 @@ Public Class SkyXFunctions
     Private theSkyXObject As TheSkyXLib.Application = Nothing
     Private camera As TheSkyXLib.ccdsoftCamera = Nothing
     Private imageFolder As String = ""
+    Private imagePrefix As String = ""
     Private filterNames As List(Of String) = Nothing
     Private currentImage As TheSkyXLib.ccdsoftImage
     Private mount As TheSkyXLib.sky6RASCOMTele
@@ -142,6 +143,14 @@ Public Class SkyXFunctions
 
     Public Function getImageFolder() As String
         Return imageFolder
+    End Function
+
+    Public Sub setImagePrefix(imgPfx As String)
+        imagePrefix = imgPfx
+    End Sub
+
+    Public Function getImagePrefix() As String
+        Return imagePrefix
     End Function
 
     Public Sub disconnect()
@@ -397,6 +406,12 @@ Public Class SkyXFunctions
 
         ' Set the camera to be asynchronous
         camera.Asynchronous = 1
+        camera.AutoSavePath = getImageFolder()
+        camera.AutoSavePrefix = getImagePrefix()
+        If camera.AutoSavePrefix = "" Then
+            camera.AutoSavePrefix = "IMAGE"
+        End If
+
         Try
             camera.TakeImage()
         Catch e As Exception
@@ -766,7 +781,7 @@ Public Class SkyXFunctions
     End Function
 
     Public Function findObject(obj As String) As Boolean
-        Dim objectFound As Boolean
+        Dim objectFound As Boolean = True
 
         If starChart Is Nothing Then
             starChart = New TheSkyXLib.sky6StarChart()
@@ -778,6 +793,7 @@ Public Class SkyXFunctions
         Try
             starChart.Find(obj)
         Catch e As Exception
+            objectFound = False
             Dim s As String = e.Message ' is 'Object not found'
             If s.Contains("Object not found") Then
                 s = "bob"
@@ -785,31 +801,31 @@ Public Class SkyXFunctions
         End Try
 
         'Sk6ObjectInformationProperty.sk6ObjInfoProp_TRANSIT_TIME
-        astroTargetInformation.Property(Sk6ObjectInformationProperty.sk6ObjInfoProp_TRANSIT_TIME) ' h.mmmmmm
-        Dim out As String = astroTargetInformation.ObjInfoPropOut.ToString()
+        'astroTargetInformation.Property(Sk6ObjectInformationProperty.sk6ObjInfoProp_TRANSIT_TIME) ' h.mmmmmm
+        'Dim out As String = astroTargetInformation.ObjInfoPropOut.ToString()
 
-        astroTargetInformation.Property(Sk6ObjectInformationProperty.sk6ObjInfoProp_RISE_TIME) ' h.mmmmmm
-        out = astroTargetInformation.ObjInfoPropOut.ToString()
+        'astroTargetInformation.Property(Sk6ObjectInformationProperty.sk6ObjInfoProp_RISE_TIME) ' h.mmmmmm
+        'out = astroTargetInformation.ObjInfoPropOut.ToString()
 
-        astroTargetInformation.Property(Sk6ObjectInformationProperty.sk6ObjInfoProp_SET_TIME) ' h.mmmmmm
-        out = astroTargetInformation.ObjInfoPropOut.ToString()
+        'astroTargetInformation.Property(Sk6ObjectInformationProperty.sk6ObjInfoProp_SET_TIME) ' h.mmmmmm
+        'out = astroTargetInformation.ObjInfoPropOut.ToString()
 
-        Dim timDbl As Double
-        Double.TryParse(out, timDbl)
-        timDbl = timDbl - 7
-        timDbl = timDbl * 60
+        'Dim timDbl As Double
+        'Double.TryParse(out, timDbl)
+        'timDbl = timDbl - 7
+        'timDbl = timDbl * 60
 
 
-        astroTargetInformation.Property(Sk6ObjectInformationProperty.sk6ObjInfoProp_ACTIVE)
-        out = astroTargetInformation.ObjInfoPropOut.ToString()
+        'astroTargetInformation.Property(Sk6ObjectInformationProperty.sk6ObjInfoProp_ACTIVE)
+        'out = astroTargetInformation.ObjInfoPropOut.ToString()
 
-        astroTargetInformation.Property(Sk6ObjectInformationProperty.sk6ObjInfoProp_ALT)
-        out = astroTargetInformation.ObjInfoPropOut.ToString()
+        'astroTargetInformation.Property(Sk6ObjectInformationProperty.sk6ObjInfoProp_ALT)
+        'out = astroTargetInformation.ObjInfoPropOut.ToString()
 
-        astroTargetInformation.Property(Sk6ObjectInformationProperty.sk6ObjInfoProp_RISE_SET_INFO)
-        out = astroTargetInformation.ObjInfoPropOut.ToString()
+        'astroTargetInformation.Property(Sk6ObjectInformationProperty.sk6ObjInfoProp_RISE_SET_INFO)
+        'out = astroTargetInformation.ObjInfoPropOut.ToString()
 
-        objectFound = False
+        'objectFound = False
 
         Return objectFound
     End Function
@@ -1091,4 +1107,8 @@ Public Class SkyXFunctions
         'Dim s As String
     End Sub
 
+    Public Sub saveCurrentImageToImageFolder()
+        'currentImage.Path = getImageFolder()
+        'currentImage.Save()
+    End Sub
 End Class

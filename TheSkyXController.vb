@@ -248,6 +248,7 @@ Public Class TheSkyXController
             BtnAbortImaging.Enabled = True
             BtnPauseImaging.Enabled = True
             BtnStopImaging.Enabled = True
+            BtnSettingsImaging.Enabled = False
             currentImagingStatus = ImagingStatus.notImaging
 
             ' Make sure any changes to the controls are reflected in the sequence elements
@@ -417,6 +418,8 @@ Public Class TheSkyXController
             ElseIf currentImagingStatus = ImagingStatus.imageComplete Then
                 ' We have the image. Save it.  Possibly check for focus.......
 
+                skyXFunctions.saveCurrentImageToImageFolder()
+
                 currentImagingStatus = ImagingStatus.postImageComplete
             ElseIf currentImagingStatus = ImagingStatus.postImageComplete Then
                 imageFileSequence.incrementSequenceImageCount()
@@ -437,6 +440,7 @@ Public Class TheSkyXController
                 BtnAbortImaging.Enabled = False
                 BtnPauseImaging.Enabled = False
                 BtnStopImaging.Enabled = False
+                BtnSettingsImaging.Enabled = True
                 TmrImagingLoop.Stop()
 
             ElseIf currentImagingStatus = ImagingStatus.abort Then
@@ -444,6 +448,7 @@ Public Class TheSkyXController
                 BtnAbortImaging.Enabled = False
                 BtnPauseImaging.Enabled = False
                 BtnStopImaging.Enabled = False
+                BtnSettingsImaging.Enabled = True
                 TmrImagingLoop.Stop()
             End If
 
@@ -460,24 +465,35 @@ Public Class TheSkyXController
     End Sub
 
     Private Sub BtnTargetSearch_Click(sender As Object, e As EventArgs) Handles BtnTargetSearch.Click
-        searchForTargetAndAddToList()
+        searchForTargetAndAddToListIfVisible()
     End Sub
 
     Private Sub TxtTarget_KeyDown(sender As Object, e As KeyEventArgs) Handles TxtTarget.KeyDown
         If e.KeyCode = Keys.Enter Then
-            searchForTargetAndAddToList()
+            searchForTargetAndAddToListIfVisible()
         End If
     End Sub
 
-    Private Sub searchForTargetAndAddToList()
-        Dim targetFound As Boolean = True 'skyXFunctions.findObject(TxtTarget.Text)
+    Private Sub searchForTargetAndAddToListIfVisible()
+        Dim targetFound As Boolean = False
+
+        If isSkyXConnected AndAlso skyXFunctions IsNot Nothing Then
+            targetFound = skyXFunctions.findObject(TxtTarget.Text)
+        Else
+            targetFound = False
+        End If
+
         If TxtTarget.Text = "" Then
             targetFound = False
         End If
         ' If search target is found add to targets panel and clear search box
         If targetFound Then
-            addToNextTarget("N " & TxtTarget.Text.ToUpper)
-            TxtTarget.Text = ""
+            If skyXFunctions.isCurrentdObjectVisible Then
+                addToNextTarget("N " & TxtTarget.Text.ToUpper)
+                TxtTarget.Text = ""
+            Else
+                targetFound = False
+            End If
         End If
     End Sub
 
