@@ -731,6 +731,8 @@ Public Class SkyXFunctions
 
             ' imageLinkResults
         Catch e As Exception
+            Dim str1 As String = imageLinkResults.errorCode
+            Dim str2 As String = imageLinkResults.errorText
             retval = False
         End Try
 
@@ -768,6 +770,10 @@ Public Class SkyXFunctions
 
     Public Function isRaAndDecVisible(ra As Double, dec As Double) As Boolean
         Dim visible As Boolean = False
+
+        If skyUtils Is Nothing Then
+            skyUtils = New sky6Utils
+        End If
 
         skyUtils.ConvertRADecToAzAlt(ra, dec)
         Dim az As Double = skyUtils.dOut0
@@ -888,7 +894,7 @@ Public Class SkyXFunctions
 
         automatedImageLinkSettings.exposureTimeAILS = 10
         automatedImageLinkSettings.filterNameAILS = ""
-        automatedImageLinkSettings.fovsToSearch = 10
+        automatedImageLinkSettings.fovsToSearch = 300
         automatedImageLinkSettings.imageScale = 2.2
         automatedImageLinkSettings.retries = 2
 

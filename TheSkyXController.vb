@@ -1,4 +1,5 @@
-﻿Imports TheSkyXLib
+﻿Imports System.IO
+Imports TheSkyXLib
 
 Public Class TheSkyXController
     Public imageFileSequence As New ImageSequence()
@@ -63,6 +64,8 @@ Public Class TheSkyXController
         BtnStopImaging.Enabled = False
         BtnSettingsImaging.Enabled = False
         BtnSelectImage.Enabled = True
+        BtnTargetSearch.Enabled = False
+        BtnSelectImage.Enabled = False
 
         myAscomUtilities = New AscomUtilities
 
@@ -101,6 +104,8 @@ Public Class TheSkyXController
                 isSkyXConnected = True
                 BtnStartImaging.Enabled = True
                 BtnSettingsImaging.Enabled = True
+                BtnTargetSearch.Enabled = True
+                BtnSelectImage.Enabled = True
                 LblCameraStatus.ForeColor = Color.Green
 
                 If skyXFunctions.isFilterWheelConnected Then
@@ -134,6 +139,8 @@ Public Class TheSkyXController
                 isSkyXConnected = False
                 BtnStartImaging.Enabled = False
                 BtnSettingsImaging.Enabled = False
+                BtnTargetSearch.Enabled = False
+                BtnSelectImage.Enabled = False
                 LblCameraStatus.ForeColor = Color.Red
                 LblFilterWheel.ForeColor = Color.Red
                 LblFocuser.ForeColor = Color.Red
@@ -248,8 +255,9 @@ Public Class TheSkyXController
             BtnAbortImaging.Enabled = True
             BtnPauseImaging.Enabled = True
             BtnStopImaging.Enabled = True
+            BtnStartImaging.Enabled = False
             BtnSettingsImaging.Enabled = False
-            currentImagingStatus = ImagingStatus.notImaging
+            currentImagingStatus = ImagingStatus.start
 
             ' Make sure any changes to the controls are reflected in the sequence elements
             imageFileSequence.refreshElementsfromControls()
@@ -310,6 +318,7 @@ Public Class TheSkyXController
                     Else
                         If skyXFunctions.isCurrentdObjectVisible = True Then
                             skyXFunctions.setRaAndDecFromObject()
+                            skyXFunctions.setImagePrefix(tgt_name)
                             currentImagingStatus = ImagingStatus.gotoTarget
                         Else
                             ' Object is not visible so go to the next one
@@ -324,6 +333,7 @@ Public Class TheSkyXController
                     Else
                         If skyXFunctions.isLastImageLinkVisible Then
                             skyXFunctions.setRaAndDecFromImageLink()
+                            skyXFunctions.setImagePrefix(Path.GetFileNameWithoutExtension(tgt_name))
                             currentImagingStatus = ImagingStatus.gotoTarget
                         Else
                             ' Object is not visible so go to the next one
@@ -509,7 +519,7 @@ Public Class TheSkyXController
             imageSelectionForTargets.InitialDirectory = "C:\"
             imageSelectionForTargets.Filter = "Fits (*.fit*)|*.fit*|All files (*.*)|*.*"
             imageSelectionForTargets.FilterIndex = 1
-            imageSelectionForTargets.RestoreDirectory = False
+            imageSelectionForTargets.RestoreDirectory = True
         Else
             imageSelectionForTargets.FileName = ""
             imageSelectionForTargets.InitialDirectory = imageSelectionForTargets_init_folder
@@ -517,8 +527,7 @@ Public Class TheSkyXController
 
         If imageSelectionForTargets.ShowDialog() = DialogResult.OK Then
             imageSelectionForTargets_init_folder = imageSelectionForTargets.InitialDirectory
-            'If skyXFunctions.imageLinkUsingImage(imageSelectionForTargets.FileName) Then
-            If True Then
+            If skyXFunctions.imageLinkUsingImage(imageSelectionForTargets.FileName) Then
                 ' put image in box
                 addToNextTarget("I " & imageSelectionForTargets.FileName)
             Else
