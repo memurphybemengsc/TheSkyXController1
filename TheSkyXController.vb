@@ -326,13 +326,15 @@ Public Class TheSkyXController
                         End If
                     End If
                 ElseIf tgt_type = "I" Then
-                    ' Plate solve the image
-                    If skyXFunctions.imageLinkUsingImage(tgt_name) = False Then
-                        ' Unable to image link so abort
+                    ' Get the RA & Dec from the fits data
+                    Dim fkv As New FitsKeyValues()
+                    fkv.populateKeyDataFromFile(tgt_name)
+                    If Not fkv.isRAandDECPresent Then
+                        ' no coordinates present so abort
                         currentImagingStatus = ImagingStatus.abort
                     Else
-                        If skyXFunctions.isLastImageLinkVisible Then
-                            skyXFunctions.setRaAndDecFromImageLink()
+                        If skyXFunctions.isRaAndDecVisible(fkv.imageRA, fkv.imageDEC) Then
+                            skyXFunctions.setRaAndDec(fkv.imageRA, fkv.imageDEC)
                             skyXFunctions.setImagePrefix(Path.GetFileNameWithoutExtension(tgt_name))
                             currentImagingStatus = ImagingStatus.gotoTarget
                         Else
@@ -340,6 +342,7 @@ Public Class TheSkyXController
                             currentImagingStatus = ImagingStatus.acqireTarget
                         End If
                     End If
+                Else
                     ' Something odd happened, abort
                     currentImagingStatus = ImagingStatus.abort
                 End If
@@ -512,7 +515,6 @@ Public Class TheSkyXController
     End Sub
 
     Private Sub BtnSelectImage_Click(sender As Object, e As EventArgs) Handles BtnSelectImage.Click
-
         If imageSelectionForTargets Is Nothing Then
             imageSelectionForTargets = New OpenFileDialog()
             imageSelectionForTargets.Title = "Select Image to Solve"
@@ -527,11 +529,14 @@ Public Class TheSkyXController
 
         If imageSelectionForTargets.ShowDialog() = DialogResult.OK Then
             imageSelectionForTargets_init_folder = imageSelectionForTargets.InitialDirectory
-            If skyXFunctions.imageLinkUsingImage(imageSelectionForTargets.FileName) Then
+            ' Get RA + Dec from Image
+            Dim fkv As New FitsKeyValues()
+            fkv.populateKeyDataFromFile(imageSelectionForTargets.FileName)
+            If fkv.isRAandDECPresent Then
                 ' put image in box
                 addToNextTarget("I " & imageSelectionForTargets.FileName)
             Else
-                MsgBox("Unable to solve image")
+                MsgBox("Coordinates are not present in image")
             End If
         End If
     End Sub

@@ -107,7 +107,7 @@ Public Class FitsKeyCollection
 
         For Each file In filelist
             Dim fkv As New FitsKeyValues()
-            fkv.extractKeysFromFile(file)
+            fkv.populateKeyDataFromFile(file)
             If fkv.isPopulated Then
                 fitsKeys.add(fkv)
             End If

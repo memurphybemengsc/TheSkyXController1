@@ -11,6 +11,9 @@ Public Class FitsKeyValues
     Private Const focusPositionKeyName As String = "FOCPOS"
     Private Const filterKeyName As String = "FILTER"
     Private Const exposureKeyName As String = "EXPTIME"
+    Private Const imageRAKeyName As String = "OBJCTRA"
+    Private Const imageDECKeyName As String = "OBJCTDEC"
+    Private Const imageObjectNameKeyName As String = "OBJECT"
 
     Private imageTypeValue As String
     Private xBinningValue As String
@@ -18,6 +21,11 @@ Public Class FitsKeyValues
     Private focusPositionValue As String
     Private filterValue As String
     Private exposureTimeValue As String
+    Private imageRAValueString As String
+    Private imageDECValueString As String
+    Private imageRAValue As Double
+    Private imageDECValue As Double
+    Private imageObjectNameValue As String
 
     Public Sub New()
         imageTypeValue = ""
@@ -26,6 +34,9 @@ Public Class FitsKeyValues
         focusPositionValue = ""
         filterValue = ""
         exposureTimeValue = ""
+        imageRAValue = Double.NaN
+        imageDECValue = Double.NaN
+        imageObjectNameValue = ""
     End Sub
 
     Public Property ImageType() As String
@@ -79,6 +90,33 @@ Public Class FitsKeyValues
         End Get
         Set(value As String)
             exposureTimeValue = value
+        End Set
+    End Property
+
+    Public Property imageRA() As Double
+        Get
+            Return imageRAValue
+        End Get
+        Set(value As Double)
+            imageRAValue = value
+        End Set
+    End Property
+
+    Public Property imageDEC() As Double
+        Get
+            Return imageDECValue
+        End Get
+        Set(value As Double)
+            imageDECValue = value
+        End Set
+    End Property
+
+    Public Property imageObjectName() As String
+        Get
+            Return imageObjectNameValue
+        End Get
+        Set(value As String)
+            imageObjectNameValue = value
         End Set
     End Property
 
@@ -138,13 +176,14 @@ Public Class FitsKeyValues
         Return readableText
     End Function
 
-    Public Sub extractKeysFromFile(file As String)
+    Public Sub populateKeyDataFromFile(file As String)
         Dim fitsHeadersInFile As New List(Of String)
         fitsHeadersInFile = getFITSHeadersForFile(file)
 
         For Each fitsHeader In fitsHeadersInFile
             Dim key As String = getKeyForFitsHeader(fitsHeader)
-            Dim data As String = getDataForFitsHeader(fitsHeader)
+            Dim data As String = getDataForFitsHeaderAsString(fitsHeader)
+            Dim dataDouble As String = getDataForFitsHeaderAsDouble(fitsHeader)
 
             If key = imageTypeKeyName Then
                 imageTypeValue = data
@@ -158,34 +197,51 @@ Public Class FitsKeyValues
                 filterValue = data
             ElseIf key = exposureKeyName Then
                 ExposureTime = data
+            ElseIf key = imageRAKeyName Then
+                imageRAValue = TheSkyXController.skyXFunctions.convertRA(data)
+                imageRAValueString = data
+            ElseIf key = imageDECKeyName Then
+                imageDECValue = TheSkyXController.skyXFunctions.convertDec(data)
+                imageDECValueString = data
             End If
         Next
 
     End Sub
 
     Private Function getFITSHeadersForFile(fileName As String) As List(Of String)
-        Dim filestream As New FileStream(fileName, FileMode.Open)
-        Dim streamreader As New StreamReader(filestream)
+        Dim filestream As FileStream = Nothing
         Dim buffer(81) As Char
         Dim FITSList As New List(Of String)
         Dim alphabet As String
         Dim firstLine As Boolean = True
 
-        Do
-            streamreader.ReadBlock(buffer, 0, 80)
-            alphabet = New String(buffer)
-            If firstLine Then
-                If alphabet.Substring(0, 6).ToUpper <> "SIMPLE" Then
-                    Exit Do
-                End If
-                firstLine = False
-            End If
-            FITSList.Add(alphabet)
-        Loop Until alphabet.Substring(0, 3) = "END"
-        'Loop Until buffer(0) = "E" And buffer(1) = "N" And buffer(2) = "D"
+        Try
+            filestream = New FileStream(fileName, FileMode.Open)
+        Catch fnfex As FileNotFoundException
+            FITSList = Nothing
+        Catch ex As Exception
+            FITSList = Nothing
+        End Try
 
-        streamreader.Close()
-        filestream.Close()
+        If filestream IsNot Nothing Then
+            Dim streamreader As New StreamReader(filestream)
+
+            Do
+                streamreader.ReadBlock(buffer, 0, 80)
+                alphabet = New String(buffer)
+                If firstLine Then
+                    If alphabet.Substring(0, 6).ToUpper <> "SIMPLE" Then
+                        Exit Do
+                    End If
+                    firstLine = False
+                End If
+                FITSList.Add(alphabet)
+            Loop Until alphabet.Substring(0, 3) = "END"
+            'Loop Until buffer(0) = "E" And buffer(1) = "N" And buffer(2) = "D"
+
+            streamreader.Close()
+            filestream.Close()
+        End If
 
         Return FITSList
     End Function
@@ -241,7 +297,7 @@ Public Class FitsKeyValues
         Return fitsKey
     End Function
 
-    Private Function getDataForFitsHeader(fitsHeader As String) As String
+    Private Function getDataForFitsHeaderAsString(fitsHeader As String) As String
         Dim fitsData As String = ""
         If fitsHeader.Length >= 30 Then
 
@@ -256,4 +312,33 @@ Public Class FitsKeyValues
         Return fitsData
     End Function
 
+    ''' <summary>
+    ''' Return the fits vslue as a double. Will return Double.NAN if conversion fails.
+    ''' </summary>
+    ''' <remarks></remarks>
+
+    Private Function getDataForFitsHeaderAsDouble(fitsheader As String) As Double
+        Dim fitsDataString As String
+        Dim fitsDataDouble As Double
+
+        fitsDataString = getDataForFitsHeaderAsString(fitsheader)
+
+        If Not Double.TryParse(fitsDataString, fitsDataDouble) Then
+            fitsDataDouble = Double.NaN ' Set an invalid value
+        End If
+
+        Return fitsDataDouble
+    End Function
+
+    Public Function isRAandDECPresent() As Boolean
+        Dim retval As Boolean = False
+
+        If Double.IsNaN(imageRAValue) Or Double.IsNaN(imageDECValue) Then
+            retval = False
+        Else
+            retval = True
+        End If
+
+        Return retval
+    End Function
 End Class

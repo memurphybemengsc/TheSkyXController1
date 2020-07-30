@@ -15,6 +15,7 @@ Public Class SkyXFunctions
     Private theSkyXObject As TheSkyXLib.Application = Nothing
     Private camera As TheSkyXLib.ccdsoftCamera = Nothing
     Private imageFolder As String = ""
+    Private CLSUntilArcSecs As Double = 10
     Private imagePrefix As String = ""
     Private filterNames As List(Of String) = Nothing
     Private currentImage As TheSkyXLib.ccdsoftImage
@@ -135,6 +136,10 @@ Public Class SkyXFunctions
 
         End If
 
+    End Sub
+
+    Public Sub setCLSUntilArcSecs(arcsec As Double)
+        CLSUntilArcSecs = arcsec
     End Sub
 
     Public Sub setImageFolder(imgFldr As String)
@@ -629,11 +634,10 @@ Public Class SkyXFunctions
     End Sub
 
     Public Function slewMount(ra As Double, dec As Double, target As String) As Boolean
-        Dim retval As Boolean = False
+        Dim retval As Boolean = True
 
         If mount IsNot Nothing Then
             mount.SlewToRaDec(ra, dec, target)
-
         End If
 
         Return retval
@@ -856,6 +860,11 @@ Public Class SkyXFunctions
         Return dec
     End Function
 
+    Public Sub setRaAndDec(ra As Double, dec As Double)
+        tgtRa = ra
+        tgtDec = dec
+    End Sub
+
     Public Sub setRaAndDecFromObject()
         tgtRa = getCurrentObjectRa()
         tgtDec = getCurrentObjectDec()
@@ -894,6 +903,7 @@ Public Class SkyXFunctions
 
         automatedImageLinkSettings.exposureTimeAILS = 10
         automatedImageLinkSettings.filterNameAILS = ""
+        automatedImageLinkSettings.positionAngle = 0
         automatedImageLinkSettings.fovsToSearch = 300
         automatedImageLinkSettings.imageScale = 2.2
         automatedImageLinkSettings.retries = 2
@@ -1006,23 +1016,38 @@ Public Class SkyXFunctions
     End Function
 
     Public Function closedLoopSlewToTarget() As Boolean
-        Dim retval As Boolean = False
+        Dim retval As Boolean = True
+        Dim retryCLS As Boolean = True
+        Dim numberOfTries As Integer = 10
+        Dim lastAngularSeperation As Double = 500
 
         Do
-            retval = slewMount(tgtRa, tgtDec, "")
+            retryCLS = slewMount(tgtRa, tgtDec, "")
 
-            If retval Then
-                retval = takeAnImageSynchronouslyImageLinkAndSyncMount()
+            If retryCLS Then
+                retryCLS = takeAnImageSynchronouslyImageLinkAndSyncMount()
             End If
 
-            If retval Then
+            If retryCLS Then
                 mount.GetRaDec()
 
                 skyUtils.ComputeAngularSeparation(tgtRa, tgtDec, mount.dRa, mount.dDec)
-                Dim dSep As Double = skyUtils.dOut0
-
+                If skyUtils.dOut0 < 1 Then ' we need to define how close we need to be
+                    retryCLS = False
+                ElseIf skyUtils.dOut0 > lastAngularSeperation Then
+                    ' We are further away, abort
+                    retryCLS = False
+                    retval = False
+                ElseIf skyUtils.dOut0 < lastAngularSeperation Then
+                    ' We are closer but not close enough, decrement counter
+                    numberOfTries -= 1
+                    If numberOfTries = 0 Then
+                        retryCLS = False
+                        retval = False
+                    End If
+                End If
             End If
-        Loop While retval
+        Loop While retryCLS
 
         Return retval
     End Function
@@ -1097,7 +1122,6 @@ Public Class SkyXFunctions
 
 
         'closedLoopSlewToMountPosition()
-
         'isMountPresent()
         'isCameraConnected()
         'takeAnImageSynchronously()
@@ -1117,4 +1141,31 @@ Public Class SkyXFunctions
         'currentImage.Path = getImageFolder()
         'currentImage.Save()
     End Sub
+
+    Public Function convertRA(ra As String) As Double
+        Dim retval As Double
+
+        If Me.skyUtils Is Nothing Then
+            skyUtils = New sky6Utils
+        End If
+
+        skyUtils.ConvertStringToRA(ra)
+        retval = skyUtils.dOut0
+
+        Return retval
+    End Function
+
+    Public Function convertDec(dec As String) As Double
+        Dim retval As Double
+
+        If Me.skyUtils Is Nothing Then
+            skyUtils = New sky6Utils
+        End If
+
+        skyUtils.ConvertStringToDec(dec)
+        retval = skyUtils.dOut0
+
+        Return retval
+    End Function
+
 End Class
