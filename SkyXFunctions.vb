@@ -1062,6 +1062,8 @@ Public Class SkyXFunctions
 
             If imageLinkUsingImage(currentImage.Path) Then
                 syncMount(imageLinkResults.imageCenterRAJ2000, imageLinkResults.imageCenterDecJ2000)
+            Else
+                retval = False
             End If
         End If
 
