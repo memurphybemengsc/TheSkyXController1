@@ -207,10 +207,10 @@
     End Function
 
     Public Function isSequenceComplete() As Boolean
-        If currentExposureCount > getCurrentImageSequenceElement.repeats Then
-            Return True
-        Else
+        If getCurrentImageSequenceElement() IsNot Nothing AndAlso currentExposureCount <= getCurrentImageSequenceElement.repeats Then
             Return False
+        Else
+            Return True
         End If
     End Function
 

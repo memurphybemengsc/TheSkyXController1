@@ -350,12 +350,15 @@ Public Class TheSkyXController
                 End If
             ElseIf currentImagingStatus = ImagingStatus.gotoTarget Then
                 TextBoxStatus.Text = "Goto Target"
+                Dim image_prefix As String = skyXFunctions.getImagePrefix
+                skyXFunctions.setImagePrefix("CLS_" + image_prefix)
                 If skyXFunctions.closedLoopSlewToTarget() = False Then
                     ' Something odd happened, abort
                     currentImagingStatus = ImagingStatus.abort
                 Else
                     currentImagingStatus = ImagingStatus.notImaging
                 End If
+                skyXFunctions.setImagePrefix(image_prefix)
             ElseIf currentImagingStatus = ImagingStatus.notImaging Then
                 TextBoxStatus.Text = "Not Imaging"
                 If phd2guiding IsNot Nothing AndAlso Not phd2guiding.isPHDGuidingAndLockedOnStar Then
@@ -462,7 +465,11 @@ Public Class TheSkyXController
                 ElseIf imageFileSequence.isExecuteDitherSet Then
                     If phd2guiding IsNot Nothing AndAlso Not phd2guiding.isPHDGuidingAndLockedOnStar Then
                         currentImagingStatus = ImagingStatus.dither
+                    Else
+                        currentImagingStatus = ImagingStatus.preTakeImage
                     End If
+                Else
+                    currentImagingStatus = ImagingStatus.preTakeImage
                 End If
             ElseIf currentImagingStatus = ImagingStatus.halt Then
                 TextBoxStatus.Text = "Halt"

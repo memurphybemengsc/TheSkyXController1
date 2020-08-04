@@ -431,6 +431,12 @@ Public Class SkyXFunctions
 
         ' Set the camera to be asynchronous
         camera.Asynchronous = 0
+        camera.AutoSavePath = getImageFolder()
+        camera.AutoSavePrefix = getImagePrefix()
+        If camera.AutoSavePrefix = "" Then
+            camera.AutoSavePrefix = "IMAGE"
+        End If
+
         Try
             camera.TakeImage()
         Catch e As Exception
@@ -465,7 +471,7 @@ Public Class SkyXFunctions
         Dim retval As Boolean = False
 
         ' Set the camera to be asynchronous
-        If camera.IsExposureComplete = 1 Then
+        If camera.IsExposureComplete = 0 Then
             retval = True
         End If
 
