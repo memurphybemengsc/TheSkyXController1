@@ -113,8 +113,8 @@ Public Class SkyXFunctions
         Dim filterNotFound As Boolean = True
         For Each locFilterName As String In filterNames
             If locFilterName = filterName Then
-                Exit For
                 filterNotFound = False
+                Exit For
             End If
             filterIndexZeroBased += 1
         Next
@@ -973,24 +973,7 @@ Public Class SkyXFunctions
         Dim retval As Boolean = True
 
         mount.GetRaDec()
-        mount.Asynchronous = 0 ' Set to synchronous, wait until finished
-        mount.SlewToRaDec(mount.dRa, mount.dDec, "")
-        Dim slewComplete As Integer = mount.IsSlewComplete
-
-
-        closedLoopSlew = New ClosedLoopSlew
-        setDefaultAutomatedImageLinkSettings()
-
-        ' Looks like CLS wont work. Develop a routine to slew, imagelink, sync repeat until done.
-
-
-        'closedLoopSlew.Asynchronous = 0 ' Set to synchronous, wait until finished
-
-        ' What is the 'current target' ?  if I can't code CLS, then repeat slew, imagelink.....
-        ' Perform a closed loop slew to the current target identified in TheSky.
-        closedLoopSlew.exec()
-
-        Dim slewError As Double = mount.LastSlewError
+        retval = closedLoopSlewToPosition(mount.dRa, mount.dDec)
 
         Return retval
     End Function
@@ -999,12 +982,15 @@ Public Class SkyXFunctions
         Dim retval As Boolean = False
         Dim localRa As Double
         Dim localDec As Double
+        Dim continueLoop As Boolean = True
 
         Do
             retval = slewMount(ra, dec, "")
 
             If retval Then
                 retval = takeAnImageSynchronouslyImageLinkAndSyncMount()
+            Else
+                continueLoop = False
             End If
 
             If retval Then
@@ -1015,8 +1001,14 @@ Public Class SkyXFunctions
                 skyUtils.ComputeAngularSeparation(ra, dec, mount.dRa, mount.dDec)
                 Dim dSep As Double = skyUtils.dOut0
 
+                If dSep < CLSUntilArcSecs Then
+                    continueLoop = False
+                End If
+
+            Else
+                continueLoop = False
             End If
-        Loop While retval
+        Loop While continueLoop
 
         Return retval
     End Function

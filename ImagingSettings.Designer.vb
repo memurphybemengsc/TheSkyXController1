@@ -69,10 +69,14 @@ Partial Class ImagingSettings
         '
         'NumUpDownCLSTo
         '
+        Me.NumUpDownCLSTo.DecimalPlaces = 1
+        Me.NumUpDownCLSTo.Increment = New Decimal(New Integer() {1, 0, 0, 65536})
         Me.NumUpDownCLSTo.Location = New System.Drawing.Point(209, 79)
+        Me.NumUpDownCLSTo.Minimum = New Decimal(New Integer() {1, 0, 0, 65536})
         Me.NumUpDownCLSTo.Name = "NumUpDownCLSTo"
         Me.NumUpDownCLSTo.Size = New System.Drawing.Size(120, 22)
         Me.NumUpDownCLSTo.TabIndex = 5
+        Me.NumUpDownCLSTo.Value = New Decimal(New Integer() {10, 0, 0, 0})
         '
         'Label2
         '

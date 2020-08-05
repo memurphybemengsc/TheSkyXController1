@@ -8,17 +8,13 @@
             TxtImageFolder.Text = folderBrowserDialog1.SelectedPath
             TheSkyXController.skyXFunctions.setImageFolder(TxtImageFolder.Text)
             TheSkyXController.TxtImageFolder.Text = TxtImageFolder.Text
-            TheSkyXController.skyXFunctions.setCLSUntilArcSecs(NumUpDownCLSTo.Value)
         Else
             Me.Close()
         End If
     End Sub
 
     Private Sub BtnExit_Click(sender As Object, e As EventArgs) Handles BtnExit.Click
+        TheSkyXController.skyXFunctions.setCLSUntilArcSecs(NumUpDownCLSTo.Value)
         Close()
-    End Sub
-
-    Private Sub ImagingSettings_Load(sender As Object, e As EventArgs) Handles MyBase.Load
-
     End Sub
 End Class

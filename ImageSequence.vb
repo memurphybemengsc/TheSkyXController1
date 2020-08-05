@@ -1,9 +1,9 @@
 ﻿Public Class ImageSequence
     Dim sequenceFileValue As String = ""
     Public componentPanel As Panel = Nothing
-    Private currentImageSequenceElement As Integer = 0
-    Private currentExposureCount As Integer = 0
-    Private currentDitherCount As Integer = 0
+    Private currentImageSequenceElementIndex As Integer = 0
+    Private currentExposureCount As Integer = 1
+    Private currentDitherCount As Integer = 1
 
     Private dither As Boolean = False
     Private imageRunComplete As Boolean = False
@@ -120,9 +120,9 @@
     End Function
 
     Public Sub initialiseImageRun()
-        currentImageSequenceElement = 0
-        currentDitherCount = 0
-        currentExposureCount = 0
+        currentImageSequenceElementIndex = 0
+        currentDitherCount = 1
+        currentExposureCount = 1
         dither = False
         imageRunComplete = False
     End Sub
@@ -131,14 +131,14 @@
     ''' Get the current sequence. Returns the first element if there is no current one.
     ''' </summary>
     Public Function getCurrentImageSequenceElement() As ImageSequenceElement
-        Return getImageSequenceElement(currentImageSequenceElement)
+        Return getImageSequenceElement(currentImageSequenceElementIndex)
     End Function
 
     ''' <summary>
     ''' Get the current sequence index (zero based).
     ''' </summary>
     Public Function getCurrentImageSequenceIndex() As Integer
-        Return currentImageSequenceElement
+        Return currentImageSequenceElementIndex
     End Function
 
     ''' <summary>
@@ -152,16 +152,18 @@
     ''' Get the first sequence. Returns Nothing if none.
     ''' </summary>
     Public Function getFirstImageSequenceElement() As ImageSequenceElement
-        currentImageSequenceElement = 0
-        Return getImageSequenceElement(currentImageSequenceElement)
+        currentImageSequenceElementIndex = 0
+        Return getImageSequenceElement(currentImageSequenceElementIndex)
     End Function
 
     ''' <summary>
     ''' Get the next sequence. Returns Nothing if none.
     ''' </summary>
     Public Function getNextImageSequenceElement() As ImageSequenceElement
-        currentImageSequenceElement += 1
-        Return getImageSequenceElement(currentImageSequenceElement)
+        currentImageSequenceElementIndex += 1
+        currentDitherCount = 1
+        currentExposureCount = 1
+        Return getImageSequenceElement(currentImageSequenceElementIndex)
     End Function
 
     ''' <summary>
@@ -210,6 +212,8 @@
         If getCurrentImageSequenceElement() IsNot Nothing AndAlso currentExposureCount <= getCurrentImageSequenceElement.repeats Then
             Return False
         Else
+            ' We need to check if we have another sequence
+
             Return True
         End If
     End Function
