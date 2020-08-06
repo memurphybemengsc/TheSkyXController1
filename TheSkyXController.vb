@@ -14,7 +14,7 @@ Public Class TheSkyXController
     Private imagingRunPaused As Boolean
     Private imagingRunAborted As Boolean
     Private currentImagingStatus As Integer = ImagingStatus.notImaging
-    Private overrideImagingStatus As Integer = ImagingStatus.notImaging
+    Private overrideImagingStatus As Integer = ImagingStatus.empty
     Private isTmrImagingLoopTicking As Boolean = False
     Private guidingStoppedStopwatch As Stopwatch = New Stopwatch()
     Private imageSelectionForTargets As OpenFileDialog = Nothing
@@ -23,6 +23,7 @@ Public Class TheSkyXController
     Private currentTargetFromList As Integer = 0
 
     Private Enum ImagingStatus
+        empty
         start
         notImaging
         acqireTarget
@@ -34,6 +35,7 @@ Public Class TheSkyXController
         imageInProgress
         imageComplete
         postImageComplete
+        setupNextImage
         dither
         ditheringInProgress
         ditherComplete
@@ -42,6 +44,8 @@ Public Class TheSkyXController
         preClosedLoopSlew
         runClosedLoopSlew
         postClosedLoopSlew
+        runAtFocus3
+        postRunAtFocus3
         meridianFlip
         abort
         halt
@@ -393,7 +397,8 @@ Public Class TheSkyXController
                 If Not skyXFunctions.closedLoopSlewToMountPosition() Then
                     ' Slew failed.  What now???
                 End If
-                currentImagingStatus = ImagingStatus.preTakeImage
+                currentImagingStatus = ImagingStatus.runAtFocus3
+                overrideImagingStatus = ImagingStatus.setupNextImage
             ElseIf currentImagingStatus = ImagingStatus.dither Then
                 TextBoxStatus.Text = "Dither"
                 If phd2guiding IsNot Nothing AndAlso phd2guiding.isPHDGuidingAndLockedOnStar Then
@@ -415,7 +420,7 @@ Public Class TheSkyXController
                 ' Do we keep the last few positions just in case we have an odd situation where the mount flips in the middle of doing stuff?
                 ' Get the next image sequence
                 If Not skyXFunctions.refreshCameraImageSettingsFromCurrentImageSequence() Then
-                    'we have an error, now what?
+                    'we have an error, now what?  @Focus3???
                 End If
                 currentImagingStatus = ImagingStatus.takeImage
             ElseIf currentImagingStatus = ImagingStatus.takeImage Then
@@ -463,10 +468,13 @@ Public Class TheSkyXController
             ElseIf currentImagingStatus = ImagingStatus.postImageComplete Then
                 TextBoxStatus.Text = "Post Image Complete"
                 imageFileSequence.incrementSequenceImageCount()
-
+                currentImagingStatus = ImagingStatus.setupNextImage
+            ElseIf currentImagingStatus = ImagingStatus.setupNextImage Then
                 ' Are we finished?
                 If imageFileSequence.isImageRunComplete Then
                     currentImagingStatus = ImagingStatus.acqireTarget
+                ElseIf imageFileSequence.isCurrentExposureTypeAtFocus3 Then
+                    currentImagingStatus = ImagingStatus.runAtFocus3
                 ElseIf skyXFunctions.updateMountPointingPositionAndReturnMeridianFlip() Then
                     ' We need to perform a meridian flip
                     ' It is possible that the mount could pass through the meridian after imaging complete but before take image !!!!!!!
@@ -480,17 +488,29 @@ Public Class TheSkyXController
                 Else
                     currentImagingStatus = ImagingStatus.preTakeImage
                 End If
+            ElseIf currentImagingStatus = ImagingStatus.runAtFocus3 Then
+                If skyXFunctions.runAtFocus3FullyAutomatically() Then
+                    If overrideImagingStatus = ImagingStatus.empty Then
+                        currentImagingStatus = ImagingStatus.postImageComplete
+                    Else
+                        currentImagingStatus = overrideImagingStatus
+                        overrideImagingStatus = ImagingStatus.empty
+                    End If
+                Else
+                    ' Focus Failed, abort
+                    currentImagingStatus = ImagingStatus.abort
+                End If
             ElseIf currentImagingStatus = ImagingStatus.halt Then
-                TextBoxStatus.Text = "Halt"
-                BtnStartImaging.Enabled = True
-                BtnAbortImaging.Enabled = False
-                BtnPauseImaging.Enabled = False
-                BtnStopImaging.Enabled = False
-                BtnSettingsImaging.Enabled = True
-                TmrImagingLoop.Stop()
+                    TextBoxStatus.Text = "Halt"
+                    BtnStartImaging.Enabled = True
+                    BtnAbortImaging.Enabled = False
+                    BtnPauseImaging.Enabled = False
+                    BtnStopImaging.Enabled = False
+                    BtnSettingsImaging.Enabled = True
+                    TmrImagingLoop.Stop()
 
-            ElseIf currentImagingStatus = ImagingStatus.abort Then
-                TextBoxStatus.Text = "Abort"
+                ElseIf currentImagingStatus = ImagingStatus.abort Then
+                    TextBoxStatus.Text = "Abort"
                 BtnStartImaging.Enabled = True
                 BtnAbortImaging.Enabled = False
                 BtnPauseImaging.Enabled = False

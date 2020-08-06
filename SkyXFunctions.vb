@@ -399,6 +399,9 @@ Public Class SkyXFunctions
 
         If TheSkyXController.imageFileSequence.isCurrentExposureTypeALightFrame Then
             exposureType = ccdsoftImageFrame.cdLight
+        ElseIf TheSkyXController.imageFileSequence.isCurrentExposureTypeAtFocus3 Then
+            ' What?????
+            exposureType = ccdsoftImageFrame.cdLight
         End If
 
         setImageSettings(exposureType, filter, exposure, bx, by)
@@ -406,6 +409,45 @@ Public Class SkyXFunctions
         Return retval
     End Function
 
+    Public Function runAtFocus3FullyAutomatically() As Boolean
+        Dim retval As Boolean = False
+
+        retval = runAtFocus3(0, True)
+
+        Return retval
+    End Function
+
+    Public Function runAtFocus3Manually(nAveraging As Integer) As Boolean
+        Dim retval As Boolean = False
+
+        retval = runAtFocus3(nAveraging, False)
+
+        Return retval
+    End Function
+
+    ''' <summary>
+    ''' Run @Focus3.<br/>
+    ''' nAveraging is the number of samples acquired at each focus position. Supported values are 1, 2, 3.<br/>
+    ''' fullyAutomatic When true means one sample per focus position, automatically determines the exposure time and optimal subframe.
+    ''' Will take a full frame and determine what the best subframe is.<br/><br/>
+    ''' Returns true if success.
+    ''' </summary>
+    ''' <remarks></remarks>
+    Private Function runAtFocus3(nAveraging As Integer, fullyAutomatic As Boolean) As Boolean
+        Dim retval As Boolean = False
+
+        If nAveraging > 3 Then
+            nAveraging = 3
+        End If
+
+        Try
+            camera.AtFocus3(nAveraging, fullyAutomatic)
+            retval = True
+        Catch ex As Exception
+        End Try
+
+        Return retval
+    End Function
     Public Function takeAnImageAsynchronously() As Boolean
         Dim retval As Boolean = True
 

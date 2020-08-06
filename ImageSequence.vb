@@ -192,7 +192,7 @@
         currentExposureCount += 1
         currentDitherCount += 1
 
-        If currentExposureCount > getCurrentImageSequenceElement.repeats Then
+        If isCurrentExposureTypeAtFocus3() Or currentExposureCount > getCurrentImageSequenceElement.repeats Then
             If getNextImageSequenceElement() Is Nothing Then
                 imageRunComplete = True
             End If

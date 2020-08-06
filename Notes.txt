@@ -5,9 +5,11 @@ Items to add
 Things to do first
 ------------------
 
-Add code to handle Meridian flip.
+Handle @Focus3
 
-Add Target list
+Should we refocus after meridian flip
+
+Should we refocus every n exposures?
 
 Things to do later
 ------------------
