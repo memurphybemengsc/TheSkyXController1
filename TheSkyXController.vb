@@ -298,209 +298,214 @@ Public Class TheSkyXController
             If currentImagingStatus = ImagingStatus.start Then
                 TextBoxStatus.Text = "Start"
 
+                If imageFileSequence IsNot Nothing Then
+                    imageFileSequence.initialiseImageRun()
+                End If
+
                 If isTargetListPopulated() Then
-                    currentImagingStatus = ImagingStatus.acqireTarget
-                Else
-                    currentImagingStatus = ImagingStatus.notImaging
-                End If
-            ElseIf currentImagingStatus = ImagingStatus.acqireTarget Then
-                TextBoxStatus.Text = "Acquire Image"
-                Dim tgt As String = getNextTargetFromList()
-                Dim tgt_type = ""
-                Dim tgt_name = ""
+                        clearCurrentTargetFromList()
+                        currentImagingStatus = ImagingStatus.acqireTarget
+                    Else
+                        currentImagingStatus = ImagingStatus.notImaging
+                    End If
+                ElseIf currentImagingStatus = ImagingStatus.acqireTarget Then
+                    TextBoxStatus.Text = "Acquire Image"
+                    Dim tgt As String = getNextTargetFromList()
+                    Dim tgt_type = ""
+                    Dim tgt_name = ""
 
-                If phd2guiding IsNot Nothing Then
-                    phd2guiding.stopGuiding()
-                End If
+                    If phd2guiding IsNot Nothing Then
+                        phd2guiding.stopGuiding()
+                    End If
 
-                If tgt = "" Then
-                    ' We have reached the end of the loop (Possibly replace with an exception)
-                    tgt_type = "HALT"
-                Else
-                    tgt_type = tgt.Substring(0, 1)
-                    tgt_name = tgt.Substring(2)
-                End If
+                    If tgt = "" Then
+                        ' We have reached the end of the loop (Possibly replace with an exception)
+                        tgt_type = "HALT"
+                    Else
+                        tgt_type = tgt.Substring(0, 1)
+                        tgt_name = tgt.Substring(2)
+                    End If
 
-                If tgt_type = "N" Then
-                    If skyXFunctions.findObject(tgt_name) = False Then
-                        ' Target object is not valid so abort
+                    If tgt_type = "N" Then
+                        If skyXFunctions.findObject(tgt_name) = False Then
+                            ' Target object is not valid so abort
+                            currentImagingStatus = ImagingStatus.abort
+                        Else
+                            If skyXFunctions.isCurrentdObjectVisible = True Then
+                                skyXFunctions.setRaAndDecFromObject()
+                                skyXFunctions.setImagePrefix(tgt_name)
+                                currentImagingStatus = ImagingStatus.gotoTarget
+                            Else
+                                ' Object is not visible so go to the next one
+                                currentImagingStatus = ImagingStatus.acqireTarget
+                            End If
+                        End If
+                    ElseIf tgt_type = "I" Then
+                        ' Get the RA & Dec from the fits data
+                        Dim fkv As New FitsKeyValues()
+                        fkv.populateKeyDataFromFile(tgt_name)
+                        If Not fkv.isRAandDECPresent Then
+                            ' no coordinates present so abort
+                            currentImagingStatus = ImagingStatus.abort
+                        Else
+                            If skyXFunctions.isRaAndDecVisible(fkv.imageRA, fkv.imageDEC) Then
+                                skyXFunctions.setRaAndDec(fkv.imageRA, fkv.imageDEC)
+                                skyXFunctions.setImagePrefix(Path.GetFileNameWithoutExtension(tgt_name))
+                                currentImagingStatus = ImagingStatus.gotoTarget
+                            Else
+                                ' Object is not visible so go to the next one
+                                currentImagingStatus = ImagingStatus.acqireTarget
+                            End If
+                        End If
+                    ElseIf tgt_type = "HALT" Then
+                        currentImagingStatus = ImagingStatus.halt
+                    Else
+                        ' Something odd happened, abort
+                        currentImagingStatus = ImagingStatus.abort
+                    End If
+                ElseIf currentImagingStatus = ImagingStatus.gotoTarget Then
+                    TextBoxStatus.Text = "Goto Target"
+                    Dim image_prefix As String = skyXFunctions.getImagePrefix
+                    skyXFunctions.setImagePrefix("CLS_" + image_prefix)
+                    If skyXFunctions.closedLoopSlewToTarget() = False Then
+                        ' Something odd happened, abort
                         currentImagingStatus = ImagingStatus.abort
                     Else
-                        If skyXFunctions.isCurrentdObjectVisible = True Then
-                            skyXFunctions.setRaAndDecFromObject()
-                            skyXFunctions.setImagePrefix(tgt_name)
-                            currentImagingStatus = ImagingStatus.gotoTarget
-                        Else
-                            ' Object is not visible so go to the next one
-                            currentImagingStatus = ImagingStatus.acqireTarget
-                        End If
+                        currentImagingStatus = ImagingStatus.notImaging
                     End If
-                ElseIf tgt_type = "I" Then
-                    ' Get the RA & Dec from the fits data
-                    Dim fkv As New FitsKeyValues()
-                    fkv.populateKeyDataFromFile(tgt_name)
-                    If Not fkv.isRAandDECPresent Then
-                        ' no coordinates present so abort
-                        currentImagingStatus = ImagingStatus.abort
-                    Else
-                        If skyXFunctions.isRaAndDecVisible(fkv.imageRA, fkv.imageDEC) Then
-                            skyXFunctions.setRaAndDec(fkv.imageRA, fkv.imageDEC)
-                            skyXFunctions.setImagePrefix(Path.GetFileNameWithoutExtension(tgt_name))
-                            currentImagingStatus = ImagingStatus.gotoTarget
-                        Else
-                            ' Object is not visible so go to the next one
-                            currentImagingStatus = ImagingStatus.acqireTarget
-                        End If
-                    End If
-                ElseIf tgt_type = "HALT" Then
-                    currentImagingStatus = ImagingStatus.halt
-                Else
-                    ' Something odd happened, abort
-                    currentImagingStatus = ImagingStatus.abort
-                End If
-            ElseIf currentImagingStatus = ImagingStatus.gotoTarget Then
-                TextBoxStatus.Text = "Goto Target"
-                Dim image_prefix As String = skyXFunctions.getImagePrefix
-                skyXFunctions.setImagePrefix("CLS_" + image_prefix)
-                If skyXFunctions.closedLoopSlewToTarget() = False Then
-                    ' Something odd happened, abort
-                    currentImagingStatus = ImagingStatus.abort
-                Else
-                    currentImagingStatus = ImagingStatus.notImaging
-                End If
-                skyXFunctions.setImagePrefix(image_prefix)
-                skyXFunctions.setMountPointingPosition()
-            ElseIf currentImagingStatus = ImagingStatus.notImaging Then
-                TextBoxStatus.Text = "Not Imaging"
-                ' initialise the various counters
-                imageFileSequence.initialiseImageRun()
-                If phd2guiding IsNot Nothing AndAlso Not phd2guiding.isPHDGuidingAndLockedOnStar Then
-                    ' PHD is not guiding so start guiding
-                    phd2guiding.startGuiding()
-                    currentImagingStatus = ImagingStatus.startGuiding
-                Else
-                    ' No PHD connection so start imaging
-                    currentImagingStatus = ImagingStatus.preTakeImage
-                End If
-            ElseIf currentImagingStatus = ImagingStatus.startGuiding Then
-                TextBoxStatus.Text = "Start Guiding"
-                If phd2guiding IsNot Nothing AndAlso phd2guiding.isPHDGuidingAndLockedOnStar Then
-                    ' PHD is now guiding so take an image
-                    currentImagingStatus = ImagingStatus.preTakeImage
-                Else
-                    ' We should add a timeout, possibly reuse the stop watch
-                End If
-            ElseIf currentImagingStatus = ImagingStatus.meridianFlip Then
-                TextBoxStatus.Text = "Meridian Flip"
-                ' We assume that the mount has gone past the meredian and a simple goto will make the mount goto the same Ra & Dec
-                ' but with the correct mount orientation
-                If Not skyXFunctions.closedLoopSlewToMountPosition() Then
-                    ' Slew failed.  What now???
-                End If
-                currentImagingStatus = ImagingStatus.runAtFocus3
-                overrideImagingStatus = ImagingStatus.setupNextImage
-            ElseIf currentImagingStatus = ImagingStatus.dither Then
-                TextBoxStatus.Text = "Dither"
-                If phd2guiding IsNot Nothing AndAlso phd2guiding.isPHDGuidingAndLockedOnStar Then
-                    ' PHD is now guiding so take an image
-                    phd2guiding.ditherMount()
-                    currentImagingStatus = ImagingStatus.ditheringInProgress
-                End If
-            ElseIf currentImagingStatus = ImagingStatus.ditheringInProgress Then
-                TextBoxStatus.Text = "Dither in progress"
-                If phd2guiding.isDitherComplete Then
-                    currentImagingStatus = ImagingStatus.ditherComplete
-                End If
-            ElseIf currentImagingStatus = ImagingStatus.ditherComplete Then
-                TextBoxStatus.Text = "Dither Complete"
-                currentImagingStatus = ImagingStatus.preTakeImage
-            ElseIf currentImagingStatus = ImagingStatus.preTakeImage Then
-                TextBoxStatus.Text = "Pre Take Image"
-                ' Still have to figure out how to determine if mount needs to be flipped.
-                ' Do we keep the last few positions just in case we have an odd situation where the mount flips in the middle of doing stuff?
-                ' Get the next image sequence
-                If Not skyXFunctions.refreshCameraImageSettingsFromCurrentImageSequence() Then
-                    'we have an error, now what?  @Focus3???
-                End If
-                currentImagingStatus = ImagingStatus.takeImage
-            ElseIf currentImagingStatus = ImagingStatus.takeImage Then
-                TextBoxStatus.Text = "Take Image"
-                If Not skyXFunctions.takeAnImageAsynchronously() Then
-                    'we have an error, now what?
-                End If
-
-                currentImagingStatus = ImagingStatus.imageInProgress
-            ElseIf currentImagingStatus = ImagingStatus.imageInProgress Then
-                TextBoxStatus.Text = "Image in progress"
-                If phd2guiding IsNot Nothing AndAlso Not phd2guiding.isPHDGuidingAndLockedOnStar Then
-                    If guidingStoppedStopwatch.IsRunning Then
-                        If phd2guiding IsNot Nothing AndAlso phd2guiding.hasTimeoutBeenExceeded(guidingStoppedStopwatch.ElapsedMilliseconds) Then
-                            ' Guiding has stopped for longer then we would like so abort image
-                            currentImagingStatus = ImagingStatus.guidingHasStopped
-                            guidingStoppedStopwatch.Stop()
-                        End If
-                    Else
-                        'We have stopped guiding, start stopwatch
-                        guidingStoppedStopwatch.Reset()
-                        guidingStoppedStopwatch.Start()
-                    End If
-                End If
-                If Not skyXFunctions.isImagingInProgress Then
-                    currentImagingStatus = ImagingStatus.imageComplete
-                End If
-            ElseIf currentImagingStatus = ImagingStatus.guidingHasStopped Then
-                TextBoxStatus.Text = "Guiding has stopped"
-                If skyXFunctions.abortImage Then
-                    ' Imaging has aborted.  What to do now? Wait for a bit and re-try???
-                    ' We might need to CLS back to target.
-                    currentImagingStatus = ImagingStatus.halt ' halt for now
-                Else
-                    'imaging has not aborted.  What to do now?  Give up?
-                    currentImagingStatus = ImagingStatus.halt ' halt for now
-                End If
-            ElseIf currentImagingStatus = ImagingStatus.imageComplete Then
-                TextBoxStatus.Text = "Image Complete"
-                ' We have the image. Save it.  Possibly check for focus.......
-
-                skyXFunctions.saveCurrentImageToImageFolder()
-
-                currentImagingStatus = ImagingStatus.postImageComplete
-            ElseIf currentImagingStatus = ImagingStatus.postImageComplete Then
-                TextBoxStatus.Text = "Post Image Complete"
-                imageFileSequence.incrementSequenceImageCount()
-                currentImagingStatus = ImagingStatus.setupNextImage
-            ElseIf currentImagingStatus = ImagingStatus.setupNextImage Then
-                ' Are we finished?
-                If imageFileSequence.isImageRunComplete Then
-                    currentImagingStatus = ImagingStatus.acqireTarget
-                ElseIf imageFileSequence.isCurrentExposureTypeAtFocus3 Then
-                    currentImagingStatus = ImagingStatus.runAtFocus3
-                ElseIf skyXFunctions.updateMountPointingPositionAndReturnMeridianFlip() Then
-                    ' We need to perform a meridian flip
-                    ' It is possible that the mount could pass through the meridian after imaging complete but before take image !!!!!!!
-                    currentImagingStatus = ImagingStatus.meridianFlip
-                ElseIf imageFileSequence.isExecuteDitherSet Then
+                    skyXFunctions.setImagePrefix(image_prefix)
+                    skyXFunctions.setMountPointingPosition()
+                ElseIf currentImagingStatus = ImagingStatus.notImaging Then
+                    TextBoxStatus.Text = "Not Imaging"
+                    ' initialise the various counters
+                    imageFileSequence.initialiseImageRun()
                     If phd2guiding IsNot Nothing AndAlso Not phd2guiding.isPHDGuidingAndLockedOnStar Then
-                        currentImagingStatus = ImagingStatus.dither
+                        ' PHD is not guiding so start guiding
+                        phd2guiding.startGuiding()
+                        currentImagingStatus = ImagingStatus.startGuiding
+                    Else
+                        ' No PHD connection so start imaging
+                        currentImagingStatus = ImagingStatus.preTakeImage
+                    End If
+                ElseIf currentImagingStatus = ImagingStatus.startGuiding Then
+                    TextBoxStatus.Text = "Start Guiding"
+                    If phd2guiding IsNot Nothing AndAlso phd2guiding.isPHDGuidingAndLockedOnStar Then
+                        ' PHD is now guiding so take an image
+                        currentImagingStatus = ImagingStatus.preTakeImage
+                    Else
+                        ' We should add a timeout, possibly reuse the stop watch
+                    End If
+                ElseIf currentImagingStatus = ImagingStatus.meridianFlip Then
+                    TextBoxStatus.Text = "Meridian Flip"
+                    ' We assume that the mount has gone past the meredian and a simple goto will make the mount goto the same Ra & Dec
+                    ' but with the correct mount orientation
+                    If Not skyXFunctions.closedLoopSlewToMountPosition() Then
+                        ' Slew failed.  What now???
+                    End If
+                    currentImagingStatus = ImagingStatus.runAtFocus3
+                    overrideImagingStatus = ImagingStatus.setupNextImage
+                ElseIf currentImagingStatus = ImagingStatus.dither Then
+                    TextBoxStatus.Text = "Dither"
+                    If phd2guiding IsNot Nothing AndAlso phd2guiding.isPHDGuidingAndLockedOnStar Then
+                        ' PHD is now guiding so take an image
+                        phd2guiding.ditherMount()
+                        currentImagingStatus = ImagingStatus.ditheringInProgress
+                    End If
+                ElseIf currentImagingStatus = ImagingStatus.ditheringInProgress Then
+                    TextBoxStatus.Text = "Dither in progress"
+                    If phd2guiding.isDitherComplete Then
+                        currentImagingStatus = ImagingStatus.ditherComplete
+                    End If
+                ElseIf currentImagingStatus = ImagingStatus.ditherComplete Then
+                    TextBoxStatus.Text = "Dither Complete"
+                    currentImagingStatus = ImagingStatus.preTakeImage
+                ElseIf currentImagingStatus = ImagingStatus.preTakeImage Then
+                    TextBoxStatus.Text = "Pre Take Image"
+                    ' Still have to figure out how to determine if mount needs to be flipped.
+                    ' Do we keep the last few positions just in case we have an odd situation where the mount flips in the middle of doing stuff?
+                    ' Get the next image sequence
+                    If Not skyXFunctions.refreshCameraImageSettingsFromCurrentImageSequence() Then
+                        'we have an error, now what?  @Focus3???
+                    End If
+                    currentImagingStatus = ImagingStatus.takeImage
+                ElseIf currentImagingStatus = ImagingStatus.takeImage Then
+                    TextBoxStatus.Text = "Take Image"
+                    If Not skyXFunctions.takeAnImageAsynchronously() Then
+                        'we have an error, now what?
+                    End If
+
+                    currentImagingStatus = ImagingStatus.imageInProgress
+                ElseIf currentImagingStatus = ImagingStatus.imageInProgress Then
+                    TextBoxStatus.Text = "Image in progress"
+                    If phd2guiding IsNot Nothing AndAlso Not phd2guiding.isPHDGuidingAndLockedOnStar Then
+                        If guidingStoppedStopwatch.IsRunning Then
+                            If phd2guiding IsNot Nothing AndAlso phd2guiding.hasTimeoutBeenExceeded(guidingStoppedStopwatch.ElapsedMilliseconds) Then
+                                ' Guiding has stopped for longer then we would like so abort image
+                                currentImagingStatus = ImagingStatus.guidingHasStopped
+                                guidingStoppedStopwatch.Stop()
+                            End If
+                        Else
+                            'We have stopped guiding, start stopwatch
+                            guidingStoppedStopwatch.Reset()
+                            guidingStoppedStopwatch.Start()
+                        End If
+                    End If
+                    If Not skyXFunctions.isImagingInProgress Then
+                        currentImagingStatus = ImagingStatus.imageComplete
+                    End If
+                ElseIf currentImagingStatus = ImagingStatus.guidingHasStopped Then
+                    TextBoxStatus.Text = "Guiding has stopped"
+                    If skyXFunctions.abortImage Then
+                        ' Imaging has aborted.  What to do now? Wait for a bit and re-try???
+                        ' We might need to CLS back to target.
+                        currentImagingStatus = ImagingStatus.halt ' halt for now
+                    Else
+                        'imaging has not aborted.  What to do now?  Give up?
+                        currentImagingStatus = ImagingStatus.halt ' halt for now
+                    End If
+                ElseIf currentImagingStatus = ImagingStatus.imageComplete Then
+                    TextBoxStatus.Text = "Image Complete"
+                    ' We have the image. Save it.  Possibly check for focus.......
+
+                    skyXFunctions.saveCurrentImageToImageFolder()
+
+                    currentImagingStatus = ImagingStatus.postImageComplete
+                ElseIf currentImagingStatus = ImagingStatus.postImageComplete Then
+                    TextBoxStatus.Text = "Post Image Complete"
+                    imageFileSequence.incrementSequenceImageCount()
+                    currentImagingStatus = ImagingStatus.setupNextImage
+                ElseIf currentImagingStatus = ImagingStatus.setupNextImage Then
+                    ' Are we finished?
+                    If imageFileSequence.isImageRunComplete Then
+                        currentImagingStatus = ImagingStatus.acqireTarget
+                    ElseIf imageFileSequence.isCurrentExposureTypeAtFocus3 Then
+                        currentImagingStatus = ImagingStatus.runAtFocus3
+                    ElseIf skyXFunctions.updateMountPointingPositionAndReturnMeridianFlip() Then
+                        ' We need to perform a meridian flip
+                        ' It is possible that the mount could pass through the meridian after imaging complete but before take image !!!!!!!
+                        currentImagingStatus = ImagingStatus.meridianFlip
+                    ElseIf imageFileSequence.isExecuteDitherSet Then
+                        If phd2guiding IsNot Nothing AndAlso Not phd2guiding.isPHDGuidingAndLockedOnStar Then
+                            currentImagingStatus = ImagingStatus.dither
+                        Else
+                            currentImagingStatus = ImagingStatus.preTakeImage
+                        End If
                     Else
                         currentImagingStatus = ImagingStatus.preTakeImage
                     End If
-                Else
-                    currentImagingStatus = ImagingStatus.preTakeImage
-                End If
-            ElseIf currentImagingStatus = ImagingStatus.runAtFocus3 Then
-                If skyXFunctions.runAtFocus3FullyAutomatically() Then
-                    If overrideImagingStatus = ImagingStatus.empty Then
-                        currentImagingStatus = ImagingStatus.postImageComplete
+                ElseIf currentImagingStatus = ImagingStatus.runAtFocus3 Then
+                    If skyXFunctions.runAtFocus3FullyAutomatically() Then
+                        If overrideImagingStatus = ImagingStatus.empty Then
+                            currentImagingStatus = ImagingStatus.postImageComplete
+                        Else
+                            currentImagingStatus = overrideImagingStatus
+                            overrideImagingStatus = ImagingStatus.empty
+                        End If
                     Else
-                        currentImagingStatus = overrideImagingStatus
-                        overrideImagingStatus = ImagingStatus.empty
+                        ' Focus Failed, abort
+                        currentImagingStatus = ImagingStatus.abort
                     End If
-                Else
-                    ' Focus Failed, abort
-                    currentImagingStatus = ImagingStatus.abort
-                End If
-            ElseIf currentImagingStatus = ImagingStatus.halt Then
+                ElseIf currentImagingStatus = ImagingStatus.halt Then
                     TextBoxStatus.Text = "Halt"
                     BtnStartImaging.Enabled = True
                     BtnAbortImaging.Enabled = False
@@ -803,7 +808,6 @@ Public Class TheSkyXController
             tgt.ForeColor = Color.Black
         Next
     End Sub
-
 
     Private Function isTargetListPopulated() As Boolean
         Dim isListPopulated As Boolean = False
