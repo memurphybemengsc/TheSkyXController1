@@ -95,6 +95,12 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AscomUtilities.vb" />
+    <Compile Include="EnterRaAndDec.Designer.vb">
+      <DependentUpon>EnterRaAndDec.vb</DependentUpon>
+    </Compile>
+    <Compile Include="EnterRaAndDec.vb">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Include="FitsKeyCollection.vb" />
     <Compile Include="FitsKeyValues.vb" />
     <Compile Include="GenerateCalibrationSequence.Designer.vb">
@@ -141,6 +147,9 @@
     <Compile Include="SkyXFunctions.vb" />
   </ItemGroup>
   <ItemGroup>
+    <EmbeddedResource Include="EnterRaAndDec.resx">
+      <DependentUpon>EnterRaAndDec.vb</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="GenerateCalibrationSequence.resx">
       <DependentUpon>GenerateCalibrationSequence.vb</DependentUpon>
     </EmbeddedResource>
