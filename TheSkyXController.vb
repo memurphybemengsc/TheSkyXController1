@@ -75,6 +75,10 @@ Public Class TheSkyXController
 
         clearTargetListText()
 
+        My.Settings.Reload()
+
+        TxtImageFolder.Text = My.Settings.ImageFolder
+
     End Sub
 
     Public Sub populateDefaultFilterWheelNames(fwNames As List(Of String))
@@ -218,6 +222,8 @@ Public Class TheSkyXController
 
     Private Sub BtnTest_Click(sender As Object, e As EventArgs) Handles BtnTest.Click
 
+        TxtImageFolder.Text = "the image folder"
+
         'myAscomUtilities.chooseAndConnectToMount()
         'If myAscomUtilities.shouldWeFlipMount() Then
         '    MsgBox("Flip Mount")
@@ -225,7 +231,7 @@ Public Class TheSkyXController
         '    MsgBox("Don't Flip Mount")
         'End If
 
-        skyXFunctions.testFunction()
+        'skyXFunctions.testFunction()
 
         'If phd2guiding IsNot Nothing Then
         '    phd2guiding.startGuiding()
@@ -823,6 +829,12 @@ Public Class TheSkyXController
     End Function
 
     Private Sub BtnEnterRAAndDec_Click(sender As Object, e As EventArgs) Handles BtnEnterRAAndDec.Click
+        My.Settings.LastSequenceFile = ""
         EnterRaAndDec.Show()
+    End Sub
+
+    Private Sub TxtImageFolder_TextChanged(sender As Object, e As EventArgs) Handles TxtImageFolder.TextChanged
+        My.Settings.ImageFolder = TxtImageFolder.Text
+        My.Settings.Save()
     End Sub
 End Class

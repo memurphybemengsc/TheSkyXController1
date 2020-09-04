@@ -1,6 +1,10 @@
 ﻿Public Class EnterRaAndDec
     Private Sub BtnEnter_Click(sender As Object, e As EventArgs) Handles BtnEnter.Click
-        Close()
+        If TxtName.Text.Trim = "" Then
+            MsgBox("You must supply a name")
+        Else
+            Close()
+        End If
     End Sub
 
     Private Sub NumUdRaDeg_ValueChanged(sender As Object, e As EventArgs) Handles NumUdRaHour.ValueChanged
