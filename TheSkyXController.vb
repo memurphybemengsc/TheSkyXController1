@@ -575,8 +575,8 @@ Public Class TheSkyXController
         End If
     End Sub
 
-    Private Sub BtnSlewLimits_Click(sender As Object, e As EventArgs) Handles BtnSlewLimits.Click
-        MsgBox("Define slew limits for scope, functionality to be added")
+    Private Sub BtnSlewLimits_Click(sender As Object, e As EventArgs) Handles BtnClearTargets.Click
+        clearTargetListText()
     End Sub
 
     Private Sub BtnSelectImage_Click(sender As Object, e As EventArgs) Handles BtnSelectImage.Click
