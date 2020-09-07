@@ -293,22 +293,17 @@ Public Class PHD2Guiding
         End Get
     End Property
 
-    Public Function SendMessage(message As Byte) As Byte
+    Private Function SendMessage(message As Byte) As Byte
         Dim retval As Byte
-        'Dim tc As TcpClient = New TcpClient()
-        'Dim ns As NetworkStream
-        'Dim br As BinaryReader
-        'Dim bw As BinaryWriter
-        '' Connect to server - Add IP address and port to the PHD form
-        'tc.Connect(“127.0.0.1”, 4300)
-        'ns = tc.GetStream
-        'br = New BinaryReader(ns)
-        'bw = New BinaryWriter(ns)
 
-        ' Write a value to server 
-        binWriter.Write(message)
-        ' Read a value from server with message box 
-        retval = binReader.ReadByte()
+        If isPhdBeingUsed() Then
+            ' Write a value to server 
+            binWriter.Write(message)
+            ' Read a value from server with message box 
+            retval = binReader.ReadByte()
+        Else
+            retval = 0
+        End If
         'MsgBox("Read String " + retval.ToString)
 
         Return retval
@@ -418,7 +413,9 @@ Public Class PHD2Guiding
     Public Function isPHDGuidingAndLockedOnStar() As Boolean
         Dim retval As Boolean = False
 
-        If checkStatus() = 3 Then
+        If Not isPhdBeingUsed() Then
+            retval = True
+        ElseIf checkStatus() = 3 Then
             retval = True
         End If
 
@@ -431,7 +428,9 @@ Public Class PHD2Guiding
     Public Function isPHDGuidingButStarLost() As Boolean
         Dim retval As Boolean = False
 
-        If checkStatus() = 4 Then
+        If Not isPhdBeingUsed() Then
+            retval = True
+        ElseIf checkStatus() = 4 Then
             retval = True
         End If
 
@@ -444,7 +443,9 @@ Public Class PHD2Guiding
     Public Function isPHDGuidingPaused() As Boolean
         Dim retval As Boolean = False
 
-        If checkStatus() = 4 Then
+        If Not isPhdBeingUsed() Then
+            retval = True
+        ElseIf checkStatus() = 4 Then
             retval = True
         End If
 
@@ -457,11 +458,10 @@ Public Class PHD2Guiding
     ''' <remarks></remarks>
     Public Function isPHDLoopingButNoStarSelected() As Boolean
         Dim retval As Boolean = False
-        Dim status As Byte
 
-        status = checkStatus()
-
-        If status = 101 Then
+        If Not isPhdBeingUsed() Then
+            retval = True
+        ElseIf checkStatus() = 101 Then
             retval = True
         End If
 
@@ -476,7 +476,9 @@ Public Class PHD2Guiding
     Public Function selectGuideStar() As Boolean
         Dim retval As Boolean = False
 
-        If SendMessage(Me.MSG_AUTOFINDSTAR) <> 1 Then
+        If Not isPhdBeingUsed() Then
+            retval = True
+        ElseIf SendMessage(Me.MSG_AUTOFINDSTAR) <> 1 Then
             retval = False
         End If
 
@@ -493,19 +495,23 @@ Public Class PHD2Guiding
     Public Function startGuiding() As Boolean
         Dim retval As Boolean = False
 
-        If isPHDNotPausedLoopingOrGuiding() Then
-            startPHDLooping()
-        End If
+        If isPhdBeingUsed() Then
+            If isPHDNotPausedLoopingOrGuiding() Then
+                startPHDLooping()
+            End If
 
-        If isPHDLoopingButNoStarSelected() Then
-            selectGuideStar()
-        End If
+            If isPHDLoopingButNoStarSelected() Then
+                selectGuideStar()
+            End If
 
-        SendMessage(Me.MSG_STARTGUIDING)
-        If isPHDGuidingAndLockedOnStar() Then
-            retval = True
+            SendMessage(Me.MSG_STARTGUIDING)
+            If isPHDGuidingAndLockedOnStar() Then
+                retval = True
+            Else
+                retval = False
+            End If
         Else
-            retval = False
+            retval = True
         End If
 
         Return retval
@@ -517,7 +523,11 @@ Public Class PHD2Guiding
     ''' <remarks></remarks>
     Public Function stopGuiding() As Byte
         Dim retval As Byte
-        retval = SendMessage(Me.MSG_STOP)
+        If Not isPhdBeingUsed() Then
+            retval = 0
+        Else
+            retval = SendMessage(Me.MSG_STOP)
+        End If
         Return retval
     End Function
 

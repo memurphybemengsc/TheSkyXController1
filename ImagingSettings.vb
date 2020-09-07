@@ -1,4 +1,14 @@
 ﻿Public Class ImagingSettings
+
+    Public Sub New()
+
+        ' This call is required by the designer.
+        InitializeComponent()
+
+        ' Add any initialization after the InitializeComponent() call.
+        Me.TxtImageFolder.Text = My.Settings.ImageFolder
+    End Sub
+
     Private Sub BtnSelectFolder_Click(sender As Object, e As EventArgs) Handles BtnSelectFolder.Click
         Dim folderBrowserDialog1 As New FolderBrowserDialog()
         folderBrowserDialog1.ShowNewFolderButton = True

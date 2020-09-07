@@ -7,7 +7,7 @@ Public Class TheSkyXController
     Dim imagingSequenceInProgress As Boolean
     Dim isPhd2Connected As Boolean = False
     Public fitsKeyCollection As FitsKeyCollection
-    Public phd2guiding As PHD2Guiding = Nothing
+    Public phd2guiding As New PHD2Guiding()
     Public skyXFunctions As SkyXFunctions = Nothing
     Public myAscomUtilities As AscomUtilities = Nothing
     Dim isSkyXConnected As Boolean = False
@@ -108,6 +108,7 @@ Public Class TheSkyXController
             ' We have not connected to SkyX
             Try
                 skyXFunctions = New SkyXFunctions()
+                skyXFunctions.setImageFolder(TxtImageFolder.Text)
                 Me.PnlSkyXStatus.BackColor = Color.Green
                 isSkyXConnected = True
                 BtnStartImaging.Enabled = True
