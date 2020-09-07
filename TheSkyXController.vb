@@ -158,9 +158,10 @@ Public Class TheSkyXController
     End Sub
 
     Private Sub BtnPHD2_Click(sender As Object, e As EventArgs) Handles BtnPHD2.Click
-        If phd2guiding Is Nothing Then
+        If Not isPhd2Connected Then
             Try
                 phd2guiding = New PHD2Guiding()
+                phd2guiding.connectToPHD()
                 isPhd2Connected = True
                 Me.PnlPhd2Status.BackColor = Color.Green
             Catch ex As Exception
@@ -173,7 +174,8 @@ Public Class TheSkyXController
                 'dispose of phd object
                 Me.PnlPhd2Status.BackColor = Color.Red
                 phd2guiding.Dispose()
-                phd2guiding = Nothing
+                phd2guiding = New PHD2Guiding() ' Create a fresh object
+                isPhd2Connected = False
             End If
         End If
     End Sub
@@ -298,15 +300,16 @@ Public Class TheSkyXController
     End Sub
 
     Private Sub TmrImagingLoop_Tick(sender As Object, e As EventArgs) Handles TmrImagingLoop.Tick
-        If Not isTmrImagingLoopTicking Then
+        If imageFileSequence Is Nothing Or phd2guiding Is Nothing Or skyXFunctions Is Nothing Then
+            'We have an error state
+            currentImagingStatus = ImagingStatus.abort
+        ElseIf Not isTmrImagingLoopTicking Then
             ' We have this boolean as the tick will be called even if the previous tick has not finished
             isTmrImagingLoopTicking = True
             If currentImagingStatus = ImagingStatus.start Then
                 TextBoxStatus.Text = "Start"
 
-                If imageFileSequence IsNot Nothing Then
-                    imageFileSequence.initialiseImageRun()
-                End If
+                imageFileSequence.initialiseImageRun()
 
                 If isTargetListPopulated() Then
                     clearCurrentTargetFromList()
@@ -320,9 +323,7 @@ Public Class TheSkyXController
                 Dim tgt_type = ""
                 Dim tgt_name = ""
 
-                If phd2guiding IsNot Nothing Then
-                    phd2guiding.stopGuiding()
-                End If
+                phd2guiding.stopGuiding()
 
                 If tgt = "" Then
                     ' We have reached the end of the loop (Possibly replace with an exception)
@@ -332,6 +333,7 @@ Public Class TheSkyXController
                     tgt_name = tgt.Substring(2)
                 End If
 
+                ' Remember to add the Ra/Dec element
                 If tgt_type = "N" Then
                     If skyXFunctions.findObject(tgt_name) = False Then
                         ' Target object is not valid so abort
@@ -373,6 +375,7 @@ Public Class TheSkyXController
                 TextBoxStatus.Text = "Goto Target"
                 Dim image_prefix As String = skyXFunctions.getImagePrefix
                 skyXFunctions.setImagePrefix("CLS_" + image_prefix)
+                ' For future, set the CLS to be asynch
                 If skyXFunctions.closedLoopSlewToTarget() = False Then
                     ' Something odd happened, abort
                     currentImagingStatus = ImagingStatus.abort
@@ -385,7 +388,7 @@ Public Class TheSkyXController
                 TextBoxStatus.Text = "Not Imaging"
                 ' initialise the various counters
                 imageFileSequence.initialiseImageRun()
-                If phd2guiding IsNot Nothing AndAlso Not phd2guiding.isPHDGuidingAndLockedOnStar Then
+                If isPhd2Connected AndAlso Not phd2guiding.isPHDGuidingAndLockedOnStar Then
                     ' PHD is not guiding so start guiding
                     phd2guiding.startGuiding()
                     currentImagingStatus = ImagingStatus.startGuiding
@@ -395,7 +398,7 @@ Public Class TheSkyXController
                 End If
             ElseIf currentImagingStatus = ImagingStatus.startGuiding Then
                 TextBoxStatus.Text = "Start Guiding"
-                If phd2guiding IsNot Nothing AndAlso phd2guiding.isPHDGuidingAndLockedOnStar Then
+                If phd2guiding.isPHDGuidingAndLockedOnStar Then
                     ' PHD is now guiding so take an image
                     currentImagingStatus = ImagingStatus.preTakeImage
                 Else
@@ -408,11 +411,12 @@ Public Class TheSkyXController
                 If Not skyXFunctions.closedLoopSlewToMountPosition() Then
                     ' Slew failed.  What now???
                 End If
+                ' As the mount has slewed re-focus in case the camera has shifted
                 currentImagingStatus = ImagingStatus.runAtFocus3
                 overrideImagingStatus = ImagingStatus.setupNextImage
             ElseIf currentImagingStatus = ImagingStatus.dither Then
                 TextBoxStatus.Text = "Dither"
-                If phd2guiding IsNot Nothing AndAlso phd2guiding.isPHDGuidingAndLockedOnStar Then
+                If phd2guiding.isPHDGuidingAndLockedOnStar Then
                     ' PHD is now guiding so take an image
                     phd2guiding.ditherMount()
                     currentImagingStatus = ImagingStatus.ditheringInProgress
@@ -443,9 +447,9 @@ Public Class TheSkyXController
                 currentImagingStatus = ImagingStatus.imageInProgress
             ElseIf currentImagingStatus = ImagingStatus.imageInProgress Then
                 TextBoxStatus.Text = "Image in progress"
-                If phd2guiding IsNot Nothing AndAlso Not phd2guiding.isPHDGuidingAndLockedOnStar Then
+                If Not phd2guiding.isPHDGuidingAndLockedOnStar Then
                     If guidingStoppedStopwatch.IsRunning Then
-                        If phd2guiding IsNot Nothing AndAlso phd2guiding.hasTimeoutBeenExceeded(guidingStoppedStopwatch.ElapsedMilliseconds) Then
+                        If phd2guiding.hasTimeoutBeenExceeded(guidingStoppedStopwatch.ElapsedMilliseconds) Then
                             ' Guiding has stopped for longer then we would like so abort image
                             currentImagingStatus = ImagingStatus.guidingHasStopped
                             guidingStoppedStopwatch.Stop()
@@ -491,7 +495,7 @@ Public Class TheSkyXController
                     ' It is possible that the mount could pass through the meridian after imaging complete but before take image !!!!!!!
                     currentImagingStatus = ImagingStatus.meridianFlip
                 ElseIf imageFileSequence.isExecuteDitherSet Then
-                    If phd2guiding IsNot Nothing AndAlso Not phd2guiding.isPHDGuidingAndLockedOnStar Then
+                    If Not phd2guiding.isPHDGuidingAndLockedOnStar Then
                         currentImagingStatus = ImagingStatus.dither
                     Else
                         currentImagingStatus = ImagingStatus.preTakeImage

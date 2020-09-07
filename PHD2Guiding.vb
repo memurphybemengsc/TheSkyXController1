@@ -15,6 +15,8 @@ Public Class PHD2Guiding
     Private ditherTimer As Stopwatch = New Stopwatch() 'System.Timers.Timer = New System.Timers.Timer()
     Private generalTimeoutInSeconds As Double
 
+    Private phdIsConnected As Boolean = False
+
     Public Sub New()
 
         ' This call is required by the designer.
@@ -27,16 +29,19 @@ Public Class PHD2Guiding
         Next
         ListBoxDitherBy.Text = ditherAmounts(0)
 
+    End Sub
+
+    Public Sub connectToPHD()
         ShowDialog() ' Show the form as a modal dialog so we pause until the dialog closes
 
         ' We have now set the port, Check PHD is running
         If createPHDConnection() Then
             'OK, we will have set the tcpConnection
+            phdIsConnected = True
         Else
             'PHD is not running so throw exception
             Throw New System.Exception("PHD is not running")
         End If
-
     End Sub
 
 
@@ -613,6 +618,13 @@ Public Class PHD2Guiding
         Else
             Return False
         End If
+    End Function
+
+    ''' <summary>
+    ''' Are we using PHD to Guide?
+    ''' </summary>
+    Public Function isPhdBeingUsed() As Boolean
+        Return phdIsConnected
     End Function
 
 End Class
