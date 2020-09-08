@@ -8,5 +8,20 @@
     <Setting Name="ImageFolder" Type="System.String" Scope="User">
       <Value Profile="(Default)" />
     </Setting>
+    <Setting Name="PhdTcpPort" Type="System.Int32" Scope="User">
+      <Value Profile="(Default)">4300</Value>
+    </Setting>
+    <Setting Name="PhdSettlingTime" Type="System.Double" Scope="User">
+      <Value Profile="(Default)">5</Value>
+    </Setting>
+    <Setting Name="PhdGeneralTimeout" Type="System.Double" Scope="User">
+      <Value Profile="(Default)">5</Value>
+    </Setting>
+    <Setting Name="PhdUseJson" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">False</Value>
+    </Setting>
+    <Setting Name="PhdDitherBy" Type="System.String" Scope="User">
+      <Value Profile="(Default)" />
+    </Setting>
   </Settings>
 </SettingsFile>

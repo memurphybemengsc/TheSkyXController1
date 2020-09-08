@@ -29,6 +29,7 @@ Public Class PHD2Guiding
         Next
         ListBoxDitherBy.Text = ditherAmounts(0)
 
+        loadSettings()
     End Sub
 
     Public Sub connectToPHD()
@@ -595,7 +596,42 @@ Public Class PHD2Guiding
         ditherSettleTimeInSeconds = NumUDSettleTimeInSecs.Value
         generalTimeoutInSeconds = NumUDGeneralTimeoutInSeconds.Value
 
+        saveSettings()
+
         Me.Hide()
+    End Sub
+
+    Private Sub loadSettings()
+        My.Settings.Reload()
+
+        tcpPort = My.Settings.PhdTcpPort
+        Me.NumUDTcpPort.Value = tcpPort
+
+        generalTimeoutInSeconds = My.Settings.PhdGeneralTimeout
+        NumUDGeneralTimeoutInSeconds.Value = generalTimeoutInSeconds
+
+        ditherSettleTimeInSeconds = My.Settings.PhdSettlingTime
+        NumUDSettleTimeInSecs.Value = ditherSettleTimeInSeconds
+
+        useJSON = My.Settings.PhdUseJson
+
+        ListBoxDitherBy.Text = My.Settings.PhdDitherBy
+        ditherAmount = 0
+        For Each ditherText As String In ditherAmounts
+            ditherAmount += 1
+            If ditherText = ListBoxDitherBy.Text Then
+                Exit For
+            End If
+        Next
+    End Sub
+
+    Private Sub saveSettings()
+        My.Settings.PhdTcpPort = tcpPort
+        My.Settings.PhdGeneralTimeout = generalTimeoutInSeconds
+        My.Settings.PhdSettlingTime = ditherSettleTimeInSeconds
+        My.Settings.PhdUseJson = useJSON
+        My.Settings.PhdDitherBy = ListBoxDitherBy.Text
+        My.Settings.Save()
     End Sub
 
     Public Sub ditherMount()

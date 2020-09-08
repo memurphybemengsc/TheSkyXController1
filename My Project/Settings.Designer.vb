@@ -77,6 +77,66 @@ Namespace My
                 Me("ImageFolder") = value
             End Set
         End Property
+        
+        <Global.System.Configuration.UserScopedSettingAttribute(),  _
+         Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),  _
+         Global.System.Configuration.DefaultSettingValueAttribute("4300")>  _
+        Public Property PhdTcpPort() As Integer
+            Get
+                Return CType(Me("PhdTcpPort"),Integer)
+            End Get
+            Set
+                Me("PhdTcpPort") = value
+            End Set
+        End Property
+        
+        <Global.System.Configuration.UserScopedSettingAttribute(),  _
+         Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),  _
+         Global.System.Configuration.DefaultSettingValueAttribute("5")>  _
+        Public Property PhdSettlingTime() As Double
+            Get
+                Return CType(Me("PhdSettlingTime"),Double)
+            End Get
+            Set
+                Me("PhdSettlingTime") = value
+            End Set
+        End Property
+        
+        <Global.System.Configuration.UserScopedSettingAttribute(),  _
+         Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),  _
+         Global.System.Configuration.DefaultSettingValueAttribute("5")>  _
+        Public Property PhdGeneralTimeout() As Double
+            Get
+                Return CType(Me("PhdGeneralTimeout"),Double)
+            End Get
+            Set
+                Me("PhdGeneralTimeout") = value
+            End Set
+        End Property
+        
+        <Global.System.Configuration.UserScopedSettingAttribute(),  _
+         Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),  _
+         Global.System.Configuration.DefaultSettingValueAttribute("False")>  _
+        Public Property PhdUseJson() As Boolean
+            Get
+                Return CType(Me("PhdUseJson"),Boolean)
+            End Get
+            Set
+                Me("PhdUseJson") = value
+            End Set
+        End Property
+        
+        <Global.System.Configuration.UserScopedSettingAttribute(),  _
+         Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),  _
+         Global.System.Configuration.DefaultSettingValueAttribute("")>  _
+        Public Property PhdDitherBy() As String
+            Get
+                Return CType(Me("PhdDitherBy"),String)
+            End Get
+            Set
+                Me("PhdDitherBy") = value
+            End Set
+        End Property
     End Class
 End Namespace
 

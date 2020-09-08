@@ -88,7 +88,7 @@ Partial Class PHD2Guiding
         '
         Me.ListBoxDitherBy.FormattingEnabled = True
         Me.ListBoxDitherBy.Location = New System.Drawing.Point(140, 102)
-        Me.ListBoxDitherBy.Margin = New System.Windows.Forms.Padding(2, 2, 2, 2)
+        Me.ListBoxDitherBy.Margin = New System.Windows.Forms.Padding(2)
         Me.ListBoxDitherBy.Name = "ListBoxDitherBy"
         Me.ListBoxDitherBy.Size = New System.Drawing.Size(91, 69)
         Me.ListBoxDitherBy.TabIndex = 5
@@ -117,7 +117,7 @@ Partial Class PHD2Guiding
         '
         Me.CheckBoxUseJSON.AutoSize = True
         Me.CheckBoxUseJSON.Location = New System.Drawing.Point(140, 216)
-        Me.CheckBoxUseJSON.Margin = New System.Windows.Forms.Padding(2, 2, 2, 2)
+        Me.CheckBoxUseJSON.Margin = New System.Windows.Forms.Padding(2)
         Me.CheckBoxUseJSON.Name = "CheckBoxUseJSON"
         Me.CheckBoxUseJSON.Size = New System.Drawing.Size(76, 17)
         Me.CheckBoxUseJSON.TabIndex = 9
