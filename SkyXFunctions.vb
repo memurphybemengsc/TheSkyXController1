@@ -162,7 +162,7 @@ Public Class SkyXFunctions
         disconnectFromCamera()
     End Sub
 
-    Public Function setImageSettings(imageType As Integer, filter As String, exposure As Double, bx As Integer, by As Integer) As Boolean
+    Private Function setImageSettings(imageType As Integer, filter As String, exposure As Double, bx As Integer, by As Integer) As Boolean
         Dim retval As Boolean = True
 
         moveToFilter(filter)

@@ -272,7 +272,13 @@
     Public Sub OpenSequenceFile()
 
         Dim openFileDialog As New OpenFileDialog()
-        Dim rootFolder As String = System.IO.Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().CodeBase)
+        Dim rootFolder As String
+
+        If My.Settings.ImageSequenceFileInitialFolder <> "" Then
+            rootFolder = My.Settings.ImageSequenceFileInitialFolder
+        Else
+            rootFolder = System.IO.Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().CodeBase)
+        End If
 
         openFileDialog.InitialDirectory = rootFolder
         openFileDialog.Filter = "Sqeuence Files|*.seq;"
@@ -281,6 +287,12 @@
 
         If openFileDialog.ShowDialog() = System.Windows.Forms.DialogResult.OK Then
             sequenceFileValue = openFileDialog.FileName
+            Dim testFile As System.IO.FileInfo
+            testFile = My.Computer.FileSystem.GetFileInfo(sequenceFileValue)
+            Dim folderPath As String = testFile.DirectoryName
+            My.Settings.ImageSequenceFileInitialFolder = folderPath
+            My.Settings.ImageSequenceFile = sequenceFileValue
+            My.Settings.Save()
         Else
             sequenceFileValue = ""
         End If
@@ -305,10 +317,16 @@
 
         If saveFileDialog.ShowDialog() = System.Windows.Forms.DialogResult.OK Then
             WriteSequenceFile(saveFileDialog.FileName)
+            Dim testFile As System.IO.FileInfo
+            testFile = My.Computer.FileSystem.GetFileInfo(saveFileDialog.FileName)
+            Dim folderPath As String = testFile.DirectoryName
+            My.Settings.ImageSequenceFileInitialFolder = folderPath
+            My.Settings.ImageSequenceFile = saveFileDialog.FileName
+            My.Settings.Save()
         End If
     End Sub
 
-    Public Sub ReadSequenceFile(fileName As String)
+    Private Sub ReadSequenceFile(fileName As String)
         Dim imageSequenceElement As New ImageSequenceElement()
         Dim readSequenceFileContext As ReadSequenceFileContext
         readSequenceFileContext = ReadSequenceFileContext.firstLineOfFile
@@ -913,7 +931,14 @@
     End Sub
 
     Public Sub createInitialPanel()
-        imageSequenceElements.Add(New ImageSequenceElement)
+        If My.Settings.ImageSequenceFile IsNot "" Then
+            sequenceFileValue = My.Settings.ImageSequenceFile
+            imageSequenceElements.Clear()
+            ReadSequenceFile(sequenceFileValue)
+        Else
+            imageSequenceElements.Add(New ImageSequenceElement)
+        End If
+
         buildPanel()
     End Sub
 

@@ -137,6 +137,30 @@ Namespace My
                 Me("PhdDitherBy") = value
             End Set
         End Property
+        
+        <Global.System.Configuration.UserScopedSettingAttribute(),  _
+         Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),  _
+         Global.System.Configuration.DefaultSettingValueAttribute("")>  _
+        Public Property ImageSequenceFile() As String
+            Get
+                Return CType(Me("ImageSequenceFile"),String)
+            End Get
+            Set
+                Me("ImageSequenceFile") = value
+            End Set
+        End Property
+        
+        <Global.System.Configuration.UserScopedSettingAttribute(),  _
+         Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),  _
+         Global.System.Configuration.DefaultSettingValueAttribute("")>  _
+        Public Property ImageSequenceFileInitialFolder() As String
+            Get
+                Return CType(Me("ImageSequenceFileInitialFolder"),String)
+            End Get
+            Set
+                Me("ImageSequenceFileInitialFolder") = value
+            End Set
+        End Property
     End Class
 End Namespace
 
