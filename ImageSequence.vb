@@ -4,6 +4,8 @@
     Private currentImageSequenceElementIndex As Integer = 0
     Private currentExposureCount As Integer = 1
     Private currentDitherCount As Integer = 1
+    Private totalExposures As Integer = 0
+    Private currentExposure As Integer = 0
 
     Private dither As Boolean = False
     Private imageRunComplete As Boolean = False
@@ -123,6 +125,7 @@
         currentImageSequenceElementIndex = 0
         currentDitherCount = 1
         currentExposureCount = 1
+        currentExposure = 1
         dither = False
         imageRunComplete = False
     End Sub
@@ -191,6 +194,11 @@
     Public Sub incrementSequenceImageCount()
         currentExposureCount += 1
         currentDitherCount += 1
+
+        If isCurrentExposureTypeABiasFrame() Or isCurrentExposureTypeADarkFrame() Or isCurrentExposureTypeAFlatPercentageFrame() Or
+                isCurrentExposureTypeAFlatSecondsFrame() Or isCurrentExposureTypeALightFrame() Then
+            currentExposure += 1
+        End If
 
         If isCurrentExposureTypeAtFocus3() Or currentExposureCount > getCurrentImageSequenceElement.repeats Then
             If getNextImageSequenceElement() Is Nothing Then
@@ -800,20 +808,22 @@
         Next
         imageSequenceElements = newSequenceElements
         buildPanel()
+        populateTotalsFromImageSequenceElements()
     End Sub
 
-    Private Sub removeSequenceElement(sequenceElementToCopy As Integer)
+    Private Sub removeSequenceElement(sequenceElementToRemove As Integer)
         Dim counter As Integer = 1
         Dim newSequenceElements As New List(Of ImageSequenceElement)
         refreshElementsfromControls()
         For Each seqEl In imageSequenceElements
-            If counter <> sequenceElementToCopy Then
+            If counter <> sequenceElementToRemove Then
                 newSequenceElements.Add(seqEl)
             End If
             counter += 1
         Next
         imageSequenceElements = newSequenceElements
         buildPanel()
+        populateTotalsFromImageSequenceElements()
     End Sub
 
     Private Sub moveSequenceElementToRight(sequenceElementToCopy As Integer)
@@ -839,6 +849,7 @@
         imageSequenceElements = preSequenceElements
         buildPanel()
     End Sub
+
     Private Sub moveSequenceElementToFarRight(sequenceElementToCopy As Integer)
         Dim counter As Integer = 1
         Dim newSequenceElements As New List(Of ImageSequenceElement)
@@ -882,6 +893,18 @@
         Next
     End Sub
 
+    Private Sub populateTotalsFromImageSequenceElements()
+        totalExposures = 0
+
+        For Each seqEl In imageSequenceElements
+            If seqEl.exposureType = lightFrame Or seqEl.exposureType = darkFrame Or
+                seqEl.exposureType = flatPercentageFrame Or seqEl.exposureType = flatSecondsFrame Or
+                seqEl.exposureType = biasFrame Then
+                totalExposures += seqEl.repeats
+            End If
+        Next
+    End Sub
+
     Public Sub refreshElementsfromControls()
         imageSequenceElements.Clear()
         Dim hasChilderen As Boolean = componentPanel.HasChildren
@@ -917,7 +940,7 @@
             Next
             imageSequenceElements.Add(imgSeqEl)
         Next
-
+        populateTotalsFromImageSequenceElements()
     End Sub
 
     Public Sub openFileAndBuildComponents()
@@ -941,6 +964,14 @@
 
         buildPanel()
     End Sub
+
+    Public Function getTotalExposures() As Integer
+        Return totalExposures
+    End Function
+
+    Public Function getCurrentExposure() As Integer
+        Return currentExposure
+    End Function
 
     Public Sub populateSequenceUsingFitsKeyCollection(fkc As FitsKeyCollection)
         imageSequenceElements.Clear()

@@ -431,7 +431,7 @@ Public Class TheSkyXController
                 TextBoxStatus.Text = "Dither Complete"
                 currentImagingStatus = ImagingStatus.preTakeImage
             ElseIf currentImagingStatus = ImagingStatus.preTakeImage Then
-                TextBoxStatus.Text = "Pre Take Image"
+                TextBoxStatus.Text = "Pre Take Image" + imageFileSequence.getCurrentExposure.ToString + "/" + imageFileSequence.getTotalExposures.ToString
                 ' Still have to figure out how to determine if mount needs to be flipped.
                 ' Do we keep the last few positions just in case we have an odd situation where the mount flips in the middle of doing stuff?
                 ' Get the next image sequence
@@ -440,14 +440,14 @@ Public Class TheSkyXController
                 End If
                 currentImagingStatus = ImagingStatus.takeImage
             ElseIf currentImagingStatus = ImagingStatus.takeImage Then
-                TextBoxStatus.Text = "Take Image"
+                TextBoxStatus.Text = "Take Image" + imageFileSequence.getCurrentExposure.ToString + "/" + imageFileSequence.getTotalExposures.ToString
                 If Not skyXFunctions.takeAnImageAsynchronously() Then
                     'we have an error, now what?
                 End If
 
                 currentImagingStatus = ImagingStatus.imageInProgress
             ElseIf currentImagingStatus = ImagingStatus.imageInProgress Then
-                TextBoxStatus.Text = "Image in progress"
+                TextBoxStatus.Text = "Image in progress" + imageFileSequence.getCurrentExposure.ToString + "/" + imageFileSequence.getTotalExposures.ToString
                 If Not phd2guiding.isPHDGuidingAndLockedOnStar Then
                     If guidingStoppedStopwatch.IsRunning Then
                         If phd2guiding.hasTimeoutBeenExceeded(guidingStoppedStopwatch.ElapsedMilliseconds) Then
@@ -475,14 +475,14 @@ Public Class TheSkyXController
                     currentImagingStatus = ImagingStatus.halt ' halt for now
                 End If
             ElseIf currentImagingStatus = ImagingStatus.imageComplete Then
-                TextBoxStatus.Text = "Image Complete"
+                TextBoxStatus.Text = "Image Complete" + imageFileSequence.getCurrentExposure.ToString + "/" + imageFileSequence.getTotalExposures.ToString
                 ' We have the image. Save it.  Possibly check for focus.......
 
                 skyXFunctions.saveCurrentImageToImageFolder()
 
                 currentImagingStatus = ImagingStatus.postImageComplete
             ElseIf currentImagingStatus = ImagingStatus.postImageComplete Then
-                TextBoxStatus.Text = "Post Image Complete"
+                TextBoxStatus.Text = "Post Image Complete" + imageFileSequence.getCurrentExposure.ToString + "/" + imageFileSequence.getTotalExposures.ToString
                 imageFileSequence.incrementSequenceImageCount()
                 currentImagingStatus = ImagingStatus.setupNextImage
             ElseIf currentImagingStatus = ImagingStatus.setupNextImage Then
