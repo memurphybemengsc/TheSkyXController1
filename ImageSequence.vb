@@ -6,6 +6,8 @@
     Private currentDitherCount As Integer = 1
     Private totalExposures As Integer = 0
     Private currentExposure As Integer = 0
+    Private totalExposureTime As Double = 0
+    Private currentExposureTimeElapsed As Double = 0
 
     Private dither As Boolean = False
     Private imageRunComplete As Boolean = False
@@ -198,6 +200,7 @@
         If isCurrentExposureTypeABiasFrame() Or isCurrentExposureTypeADarkFrame() Or isCurrentExposureTypeAFlatPercentageFrame() Or
                 isCurrentExposureTypeAFlatSecondsFrame() Or isCurrentExposureTypeALightFrame() Then
             currentExposure += 1
+            currentExposureTimeElapsed += Double.Parse(getCurrentImageSequenceElement.exposureLength)
         End If
 
         If isCurrentExposureTypeAtFocus3() Or currentExposureCount > getCurrentImageSequenceElement.repeats Then
@@ -895,12 +898,14 @@
 
     Private Sub populateTotalsFromImageSequenceElements()
         totalExposures = 0
+        totalExposureTime = 0
 
         For Each seqEl In imageSequenceElements
             If seqEl.exposureType = lightFrame Or seqEl.exposureType = darkFrame Or
                 seqEl.exposureType = flatPercentageFrame Or seqEl.exposureType = flatSecondsFrame Or
                 seqEl.exposureType = biasFrame Then
                 totalExposures += seqEl.repeats
+                totalExposureTime += Double.Parse(seqEl.exposureLength) * seqEl.repeats
             End If
         Next
     End Sub
@@ -969,8 +974,24 @@
         Return totalExposures
     End Function
 
+    Public Function getTotalExposureTime() As Double
+        Return totalExposureTime
+    End Function
+
+    Public Function getcurrentExposureTimeElapsed() As Double
+        Return currentExposureTimeElapsed
+    End Function
+
     Public Function getCurrentExposure() As Integer
         Return currentExposure
+    End Function
+
+    Public Function getCurrentProgress() As String
+        Dim progress As String
+
+        progress = getCurrentExposure.ToString + "/" + getTotalExposures.ToString + " " + getcurrentExposureTimeElapsed().ToString + "/" + getTotalExposureTime().ToString
+
+        Return progress
     End Function
 
     Public Sub populateSequenceUsingFitsKeyCollection(fkc As FitsKeyCollection)
