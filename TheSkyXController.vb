@@ -225,7 +225,14 @@ Public Class TheSkyXController
 
     Private Sub BtnTest_Click(sender As Object, e As EventArgs) Handles BtnTest.Click
 
-        TxtImageFolder.Text = "the image folder"
+        Dim tgt As String = getNextTargetFromList()
+
+        Dim ra As Double = EnterRaAndDec.extractRa(tgt)
+        Dim dec As Double = EnterRaAndDec.extractDec(tgt)
+        Dim name As String = EnterRaAndDec.extractName(tgt)
+
+
+        'TxtImageFolder.Text = "the image folder"
 
         'myAscomUtilities.chooseAndConnectToMount()
         'If myAscomUtilities.shouldWeFlipMount() Then
@@ -334,7 +341,6 @@ Public Class TheSkyXController
                     tgt_name = tgt.Substring(2)
                 End If
 
-                ' Remember to add the Ra/Dec element
                 If tgt_type = "N" Then
                     If skyXFunctions.findObject(tgt_name) = False Then
                         ' Target object is not valid so abort
@@ -348,6 +354,16 @@ Public Class TheSkyXController
                             ' Object is not visible so go to the next one
                             currentImagingStatus = ImagingStatus.acqireTarget
                         End If
+                    End If
+                ElseIf tgt_type = "C" Then
+                    ' Extract the Ra and Dec
+                    If skyXFunctions.isRaAndDecVisible(EnterRaAndDec.extractRa(tgt_name), EnterRaAndDec.extractDec(tgt_name)) Then
+                        skyXFunctions.setRaAndDec(EnterRaAndDec.extractRa(tgt_name), EnterRaAndDec.extractDec(tgt_name))
+                        skyXFunctions.setImagePrefix(EnterRaAndDec.extractName(tgt_name))
+                        currentImagingStatus = ImagingStatus.gotoTarget
+                    Else
+                        ' Object is not visible so go to the next one
+                        currentImagingStatus = ImagingStatus.acqireTarget
                     End If
                 ElseIf tgt_type = "I" Then
                     ' Get the RA & Dec from the fits data
@@ -475,14 +491,14 @@ Public Class TheSkyXController
                     currentImagingStatus = ImagingStatus.halt ' halt for now
                 End If
             ElseIf currentImagingStatus = ImagingStatus.imageComplete Then
-                TextBoxStatus.Text = "Image Complete " + imageFileSequence.getCurrentProgress
+                TextBoxStatus.Text = "Image Complete " + imageFileSequence.getCurrentProgress()
                 ' We have the image. Save it.  Possibly check for focus.......
 
                 skyXFunctions.saveCurrentImageToImageFolder()
 
                 currentImagingStatus = ImagingStatus.postImageComplete
             ElseIf currentImagingStatus = ImagingStatus.postImageComplete Then
-                TextBoxStatus.Text = "Post Image Complete " + imageFileSequence.getCurrentProgress
+                TextBoxStatus.Text = "Post Image Complete " + imageFileSequence.getCurrentProgress()
                 imageFileSequence.incrementSequenceImageCount()
                 currentImagingStatus = ImagingStatus.setupNextImage
             ElseIf currentImagingStatus = ImagingStatus.setupNextImage Then
@@ -679,7 +695,7 @@ Public Class TheSkyXController
         LblTargetListItem6.BorderStyle = BorderStyle.None
     End Sub
 
-    Private Function addToNextTarget(nextTarget As String) As Boolean
+    Public Function addToNextTarget(nextTarget As String) As Boolean
         If isTargetAlreadyPresent(nextTarget) = True Then
             Return True
         End If

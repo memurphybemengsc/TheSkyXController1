@@ -1,8 +1,17 @@
-﻿Public Class EnterRaAndDec
+﻿Imports System.Windows.Forms.VisualStyles
+
+Public Class EnterRaAndDec
     Private Sub BtnEnter_Click(sender As Object, e As EventArgs) Handles BtnEnter.Click
         If TxtName.Text.Trim = "" Then
             MsgBox("You must supply a name")
         Else
+            ' Remove any occurence of Ra or Dec to avoid confusion
+            Dim workString As String = TxtName.Text.ToUpper
+            workString = workString.Replace(" RA: ", " ")
+            workString = workString.Replace(" DEC: ", " ")
+            ' Add to the list of targets
+            TheSkyXController.addToNextTarget("C " + workString.Trim + " Ra: " + NumUdRaDecimal.Value.ToString + " Dec: " + NumUdDecDecimal.Value.ToString)
+
             Close()
         End If
     End Sub
@@ -47,7 +56,11 @@
 
         NumUdRaHour.Value = hour
         NumUdRaMin.Value = min
-        NumUdRaSec.Value = second
+        If second < NumUdRaSec.Maximum Then
+            NumUdRaSec.Value = second
+        Else
+            NumUdRaSec.Value = NumUdRaSec.Maximum
+        End If
     End Sub
 
     Private Sub NumUdDecDeg_ValueChanged(sender As Object, e As EventArgs) Handles NumUdDecDeg.ValueChanged
@@ -133,7 +146,34 @@
 
         NumUdDecDeg.Value = degree
         NumUdDecMin.Value = minute
-        NumUdDecSec.Value = seconds
+        If seconds < NumUdDecSec.Maximum Then
+            NumUdDecSec.Value = seconds
+        Else
+            NumUdDecSec.Value = NumUdDecSec.Maximum
+        End If
 
     End Sub
+
+    Public Shared Function extractRa(target As String) As Double
+        Dim ra As Double = 0
+        Dim startRa As Double = target.IndexOf("Ra:")
+        Dim startDec As Double = target.IndexOf("Dec:")
+        Dim length As Double = startDec - (startRa + 3)
+        ra = Double.Parse(target.Substring(startRa + 3, length))
+        Return ra
+    End Function
+
+    Public Shared Function extractDec(target As String) As Double
+        Dim dec As Double = 0
+        Dim startDec As Double = target.IndexOf("Dec:")
+        Dim length As Double = target.Length - (startDec + 4)
+        dec = Double.Parse(target.Substring(startDec + 4, length))
+        Return dec
+    End Function
+
+    Public Shared Function extractName(target As String) As String
+        Dim name As String = ""
+        name = target.Substring(0, target.IndexOf("Ra:"))
+        Return name
+    End Function
 End Class
