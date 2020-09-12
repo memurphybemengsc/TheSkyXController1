@@ -73,9 +73,9 @@ Public Class TheSkyXController
 
         myAscomUtilities = New AscomUtilities
 
-        clearTargetListText()
-
         My.Settings.Reload()
+
+        loadTargets()
 
         TxtImageFolder.Text = My.Settings.ImageFolder
 
@@ -232,7 +232,7 @@ Public Class TheSkyXController
         Dim name As String = EnterRaAndDec.extractName(tgt)
 
 
-        'TxtImageFolder.Text = "the image folder"
+        TxtImageFolder.Text = "the image folder"
 
         'myAscomUtilities.chooseAndConnectToMount()
         'If myAscomUtilities.shouldWeFlipMount() Then
@@ -706,6 +706,9 @@ Public Class TheSkyXController
                 Exit For
             End If
         Next
+
+        saveTargets()
+
         Return True
     End Function
 
@@ -745,6 +748,9 @@ Public Class TheSkyXController
             LblTargetListItem6.BorderStyle = BorderStyle.None
             LblTargetListItem6.Text = ""
         End If
+
+        saveTargets()
+
         Return True
     End Function
 
@@ -768,6 +774,8 @@ Public Class TheSkyXController
             index += 1
         Next
 
+        saveTargets()
+
         Return True
     End Function
 
@@ -777,6 +785,8 @@ Public Class TheSkyXController
         For Each targetLabel As Label In getListOfTargets()
             targetLabel.Text = ""
         Next
+
+        saveTargets()
 
         Return True
     End Function
@@ -836,6 +846,24 @@ Public Class TheSkyXController
         Next
     End Sub
 
+    Private Sub saveTargets()
+        My.Settings.target1 = LblTargetListItem1.Text
+        My.Settings.target2 = LblTargetListItem2.Text
+        My.Settings.target3 = LblTargetListItem3.Text
+        My.Settings.target4 = LblTargetListItem4.Text
+        My.Settings.target5 = LblTargetListItem5.Text
+        My.Settings.target6 = LblTargetListItem6.Text
+    End Sub
+
+    Private Sub loadTargets()
+        LblTargetListItem1.Text = My.Settings.target1
+        LblTargetListItem2.Text = My.Settings.target2
+        LblTargetListItem3.Text = My.Settings.target3
+        LblTargetListItem4.Text = My.Settings.target4
+        LblTargetListItem5.Text = My.Settings.target5
+        LblTargetListItem6.Text = My.Settings.target6
+    End Sub
+
     Private Function isTargetListPopulated() As Boolean
         Dim isListPopulated As Boolean = False
 
@@ -858,4 +886,5 @@ Public Class TheSkyXController
         My.Settings.ImageFolder = TxtImageFolder.Text
         My.Settings.Save()
     End Sub
+
 End Class

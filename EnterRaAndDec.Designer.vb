@@ -50,7 +50,7 @@ Partial Class EnterRaAndDec
         'BtnEnter
         '
         Me.BtnEnter.Location = New System.Drawing.Point(405, 199)
-        Me.BtnEnter.Margin = New System.Windows.Forms.Padding(4, 4, 4, 4)
+        Me.BtnEnter.Margin = New System.Windows.Forms.Padding(4)
         Me.BtnEnter.Name = "BtnEnter"
         Me.BtnEnter.Size = New System.Drawing.Size(100, 28)
         Me.BtnEnter.TabIndex = 0
@@ -60,7 +60,7 @@ Partial Class EnterRaAndDec
         'NumUdRaHour
         '
         Me.NumUdRaHour.Location = New System.Drawing.Point(199, 53)
-        Me.NumUdRaHour.Margin = New System.Windows.Forms.Padding(4, 4, 4, 4)
+        Me.NumUdRaHour.Margin = New System.Windows.Forms.Padding(4)
         Me.NumUdRaHour.Maximum = New Decimal(New Integer() {23, 0, 0, 0})
         Me.NumUdRaHour.Name = "NumUdRaHour"
         Me.NumUdRaHour.Size = New System.Drawing.Size(55, 22)
@@ -69,7 +69,7 @@ Partial Class EnterRaAndDec
         'NumUdRaMin
         '
         Me.NumUdRaMin.Location = New System.Drawing.Point(277, 53)
-        Me.NumUdRaMin.Margin = New System.Windows.Forms.Padding(4, 4, 4, 4)
+        Me.NumUdRaMin.Margin = New System.Windows.Forms.Padding(4)
         Me.NumUdRaMin.Maximum = New Decimal(New Integer() {59, 0, 0, 0})
         Me.NumUdRaMin.Name = "NumUdRaMin"
         Me.NumUdRaMin.Size = New System.Drawing.Size(48, 22)
@@ -80,7 +80,7 @@ Partial Class EnterRaAndDec
         Me.NumUdRaSec.DecimalPlaces = 3
         Me.NumUdRaSec.Increment = New Decimal(New Integer() {1, 0, 0, 196608})
         Me.NumUdRaSec.Location = New System.Drawing.Point(345, 53)
-        Me.NumUdRaSec.Margin = New System.Windows.Forms.Padding(4, 4, 4, 4)
+        Me.NumUdRaSec.Margin = New System.Windows.Forms.Padding(4)
         Me.NumUdRaSec.Maximum = New Decimal(New Integer() {59999, 0, 0, 196608})
         Me.NumUdRaSec.Name = "NumUdRaSec"
         Me.NumUdRaSec.Size = New System.Drawing.Size(160, 22)
@@ -121,7 +121,7 @@ Partial Class EnterRaAndDec
         Me.NumUdRaDecimal.DecimalPlaces = 6
         Me.NumUdRaDecimal.Increment = New Decimal(New Integer() {1, 0, 0, 393216})
         Me.NumUdRaDecimal.Location = New System.Drawing.Point(199, 98)
-        Me.NumUdRaDecimal.Margin = New System.Windows.Forms.Padding(4, 4, 4, 4)
+        Me.NumUdRaDecimal.Margin = New System.Windows.Forms.Padding(4)
         Me.NumUdRaDecimal.Maximum = New Decimal(New Integer() {23999999, 0, 0, 393216})
         Me.NumUdRaDecimal.Name = "NumUdRaDecimal"
         Me.NumUdRaDecimal.Size = New System.Drawing.Size(160, 22)
@@ -132,9 +132,9 @@ Partial Class EnterRaAndDec
         Me.NumUdDecDecimal.DecimalPlaces = 6
         Me.NumUdDecDecimal.Increment = New Decimal(New Integer() {1, 0, 0, 393216})
         Me.NumUdDecDecimal.Location = New System.Drawing.Point(559, 98)
-        Me.NumUdDecDecimal.Margin = New System.Windows.Forms.Padding(4, 4, 4, 4)
-        Me.NumUdDecDecimal.Maximum = New Decimal(New Integer() {90, 0, 0, 0})
-        Me.NumUdDecDecimal.Minimum = New Decimal(New Integer() {90, 0, 0, -2147483648})
+        Me.NumUdDecDecimal.Margin = New System.Windows.Forms.Padding(4)
+        Me.NumUdDecDecimal.Maximum = New Decimal(New Integer() {89999999, 0, 0, 393216})
+        Me.NumUdDecDecimal.Minimum = New Decimal(New Integer() {89999999, 0, 0, -2147090432})
         Me.NumUdDecDecimal.Name = "NumUdDecDecimal"
         Me.NumUdDecDecimal.Size = New System.Drawing.Size(160, 22)
         Me.NumUdDecDecimal.TabIndex = 15
@@ -154,7 +154,7 @@ Partial Class EnterRaAndDec
         Me.NumUdDecSec.DecimalPlaces = 3
         Me.NumUdDecSec.Increment = New Decimal(New Integer() {1, 0, 0, 196608})
         Me.NumUdDecSec.Location = New System.Drawing.Point(705, 53)
-        Me.NumUdDecSec.Margin = New System.Windows.Forms.Padding(4, 4, 4, 4)
+        Me.NumUdDecSec.Margin = New System.Windows.Forms.Padding(4)
         Me.NumUdDecSec.Maximum = New Decimal(New Integer() {59999, 0, 0, 196608})
         Me.NumUdDecSec.Name = "NumUdDecSec"
         Me.NumUdDecSec.Size = New System.Drawing.Size(160, 22)
@@ -163,7 +163,7 @@ Partial Class EnterRaAndDec
         'NumUdDecMin
         '
         Me.NumUdDecMin.Location = New System.Drawing.Point(637, 53)
-        Me.NumUdDecMin.Margin = New System.Windows.Forms.Padding(4, 4, 4, 4)
+        Me.NumUdDecMin.Margin = New System.Windows.Forms.Padding(4)
         Me.NumUdDecMin.Maximum = New Decimal(New Integer() {59, 0, 0, 0})
         Me.NumUdDecMin.Name = "NumUdDecMin"
         Me.NumUdDecMin.Size = New System.Drawing.Size(48, 22)
@@ -172,7 +172,7 @@ Partial Class EnterRaAndDec
         'NumUdDecDeg
         '
         Me.NumUdDecDeg.Location = New System.Drawing.Point(559, 53)
-        Me.NumUdDecDeg.Margin = New System.Windows.Forms.Padding(4, 4, 4, 4)
+        Me.NumUdDecDeg.Margin = New System.Windows.Forms.Padding(4)
         Me.NumUdDecDeg.Maximum = New Decimal(New Integer() {89, 0, 0, 0})
         Me.NumUdDecDeg.Minimum = New Decimal(New Integer() {89, 0, 0, -2147483648})
         Me.NumUdDecDeg.Name = "NumUdDecDeg"
@@ -192,7 +192,7 @@ Partial Class EnterRaAndDec
         'TxtName
         '
         Me.TxtName.Location = New System.Drawing.Point(199, 151)
-        Me.TxtName.Margin = New System.Windows.Forms.Padding(4, 4, 4, 4)
+        Me.TxtName.Margin = New System.Windows.Forms.Padding(4)
         Me.TxtName.Name = "TxtName"
         Me.TxtName.Size = New System.Drawing.Size(665, 22)
         Me.TxtName.TabIndex = 17
@@ -217,7 +217,7 @@ Partial Class EnterRaAndDec
         Me.Controls.Add(Me.NumUdRaMin)
         Me.Controls.Add(Me.NumUdRaHour)
         Me.Controls.Add(Me.BtnEnter)
-        Me.Margin = New System.Windows.Forms.Padding(4, 4, 4, 4)
+        Me.Margin = New System.Windows.Forms.Padding(4)
         Me.Name = "EnterRaAndDec"
         Me.Text = "EnterRaAndDec"
         CType(Me.NumUdRaHour, System.ComponentModel.ISupportInitialize).EndInit()

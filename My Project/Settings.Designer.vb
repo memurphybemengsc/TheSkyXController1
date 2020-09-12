@@ -161,6 +161,78 @@ Namespace My
                 Me("ImageSequenceFileInitialFolder") = value
             End Set
         End Property
+        
+        <Global.System.Configuration.UserScopedSettingAttribute(),  _
+         Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),  _
+         Global.System.Configuration.DefaultSettingValueAttribute("")>  _
+        Public Property target1() As String
+            Get
+                Return CType(Me("target1"),String)
+            End Get
+            Set
+                Me("target1") = value
+            End Set
+        End Property
+        
+        <Global.System.Configuration.UserScopedSettingAttribute(),  _
+         Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),  _
+         Global.System.Configuration.DefaultSettingValueAttribute("")>  _
+        Public Property target2() As String
+            Get
+                Return CType(Me("target2"),String)
+            End Get
+            Set
+                Me("target2") = value
+            End Set
+        End Property
+        
+        <Global.System.Configuration.UserScopedSettingAttribute(),  _
+         Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),  _
+         Global.System.Configuration.DefaultSettingValueAttribute("")>  _
+        Public Property target3() As String
+            Get
+                Return CType(Me("target3"),String)
+            End Get
+            Set
+                Me("target3") = value
+            End Set
+        End Property
+        
+        <Global.System.Configuration.UserScopedSettingAttribute(),  _
+         Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),  _
+         Global.System.Configuration.DefaultSettingValueAttribute("")>  _
+        Public Property target4() As String
+            Get
+                Return CType(Me("target4"),String)
+            End Get
+            Set
+                Me("target4") = value
+            End Set
+        End Property
+        
+        <Global.System.Configuration.UserScopedSettingAttribute(),  _
+         Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),  _
+         Global.System.Configuration.DefaultSettingValueAttribute("")>  _
+        Public Property target5() As String
+            Get
+                Return CType(Me("target5"),String)
+            End Get
+            Set
+                Me("target5") = value
+            End Set
+        End Property
+        
+        <Global.System.Configuration.UserScopedSettingAttribute(),  _
+         Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),  _
+         Global.System.Configuration.DefaultSettingValueAttribute("")>  _
+        Public Property target6() As String
+            Get
+                Return CType(Me("target6"),String)
+            End Get
+            Set
+                Me("target6") = value
+            End Set
+        End Property
     End Class
 End Namespace
 

@@ -85,7 +85,7 @@ Partial Class TheSkyXController
         'BtnSkyX
         '
         Me.BtnSkyX.Location = New System.Drawing.Point(21, 23)
-        Me.BtnSkyX.Margin = New System.Windows.Forms.Padding(4, 4, 4, 4)
+        Me.BtnSkyX.Margin = New System.Windows.Forms.Padding(4)
         Me.BtnSkyX.Name = "BtnSkyX"
         Me.BtnSkyX.Size = New System.Drawing.Size(100, 28)
         Me.BtnSkyX.TabIndex = 0
@@ -96,7 +96,7 @@ Partial Class TheSkyXController
         'BtnPHD2
         '
         Me.BtnPHD2.Location = New System.Drawing.Point(21, 68)
-        Me.BtnPHD2.Margin = New System.Windows.Forms.Padding(4, 4, 4, 4)
+        Me.BtnPHD2.Margin = New System.Windows.Forms.Padding(4)
         Me.BtnPHD2.Name = "BtnPHD2"
         Me.BtnPHD2.Size = New System.Drawing.Size(100, 28)
         Me.BtnPHD2.TabIndex = 1
@@ -107,7 +107,7 @@ Partial Class TheSkyXController
         'btnExit
         '
         Me.btnExit.Location = New System.Drawing.Point(57, 545)
-        Me.btnExit.Margin = New System.Windows.Forms.Padding(4, 4, 4, 4)
+        Me.btnExit.Margin = New System.Windows.Forms.Padding(4)
         Me.btnExit.Name = "btnExit"
         Me.btnExit.Size = New System.Drawing.Size(100, 28)
         Me.btnExit.TabIndex = 11
@@ -119,7 +119,7 @@ Partial Class TheSkyXController
         '
         Me.PnlImageSequence.AutoScroll = True
         Me.PnlImageSequence.Location = New System.Drawing.Point(469, 15)
-        Me.PnlImageSequence.Margin = New System.Windows.Forms.Padding(4, 4, 4, 4)
+        Me.PnlImageSequence.Margin = New System.Windows.Forms.Padding(4)
         Me.PnlImageSequence.Name = "PnlImageSequence"
         Me.PnlImageSequence.Size = New System.Drawing.Size(1197, 308)
         Me.PnlImageSequence.TabIndex = 12
@@ -127,7 +127,7 @@ Partial Class TheSkyXController
         'BtnSequenceOpen
         '
         Me.BtnSequenceOpen.Location = New System.Drawing.Point(469, 347)
-        Me.BtnSequenceOpen.Margin = New System.Windows.Forms.Padding(4, 4, 4, 4)
+        Me.BtnSequenceOpen.Margin = New System.Windows.Forms.Padding(4)
         Me.BtnSequenceOpen.Name = "BtnSequenceOpen"
         Me.BtnSequenceOpen.Size = New System.Drawing.Size(100, 28)
         Me.BtnSequenceOpen.TabIndex = 13
@@ -138,7 +138,7 @@ Partial Class TheSkyXController
         'BtnSeqenceAppend
         '
         Me.BtnSeqenceAppend.Location = New System.Drawing.Point(597, 347)
-        Me.BtnSeqenceAppend.Margin = New System.Windows.Forms.Padding(4, 4, 4, 4)
+        Me.BtnSeqenceAppend.Margin = New System.Windows.Forms.Padding(4)
         Me.BtnSeqenceAppend.Name = "BtnSeqenceAppend"
         Me.BtnSeqenceAppend.Size = New System.Drawing.Size(100, 28)
         Me.BtnSeqenceAppend.TabIndex = 14
@@ -149,7 +149,7 @@ Partial Class TheSkyXController
         'BtnSequenceSave
         '
         Me.BtnSequenceSave.Location = New System.Drawing.Point(843, 347)
-        Me.BtnSequenceSave.Margin = New System.Windows.Forms.Padding(4, 4, 4, 4)
+        Me.BtnSequenceSave.Margin = New System.Windows.Forms.Padding(4)
         Me.BtnSequenceSave.Name = "BtnSequenceSave"
         Me.BtnSequenceSave.Size = New System.Drawing.Size(100, 28)
         Me.BtnSequenceSave.TabIndex = 15
@@ -170,7 +170,7 @@ Partial Class TheSkyXController
         Me.PnlImageSeqTitles.Controls.Add(Me.LblFilter)
         Me.PnlImageSeqTitles.Controls.Add(Me.LblExposureType)
         Me.PnlImageSeqTitles.Location = New System.Drawing.Point(247, 15)
-        Me.PnlImageSeqTitles.Margin = New System.Windows.Forms.Padding(4, 4, 4, 4)
+        Me.PnlImageSeqTitles.Margin = New System.Windows.Forms.Padding(4)
         Me.PnlImageSeqTitles.Name = "PnlImageSeqTitles"
         Me.PnlImageSeqTitles.Size = New System.Drawing.Size(195, 308)
         Me.PnlImageSeqTitles.TabIndex = 16
@@ -294,9 +294,9 @@ Partial Class TheSkyXController
         Me.GroupBox2.Controls.Add(Me.BtnAbortImaging)
         Me.GroupBox2.Controls.Add(Me.BtnSettingsImaging)
         Me.GroupBox2.Location = New System.Drawing.Point(16, 193)
-        Me.GroupBox2.Margin = New System.Windows.Forms.Padding(4, 4, 4, 4)
+        Me.GroupBox2.Margin = New System.Windows.Forms.Padding(4)
         Me.GroupBox2.Name = "GroupBox2"
-        Me.GroupBox2.Padding = New System.Windows.Forms.Padding(4, 4, 4, 4)
+        Me.GroupBox2.Padding = New System.Windows.Forms.Padding(4)
         Me.GroupBox2.Size = New System.Drawing.Size(192, 249)
         Me.GroupBox2.TabIndex = 17
         Me.GroupBox2.TabStop = False
@@ -305,7 +305,7 @@ Partial Class TheSkyXController
         'BtnStopImaging
         '
         Me.BtnStopImaging.Location = New System.Drawing.Point(41, 130)
-        Me.BtnStopImaging.Margin = New System.Windows.Forms.Padding(4, 4, 4, 4)
+        Me.BtnStopImaging.Margin = New System.Windows.Forms.Padding(4)
         Me.BtnStopImaging.Name = "BtnStopImaging"
         Me.BtnStopImaging.Size = New System.Drawing.Size(100, 28)
         Me.BtnStopImaging.TabIndex = 20
@@ -316,7 +316,7 @@ Partial Class TheSkyXController
         'BtnCalibrationFrames
         '
         Me.BtnCalibrationFrames.Location = New System.Drawing.Point(21, 202)
-        Me.BtnCalibrationFrames.Margin = New System.Windows.Forms.Padding(4, 4, 4, 4)
+        Me.BtnCalibrationFrames.Margin = New System.Windows.Forms.Padding(4)
         Me.BtnCalibrationFrames.Name = "BtnCalibrationFrames"
         Me.BtnCalibrationFrames.Size = New System.Drawing.Size(156, 28)
         Me.BtnCalibrationFrames.TabIndex = 9
@@ -326,7 +326,7 @@ Partial Class TheSkyXController
         'BtnStartImaging
         '
         Me.BtnStartImaging.Location = New System.Drawing.Point(41, 23)
-        Me.BtnStartImaging.Margin = New System.Windows.Forms.Padding(4, 4, 4, 4)
+        Me.BtnStartImaging.Margin = New System.Windows.Forms.Padding(4)
         Me.BtnStartImaging.Name = "BtnStartImaging"
         Me.BtnStartImaging.Size = New System.Drawing.Size(100, 28)
         Me.BtnStartImaging.TabIndex = 2
@@ -337,7 +337,7 @@ Partial Class TheSkyXController
         'BtnPauseImaging
         '
         Me.BtnPauseImaging.Location = New System.Drawing.Point(41, 59)
-        Me.BtnPauseImaging.Margin = New System.Windows.Forms.Padding(4, 4, 4, 4)
+        Me.BtnPauseImaging.Margin = New System.Windows.Forms.Padding(4)
         Me.BtnPauseImaging.Name = "BtnPauseImaging"
         Me.BtnPauseImaging.Size = New System.Drawing.Size(100, 28)
         Me.BtnPauseImaging.TabIndex = 3
@@ -348,7 +348,7 @@ Partial Class TheSkyXController
         'BtnAbortImaging
         '
         Me.BtnAbortImaging.Location = New System.Drawing.Point(41, 95)
-        Me.BtnAbortImaging.Margin = New System.Windows.Forms.Padding(4, 4, 4, 4)
+        Me.BtnAbortImaging.Margin = New System.Windows.Forms.Padding(4)
         Me.BtnAbortImaging.Name = "BtnAbortImaging"
         Me.BtnAbortImaging.Size = New System.Drawing.Size(100, 28)
         Me.BtnAbortImaging.TabIndex = 4
@@ -359,7 +359,7 @@ Partial Class TheSkyXController
         'BtnSettingsImaging
         '
         Me.BtnSettingsImaging.Location = New System.Drawing.Point(41, 166)
-        Me.BtnSettingsImaging.Margin = New System.Windows.Forms.Padding(4, 4, 4, 4)
+        Me.BtnSettingsImaging.Margin = New System.Windows.Forms.Padding(4)
         Me.BtnSettingsImaging.Name = "BtnSettingsImaging"
         Me.BtnSettingsImaging.Size = New System.Drawing.Size(100, 28)
         Me.BtnSettingsImaging.TabIndex = 5
@@ -373,9 +373,9 @@ Partial Class TheSkyXController
         Me.GroupBox1.Controls.Add(Me.BtnPHD2)
         Me.GroupBox1.Controls.Add(Me.BtnSkyX)
         Me.GroupBox1.Location = New System.Drawing.Point(16, 9)
-        Me.GroupBox1.Margin = New System.Windows.Forms.Padding(4, 4, 4, 4)
+        Me.GroupBox1.Margin = New System.Windows.Forms.Padding(4)
         Me.GroupBox1.Name = "GroupBox1"
-        Me.GroupBox1.Padding = New System.Windows.Forms.Padding(4, 4, 4, 4)
+        Me.GroupBox1.Padding = New System.Windows.Forms.Padding(4)
         Me.GroupBox1.Size = New System.Drawing.Size(192, 123)
         Me.GroupBox1.TabIndex = 18
         Me.GroupBox1.TabStop = False
@@ -385,7 +385,7 @@ Partial Class TheSkyXController
         '
         Me.PnlPhd2Status.BackColor = System.Drawing.Color.Red
         Me.PnlPhd2Status.Location = New System.Drawing.Point(137, 68)
-        Me.PnlPhd2Status.Margin = New System.Windows.Forms.Padding(4, 4, 4, 4)
+        Me.PnlPhd2Status.Margin = New System.Windows.Forms.Padding(4)
         Me.PnlPhd2Status.Name = "PnlPhd2Status"
         Me.PnlPhd2Status.Size = New System.Drawing.Size(33, 28)
         Me.PnlPhd2Status.TabIndex = 10
@@ -394,7 +394,7 @@ Partial Class TheSkyXController
         '
         Me.PnlSkyXStatus.BackColor = System.Drawing.Color.Red
         Me.PnlSkyXStatus.Location = New System.Drawing.Point(137, 23)
-        Me.PnlSkyXStatus.Margin = New System.Windows.Forms.Padding(4, 4, 4, 4)
+        Me.PnlSkyXStatus.Margin = New System.Windows.Forms.Padding(4)
         Me.PnlSkyXStatus.Name = "PnlSkyXStatus"
         Me.PnlSkyXStatus.Size = New System.Drawing.Size(33, 28)
         Me.PnlSkyXStatus.TabIndex = 9
@@ -402,7 +402,7 @@ Partial Class TheSkyXController
         'BtnTest
         '
         Me.BtnTest.Location = New System.Drawing.Point(57, 610)
-        Me.BtnTest.Margin = New System.Windows.Forms.Padding(4, 4, 4, 4)
+        Me.BtnTest.Margin = New System.Windows.Forms.Padding(4)
         Me.BtnTest.Name = "BtnTest"
         Me.BtnTest.Size = New System.Drawing.Size(100, 28)
         Me.BtnTest.TabIndex = 11
@@ -412,7 +412,7 @@ Partial Class TheSkyXController
         'BtnLoadGroup
         '
         Me.BtnLoadGroup.Location = New System.Drawing.Point(721, 347)
-        Me.BtnLoadGroup.Margin = New System.Windows.Forms.Padding(4, 4, 4, 4)
+        Me.BtnLoadGroup.Margin = New System.Windows.Forms.Padding(4)
         Me.BtnLoadGroup.Name = "BtnLoadGroup"
         Me.BtnLoadGroup.Size = New System.Drawing.Size(100, 28)
         Me.BtnLoadGroup.TabIndex = 19
@@ -427,7 +427,7 @@ Partial Class TheSkyXController
         'BtnTargetSearch
         '
         Me.BtnTargetSearch.Location = New System.Drawing.Point(677, 502)
-        Me.BtnTargetSearch.Margin = New System.Windows.Forms.Padding(4, 4, 4, 4)
+        Me.BtnTargetSearch.Margin = New System.Windows.Forms.Padding(4)
         Me.BtnTargetSearch.Name = "BtnTargetSearch"
         Me.BtnTargetSearch.Size = New System.Drawing.Size(100, 28)
         Me.BtnTargetSearch.TabIndex = 28
@@ -438,7 +438,7 @@ Partial Class TheSkyXController
         'BtnClearTargets
         '
         Me.BtnClearTargets.Location = New System.Drawing.Point(677, 640)
-        Me.BtnClearTargets.Margin = New System.Windows.Forms.Padding(4, 4, 4, 4)
+        Me.BtnClearTargets.Margin = New System.Windows.Forms.Padding(4)
         Me.BtnClearTargets.Name = "BtnClearTargets"
         Me.BtnClearTargets.Size = New System.Drawing.Size(100, 28)
         Me.BtnClearTargets.TabIndex = 21
@@ -450,7 +450,7 @@ Partial Class TheSkyXController
         '
         Me.BtnSelectImage.Enabled = False
         Me.BtnSelectImage.Location = New System.Drawing.Point(677, 534)
-        Me.BtnSelectImage.Margin = New System.Windows.Forms.Padding(4, 4, 4, 4)
+        Me.BtnSelectImage.Margin = New System.Windows.Forms.Padding(4)
         Me.BtnSelectImage.Name = "BtnSelectImage"
         Me.BtnSelectImage.Size = New System.Drawing.Size(100, 28)
         Me.BtnSelectImage.TabIndex = 32
@@ -461,7 +461,7 @@ Partial Class TheSkyXController
         'BtnRemoveTarget
         '
         Me.BtnRemoveTarget.Location = New System.Drawing.Point(677, 608)
-        Me.BtnRemoveTarget.Margin = New System.Windows.Forms.Padding(4, 4, 4, 4)
+        Me.BtnRemoveTarget.Margin = New System.Windows.Forms.Padding(4)
         Me.BtnRemoveTarget.Name = "BtnRemoveTarget"
         Me.BtnRemoveTarget.Size = New System.Drawing.Size(100, 28)
         Me.BtnRemoveTarget.TabIndex = 34
@@ -472,7 +472,7 @@ Partial Class TheSkyXController
         'BtnEnterRAAndDec
         '
         Me.BtnEnterRAAndDec.Location = New System.Drawing.Point(677, 570)
-        Me.BtnEnterRAAndDec.Margin = New System.Windows.Forms.Padding(4, 4, 4, 4)
+        Me.BtnEnterRAAndDec.Margin = New System.Windows.Forms.Padding(4)
         Me.BtnEnterRAAndDec.Name = "BtnEnterRAAndDec"
         Me.BtnEnterRAAndDec.Size = New System.Drawing.Size(100, 28)
         Me.BtnEnterRAAndDec.TabIndex = 35
@@ -579,7 +579,7 @@ Partial Class TheSkyXController
         Me.PnlTxtTargetList.Controls.Add(Me.LblTargetListItem2)
         Me.PnlTxtTargetList.Controls.Add(Me.LblTargetListItem1)
         Me.PnlTxtTargetList.Location = New System.Drawing.Point(785, 502)
-        Me.PnlTxtTargetList.Margin = New System.Windows.Forms.Padding(4, 4, 4, 4)
+        Me.PnlTxtTargetList.Margin = New System.Windows.Forms.Padding(4)
         Me.PnlTxtTargetList.Name = "PnlTxtTargetList"
         Me.PnlTxtTargetList.Size = New System.Drawing.Size(880, 166)
         Me.PnlTxtTargetList.TabIndex = 13
@@ -680,7 +680,7 @@ Partial Class TheSkyXController
         Me.Controls.Add(Me.BtnSequenceOpen)
         Me.Controls.Add(Me.PnlImageSequence)
         Me.Controls.Add(Me.btnExit)
-        Me.Margin = New System.Windows.Forms.Padding(4, 4, 4, 4)
+        Me.Margin = New System.Windows.Forms.Padding(4)
         Me.Name = "TheSkyXController"
         Me.Text = "TheSkyXController"
         Me.PnlImageSeqTitles.ResumeLayout(False)
