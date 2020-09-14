@@ -7,6 +7,7 @@
 
         ' Add any initialization after the InitializeComponent() call.
         Me.TxtImageFolder.Text = My.Settings.ImageFolder
+        NumUpDownCLSTo.Value = My.Settings.CLSUntilArcSecs
     End Sub
 
     Private Sub BtnSelectFolder_Click(sender As Object, e As EventArgs) Handles BtnSelectFolder.Click

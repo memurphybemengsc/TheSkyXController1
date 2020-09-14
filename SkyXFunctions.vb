@@ -78,6 +78,7 @@ Public Class SkyXFunctions
         End If
 
         mountEastWest = MountPointingPosition.noPosition
+        CLSUntilArcSecs = My.Settings.CLSUntilArcSecs
     End Sub
 
     Public Function getFilterNames() As List(Of String)
@@ -140,6 +141,8 @@ Public Class SkyXFunctions
 
     Public Sub setCLSUntilArcSecs(arcsec As Double)
         CLSUntilArcSecs = arcsec
+        My.Settings.CLSUntilArcSecs = CLSUntilArcSecs
+        My.Settings.Save()
     End Sub
 
     Public Sub setImageFolder(imgFldr As String)
