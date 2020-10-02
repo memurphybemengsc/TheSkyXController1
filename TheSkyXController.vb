@@ -57,7 +57,7 @@ Public Class TheSkyXController
         InitializeComponent()
 
         ' Add any initialization after the InitializeComponent() call.
-        populateDefaultFilterWheelNames(Nothing)
+        PopulateDefaultFilterWheelNames(Nothing)
         imagingSequenceInProgress = False
 
         fitsKeyCollection = New FitsKeyCollection
@@ -75,13 +75,13 @@ Public Class TheSkyXController
 
         My.Settings.Reload()
 
-        loadTargets()
+        LoadTargets()
 
         TxtImageFolder.Text = My.Settings.ImageFolder
 
     End Sub
 
-    Public Sub populateDefaultFilterWheelNames(fwNames As List(Of String))
+    Public Sub PopulateDefaultFilterWheelNames(fwNames As List(Of String))
         defaultFilterWheelNames = New List(Of String)
         If fwNames Is Nothing Then
             defaultFilterWheelNames.Add("Lum")
@@ -99,7 +99,7 @@ Public Class TheSkyXController
         End If
     End Sub
 
-    Public Function getFilterWheelNames() As List(Of String)
+    Public Function GetFilterWheelNames() As List(Of String)
         Return defaultFilterWheelNames
     End Function
 
@@ -108,7 +108,7 @@ Public Class TheSkyXController
             ' We have not connected to SkyX
             Try
                 skyXFunctions = New SkyXFunctions()
-                skyXFunctions.setImageFolder(TxtImageFolder.Text)
+                skyXFunctions.SetImageFolder(TxtImageFolder.Text)
                 Me.PnlSkyXStatus.BackColor = Color.Green
                 isSkyXConnected = True
                 BtnStartImaging.Enabled = True
@@ -117,17 +117,17 @@ Public Class TheSkyXController
                 BtnSelectImage.Enabled = True
                 LblCameraStatus.ForeColor = Color.Green
 
-                If skyXFunctions.isFilterWheelConnected Then
+                If skyXFunctions.IsFilterWheelConnected Then
                     LblFilterWheel.ForeColor = Color.Green
-                    populateDefaultFilterWheelNames(skyXFunctions.getFilterNames)
-                    imageFileSequence.buildPanel()
+                    PopulateDefaultFilterWheelNames(skyXFunctions.GetFilterNames)
+                    imageFileSequence.BuildPanel()
                 End If
 
-                If skyXFunctions.isFocuserConnected Then
+                If skyXFunctions.IsFocuserConnected Then
                     LblFocuser.ForeColor = Color.Green
                 End If
 
-                If skyXFunctions.isMountpresentAndConnected Then
+                If skyXFunctions.IsMountpresentAndConnected Then
                     LblMount.ForeColor = Color.Green
                 End If
             Catch ex As Exception
@@ -143,7 +143,7 @@ Public Class TheSkyXController
             Dim res = MsgBox("Imaging is in progress, do you wish to disconnect?", MsgBoxStyle.YesNo)
             If (res = MsgBoxResult.Yes) Then
                 Me.PnlSkyXStatus.BackColor = Color.Red
-                skyXFunctions.disconnect()
+                skyXFunctions.Disconnect()
                 skyXFunctions = Nothing
                 isSkyXConnected = False
                 BtnStartImaging.Enabled = False
@@ -190,7 +190,7 @@ Public Class TheSkyXController
         GenerateCalibrationSequence.Show()
     End Sub
 
-    Private Sub btnExit_Click(sender As Object, e As EventArgs) Handles btnExit.Click
+    Private Sub BtnExit_Click(sender As Object, e As EventArgs) Handles btnExit.Click
         Dim exitApplication As Boolean = True
 
         If imagingSequenceInProgress Then
@@ -212,24 +212,24 @@ Public Class TheSkyXController
             Me.PnlImageSequence.VerticalScroll.Enabled = False
             Me.PnlImageSequence.AutoScroll = True
             imageFileSequence.componentPanel = Me.PnlImageSequence
-            imageFileSequence.createInitialPanel()
+            imageFileSequence.CreateInitialPanel()
         End If
     End Sub
 
     Private Sub BtnSequenceOpen_Click(sender As Object, e As EventArgs) Handles BtnSequenceOpen.Click
-        imageFileSequence.openFileAndBuildComponents()
+        imageFileSequence.OpenFileAndBuildComponents()
     End Sub
     Private Sub BtnSequenceSave_Click(sender As Object, e As EventArgs) Handles BtnSequenceSave.Click
-        imageFileSequence.refreshComponentsAndSaveFile()
+        imageFileSequence.RefreshComponentsAndSaveFile()
     End Sub
 
     Private Sub BtnTest_Click(sender As Object, e As EventArgs) Handles BtnTest.Click
 
-        Dim tgt As String = getNextTargetFromList()
+        Dim tgt As String = GetNextTargetFromList()
 
-        Dim ra As Double = EnterRaAndDec.extractRa(tgt)
-        Dim dec As Double = EnterRaAndDec.extractDec(tgt)
-        Dim name As String = EnterRaAndDec.extractName(tgt)
+        Dim ra As Double = EnterRaAndDec.ExtractRa(tgt)
+        Dim dec As Double = EnterRaAndDec.ExtractDec(tgt)
+        Dim name As String = EnterRaAndDec.ExtractName(tgt)
 
 
         TxtImageFolder.Text = "the image folder"
@@ -267,8 +267,8 @@ Public Class TheSkyXController
     Private Sub BtnStartImaging_Click(sender As Object, e As EventArgs) Handles BtnStartImaging.Click
         ' Are we connected to SkyX?
         ' we need to validate the image sequence against the camera filters/binning etc.
-        If isSkyXConnected AndAlso skyXFunctions IsNot Nothing AndAlso skyXFunctions.isCameraConnected Then
-            If skyXFunctions.getImageFolder = "" Then
+        If isSkyXConnected AndAlso skyXFunctions IsNot Nothing AndAlso skyXFunctions.IsCameraConnected Then
+            If skyXFunctions.GetImageFolder = "" Then
                 MsgBox("Please set the imaging folder")
                 Return
             End If
@@ -280,9 +280,9 @@ Public Class TheSkyXController
             currentImagingStatus = ImagingStatus.start
 
             ' Make sure any changes to the controls are reflected in the sequence elements
-            imageFileSequence.refreshElementsfromControls()
+            imageFileSequence.RefreshElementsfromControls()
 
-            clearCurrentTargetFromList()
+            ClearCurrentTargetFromList()
 
             ' Start the imaging timer
             TmrImagingLoop.Start()
@@ -317,17 +317,17 @@ Public Class TheSkyXController
             If currentImagingStatus = ImagingStatus.start Then
                 TextBoxStatus.Text = "Start"
 
-                imageFileSequence.initialiseImageRun()
+                imageFileSequence.InitialiseImageRun()
 
-                If isTargetListPopulated() Then
-                    clearCurrentTargetFromList()
+                If IsTargetListPopulated() Then
+                    ClearCurrentTargetFromList()
                     currentImagingStatus = ImagingStatus.acqireTarget
                 Else
                     currentImagingStatus = ImagingStatus.notImaging
                 End If
             ElseIf currentImagingStatus = ImagingStatus.acqireTarget Then
                 TextBoxStatus.Text = "Acquire Image"
-                Dim tgt As String = getNextTargetFromList()
+                Dim tgt As String = GetNextTargetFromList()
                 Dim tgt_type = ""
                 Dim tgt_name = ""
 
@@ -342,13 +342,13 @@ Public Class TheSkyXController
                 End If
 
                 If tgt_type = "N" Then
-                    If skyXFunctions.findObject(tgt_name) = False Then
+                    If skyXFunctions.FindObject(tgt_name) = False Then
                         ' Target object is not valid so abort
                         currentImagingStatus = ImagingStatus.abort
                     Else
-                        If skyXFunctions.isCurrentdObjectVisible = True Then
-                            skyXFunctions.setRaAndDecFromObject()
-                            skyXFunctions.setImagePrefix(tgt_name)
+                        If skyXFunctions.IsCurrentdObjectVisible = True Then
+                            skyXFunctions.SetRaAndDecFromObject()
+                            skyXFunctions.SetImagePrefix(tgt_name)
                             currentImagingStatus = ImagingStatus.gotoTarget
                         Else
                             ' Object is not visible so go to the next one
@@ -357,9 +357,9 @@ Public Class TheSkyXController
                     End If
                 ElseIf tgt_type = "C" Then
                     ' Extract the Ra and Dec
-                    If skyXFunctions.isRaAndDecVisible(EnterRaAndDec.extractRa(tgt_name), EnterRaAndDec.extractDec(tgt_name)) Then
-                        skyXFunctions.setRaAndDec(EnterRaAndDec.extractRa(tgt_name), EnterRaAndDec.extractDec(tgt_name))
-                        skyXFunctions.setImagePrefix(EnterRaAndDec.extractName(tgt_name))
+                    If skyXFunctions.IsRaAndDecVisible(EnterRaAndDec.ExtractRa(tgt_name), EnterRaAndDec.ExtractDec(tgt_name)) Then
+                        skyXFunctions.SetRaAndDec(EnterRaAndDec.ExtractRa(tgt_name), EnterRaAndDec.ExtractDec(tgt_name))
+                        skyXFunctions.SetImagePrefix(EnterRaAndDec.ExtractName(tgt_name))
                         currentImagingStatus = ImagingStatus.gotoTarget
                     Else
                         ' Object is not visible so go to the next one
@@ -373,9 +373,9 @@ Public Class TheSkyXController
                         ' no coordinates present so abort
                         currentImagingStatus = ImagingStatus.abort
                     Else
-                        If skyXFunctions.isRaAndDecVisible(fkv.imageRA, fkv.imageDEC) Then
-                            skyXFunctions.setRaAndDec(fkv.imageRA, fkv.imageDEC)
-                            skyXFunctions.setImagePrefix(Path.GetFileNameWithoutExtension(tgt_name))
+                        If skyXFunctions.IsRaAndDecVisible(fkv.imageRA, fkv.imageDEC) Then
+                            skyXFunctions.SetRaAndDec(fkv.imageRA, fkv.imageDEC)
+                            skyXFunctions.SetImagePrefix(Path.GetFileNameWithoutExtension(tgt_name))
                             currentImagingStatus = ImagingStatus.gotoTarget
                         Else
                             ' Object is not visible so go to the next one
@@ -390,21 +390,21 @@ Public Class TheSkyXController
                 End If
             ElseIf currentImagingStatus = ImagingStatus.gotoTarget Then
                 TextBoxStatus.Text = "Goto Target"
-                Dim image_prefix As String = skyXFunctions.getImagePrefix
-                skyXFunctions.setImagePrefix("CLS_" + image_prefix)
+                Dim image_prefix As String = skyXFunctions.GetImagePrefix
+                skyXFunctions.SetImagePrefix("CLS_" + image_prefix)
                 ' For future, set the CLS to be asynch
-                If skyXFunctions.closedLoopSlewToTarget() = False Then
+                If skyXFunctions.ClosedLoopSlewToTarget() = False Then
                     ' Something odd happened, abort
                     currentImagingStatus = ImagingStatus.abort
                 Else
                     currentImagingStatus = ImagingStatus.notImaging
                 End If
-                skyXFunctions.setImagePrefix(image_prefix)
-                skyXFunctions.setMountPointingPosition()
+                skyXFunctions.SetImagePrefix(image_prefix)
+                skyXFunctions.SetMountPointingPosition()
             ElseIf currentImagingStatus = ImagingStatus.notImaging Then
                 TextBoxStatus.Text = "Not Imaging"
                 ' initialise the various counters
-                imageFileSequence.initialiseImageRun()
+                imageFileSequence.InitialiseImageRun()
                 If isPhd2Connected AndAlso Not phd2guiding.isPHDGuidingAndLockedOnStar Then
                     ' PHD is not guiding so start guiding
                     phd2guiding.startGuiding()
@@ -425,7 +425,7 @@ Public Class TheSkyXController
                 TextBoxStatus.Text = "Meridian Flip"
                 ' We assume that the mount has gone past the meredian and a simple goto will make the mount goto the same Ra & Dec
                 ' but with the correct mount orientation
-                If Not skyXFunctions.closedLoopSlewToMountPosition() Then
+                If Not skyXFunctions.ClosedLoopSlewToMountPosition() Then
                     ' Slew failed.  What now???
                 End If
                 ' As the mount has slewed re-focus in case the camera has shifted
@@ -447,23 +447,23 @@ Public Class TheSkyXController
                 TextBoxStatus.Text = "Dither Complete"
                 currentImagingStatus = ImagingStatus.preTakeImage
             ElseIf currentImagingStatus = ImagingStatus.preTakeImage Then
-                TextBoxStatus.Text = "Pre Take Image " + imageFileSequence.getCurrentProgress
+                TextBoxStatus.Text = "Pre Take Image " + imageFileSequence.GetCurrentProgress
                 ' Still have to figure out how to determine if mount needs to be flipped.
                 ' Do we keep the last few positions just in case we have an odd situation where the mount flips in the middle of doing stuff?
                 ' Get the next image sequence
-                If Not skyXFunctions.refreshCameraImageSettingsFromCurrentImageSequence() Then
+                If Not skyXFunctions.RefreshCameraImageSettingsFromCurrentImageSequence() Then
                     'we have an error, now what?  @Focus3???
                 End If
                 currentImagingStatus = ImagingStatus.takeImage
             ElseIf currentImagingStatus = ImagingStatus.takeImage Then
-                TextBoxStatus.Text = "Take Image " + imageFileSequence.getCurrentProgress
-                If Not skyXFunctions.takeAnImageAsynchronously() Then
+                TextBoxStatus.Text = "Take Image " + imageFileSequence.GetCurrentProgress
+                If Not skyXFunctions.TakeAnImageAsynchronously() Then
                     'we have an error, now what?
                 End If
 
                 currentImagingStatus = ImagingStatus.imageInProgress
             ElseIf currentImagingStatus = ImagingStatus.imageInProgress Then
-                TextBoxStatus.Text = "Image in progress " + imageFileSequence.getCurrentProgress
+                TextBoxStatus.Text = "Image in progress " + imageFileSequence.GetCurrentProgress
                 If Not phd2guiding.isPHDGuidingAndLockedOnStar Then
                     If guidingStoppedStopwatch.IsRunning Then
                         If phd2guiding.hasTimeoutBeenExceeded(guidingStoppedStopwatch.ElapsedMilliseconds) Then
@@ -477,12 +477,12 @@ Public Class TheSkyXController
                         guidingStoppedStopwatch.Start()
                     End If
                 End If
-                If Not skyXFunctions.isImagingInProgress Then
+                If Not skyXFunctions.IsImagingInProgress Then
                     currentImagingStatus = ImagingStatus.imageComplete
                 End If
             ElseIf currentImagingStatus = ImagingStatus.guidingHasStopped Then
                 TextBoxStatus.Text = "Guiding has stopped"
-                If skyXFunctions.abortImage Then
+                If skyXFunctions.AbortImage Then
                     ' Imaging has aborted.  What to do now? Wait for a bit and re-try???
                     ' We might need to CLS back to target.
                     currentImagingStatus = ImagingStatus.halt ' halt for now
@@ -491,27 +491,27 @@ Public Class TheSkyXController
                     currentImagingStatus = ImagingStatus.halt ' halt for now
                 End If
             ElseIf currentImagingStatus = ImagingStatus.imageComplete Then
-                TextBoxStatus.Text = "Image Complete " + imageFileSequence.getCurrentProgress()
+                TextBoxStatus.Text = "Image Complete " + imageFileSequence.GetCurrentProgress()
                 ' We have the image. Save it.  Possibly check for focus.......
 
-                skyXFunctions.saveCurrentImageToImageFolder()
+                skyXFunctions.SaveCurrentImageToImageFolder()
 
                 currentImagingStatus = ImagingStatus.postImageComplete
             ElseIf currentImagingStatus = ImagingStatus.postImageComplete Then
-                TextBoxStatus.Text = "Post Image Complete " + imageFileSequence.getCurrentProgress()
-                imageFileSequence.incrementSequenceImageCount()
+                TextBoxStatus.Text = "Post Image Complete " + imageFileSequence.GetCurrentProgress()
+                imageFileSequence.IncrementSequenceImageCount()
                 currentImagingStatus = ImagingStatus.setupNextImage
             ElseIf currentImagingStatus = ImagingStatus.setupNextImage Then
                 ' Are we finished?
-                If imageFileSequence.isImageRunComplete Then
+                If imageFileSequence.IsImageRunComplete Then
                     currentImagingStatus = ImagingStatus.acqireTarget
-                ElseIf imageFileSequence.isCurrentExposureTypeAtFocus3 Then
+                ElseIf imageFileSequence.IsCurrentExposureTypeAtFocus3 Then
                     currentImagingStatus = ImagingStatus.runAtFocus3
-                ElseIf skyXFunctions.updateMountPointingPositionAndReturnMeridianFlip() Then
+                ElseIf skyXFunctions.UpdateMountPointingPositionAndReturnMeridianFlip() Then
                     ' We need to perform a meridian flip
                     ' It is possible that the mount could pass through the meridian after imaging complete but before take image !!!!!!!
                     currentImagingStatus = ImagingStatus.meridianFlip
-                ElseIf imageFileSequence.isExecuteDitherSet Then
+                ElseIf imageFileSequence.IsExecuteDitherSet Then
                     If Not phd2guiding.isPHDGuidingAndLockedOnStar Then
                         currentImagingStatus = ImagingStatus.dither
                     Else
@@ -521,7 +521,7 @@ Public Class TheSkyXController
                     currentImagingStatus = ImagingStatus.preTakeImage
                 End If
             ElseIf currentImagingStatus = ImagingStatus.runAtFocus3 Then
-                If skyXFunctions.runAtFocus3FullyAutomatically() Then
+                If skyXFunctions.RunAtFocus3FullyAutomatically() Then
                     If overrideImagingStatus = ImagingStatus.empty Then
                         currentImagingStatus = ImagingStatus.postImageComplete
                     Else
@@ -564,20 +564,20 @@ Public Class TheSkyXController
     End Sub
 
     Private Sub BtnTargetSearch_Click(sender As Object, e As EventArgs) Handles BtnTargetSearch.Click
-        searchForTargetAndAddToListIfVisible()
+        SearchForTargetAndAddToListIfVisible()
     End Sub
 
     Private Sub TxtTarget_KeyDown(sender As Object, e As KeyEventArgs) Handles TxtTarget.KeyDown
         If e.KeyCode = Keys.Enter Then
-            searchForTargetAndAddToListIfVisible()
+            SearchForTargetAndAddToListIfVisible()
         End If
     End Sub
 
-    Private Sub searchForTargetAndAddToListIfVisible()
+    Private Sub SearchForTargetAndAddToListIfVisible()
         Dim targetFound As Boolean = False
 
         If isSkyXConnected AndAlso skyXFunctions IsNot Nothing Then
-            targetFound = skyXFunctions.findObject(TxtTarget.Text)
+            targetFound = skyXFunctions.FindObject(TxtTarget.Text)
         Else
             targetFound = False
         End If
@@ -587,8 +587,8 @@ Public Class TheSkyXController
         End If
         ' If search target is found add to targets panel and clear search box
         If targetFound Then
-            If skyXFunctions.isCurrentdObjectVisible Then
-                addToNextTarget("N " & TxtTarget.Text.ToUpper)
+            If skyXFunctions.IsCurrentdObjectVisible Then
+                AddToNextTarget("N " & TxtTarget.Text.ToUpper)
                 TxtTarget.Text = ""
             Else
                 targetFound = False
@@ -597,7 +597,7 @@ Public Class TheSkyXController
     End Sub
 
     Private Sub BtnSlewLimits_Click(sender As Object, e As EventArgs) Handles BtnClearTargets.Click
-        clearTargetListText()
+        ClearTargetListText()
     End Sub
 
     Private Sub BtnSelectImage_Click(sender As Object, e As EventArgs) Handles BtnSelectImage.Click
@@ -620,7 +620,7 @@ Public Class TheSkyXController
             fkv.populateKeyDataFromFile(imageSelectionForTargets.FileName)
             If fkv.isRAandDECPresent Then
                 ' put image in box
-                addToNextTarget("I " & imageSelectionForTargets.FileName)
+                AddToNextTarget("I " & imageSelectionForTargets.FileName)
             Else
                 MsgBox("Coordinates are not present in image")
             End If
@@ -628,12 +628,12 @@ Public Class TheSkyXController
     End Sub
 
     Private Sub BtnRemoveTarget_Click(sender As Object, e As EventArgs) Handles BtnRemoveTarget.Click
-        removeHighlightedTarget()
-        reorderTargetList()
+        RemoveHighlightedTarget()
+        ReorderTargetList()
     End Sub
 
     Private Sub LblTargetListItem1_Click(sender As Object, e As EventArgs) Handles LblTargetListItem1.Click
-        clearBordersOnAllTargets()
+        ClearBordersOnAllTargets()
         If LblTargetListItem1.BorderStyle = BorderStyle.None Then
             LblTargetListItem1.BorderStyle = BorderStyle.FixedSingle
         Else
@@ -642,7 +642,7 @@ Public Class TheSkyXController
     End Sub
 
     Private Sub LblTargetListItem2_Click(sender As Object, e As EventArgs) Handles LblTargetListItem2.Click
-        clearBordersOnAllTargets()
+        ClearBordersOnAllTargets()
         If LblTargetListItem2.BorderStyle = BorderStyle.None Then
             LblTargetListItem2.BorderStyle = BorderStyle.FixedSingle
         Else
@@ -651,7 +651,7 @@ Public Class TheSkyXController
     End Sub
 
     Private Sub LblTargetListItem3_Click(sender As Object, e As EventArgs) Handles LblTargetListItem3.Click
-        clearBordersOnAllTargets()
+        ClearBordersOnAllTargets()
         If LblTargetListItem3.BorderStyle = BorderStyle.None Then
             LblTargetListItem3.BorderStyle = BorderStyle.FixedSingle
         Else
@@ -660,7 +660,7 @@ Public Class TheSkyXController
     End Sub
 
     Private Sub LblTargetListItem4_Click(sender As Object, e As EventArgs) Handles LblTargetListItem4.Click
-        clearBordersOnAllTargets()
+        ClearBordersOnAllTargets()
         If LblTargetListItem4.BorderStyle = BorderStyle.None Then
             LblTargetListItem4.BorderStyle = BorderStyle.FixedSingle
         Else
@@ -669,7 +669,7 @@ Public Class TheSkyXController
     End Sub
 
     Private Sub LblTargetListItem5_Click(sender As Object, e As EventArgs) Handles LblTargetListItem5.Click
-        clearBordersOnAllTargets()
+        ClearBordersOnAllTargets()
         If LblTargetListItem5.BorderStyle = BorderStyle.None Then
             LblTargetListItem5.BorderStyle = BorderStyle.FixedSingle
         Else
@@ -678,7 +678,7 @@ Public Class TheSkyXController
     End Sub
 
     Private Sub LblTargetListItem6_Click(sender As Object, e As EventArgs) Handles LblTargetListItem6.Click
-        clearBordersOnAllTargets()
+        ClearBordersOnAllTargets()
         If LblTargetListItem6.BorderStyle = BorderStyle.None Then
             LblTargetListItem6.BorderStyle = BorderStyle.FixedSingle
         Else
@@ -686,7 +686,7 @@ Public Class TheSkyXController
         End If
     End Sub
 
-    Private Sub clearBordersOnAllTargets()
+    Private Sub ClearBordersOnAllTargets()
         LblTargetListItem1.BorderStyle = BorderStyle.None
         LblTargetListItem2.BorderStyle = BorderStyle.None
         LblTargetListItem3.BorderStyle = BorderStyle.None
@@ -695,26 +695,26 @@ Public Class TheSkyXController
         LblTargetListItem6.BorderStyle = BorderStyle.None
     End Sub
 
-    Public Function addToNextTarget(nextTarget As String) As Boolean
-        If isTargetAlreadyPresent(nextTarget) = True Then
+    Public Function AddToNextTarget(nextTarget As String) As Boolean
+        If IsTargetAlreadyPresent(nextTarget) = True Then
             Return True
         End If
 
-        For Each targetLabel As Label In getListOfTargets()
+        For Each targetLabel As Label In GetListOfTargets()
             If targetLabel.Text = "" Then
                 targetLabel.Text = nextTarget
                 Exit For
             End If
         Next
 
-        saveTargets()
+        SaveTargets()
 
         Return True
     End Function
 
-    Private Function isTargetAlreadyPresent(newTarget As String) As Boolean
+    Private Function IsTargetAlreadyPresent(newTarget As String) As Boolean
         Dim targetIsPresent As Boolean = False
-        For Each tgt As Label In getListOfTargets()
+        For Each tgt As Label In GetListOfTargets()
             If tgt.Text = newTarget Then
                 targetIsPresent = True
                 Exit For
@@ -723,7 +723,7 @@ Public Class TheSkyXController
         Return targetIsPresent
     End Function
 
-    Private Function removeHighlightedTarget() As Boolean
+    Private Function RemoveHighlightedTarget() As Boolean
         If LblTargetListItem1.BorderStyle = BorderStyle.FixedSingle Then
             LblTargetListItem1.BorderStyle = BorderStyle.None
             LblTargetListItem1.Text = ""
@@ -749,14 +749,14 @@ Public Class TheSkyXController
             LblTargetListItem6.Text = ""
         End If
 
-        saveTargets()
+        SaveTargets()
 
         Return True
     End Function
 
-    Private Function reorderTargetList() As Boolean
+    Private Function ReorderTargetList() As Boolean
         Dim targetLabelsText As New List(Of String)
-        Dim targetLabels As List(Of Label) = getListOfTargets()
+        Dim targetLabels As List(Of Label) = GetListOfTargets()
 
         For Each targetLabel As Label In targetLabels
             If targetLabel.Text <> "" Then
@@ -764,7 +764,7 @@ Public Class TheSkyXController
             End If
         Next
 
-        clearTargetListText()
+        ClearTargetListText()
 
         Dim index As Integer = 0
         For Each targetText As String In targetLabelsText
@@ -774,24 +774,24 @@ Public Class TheSkyXController
             index += 1
         Next
 
-        saveTargets()
+        SaveTargets()
 
         Return True
     End Function
 
-    Private Function clearTargetListText() As Boolean
+    Private Function ClearTargetListText() As Boolean
         Dim targetLabelsText As New List(Of String)
 
-        For Each targetLabel As Label In getListOfTargets()
+        For Each targetLabel As Label In GetListOfTargets()
             targetLabel.Text = ""
         Next
 
-        saveTargets()
+        SaveTargets()
 
         Return True
     End Function
 
-    Private Function getListOfTargets() As List(Of Label)
+    Private Function GetListOfTargets() As List(Of Label)
         If targetLabels Is Nothing Then
             targetLabels = New List(Of Label)
             targetLabels.Add(LblTargetListItem1)
@@ -804,8 +804,8 @@ Public Class TheSkyXController
         Return targetLabels
     End Function
 
-    Private Function getNextTargetFromList() As String
-        Dim currentTarget As String = getCurrrentTargetFromList()
+    Private Function GetNextTargetFromList() As String
+        Dim currentTarget As String = GetCurrrentTargetFromList()
         Dim nextTarget As String = ""
         Dim useNextTarget As Boolean = False
 
@@ -813,7 +813,7 @@ Public Class TheSkyXController
             useNextTarget = True
         End If
 
-        For Each tgt As Label In getListOfTargets()
+        For Each tgt As Label In GetListOfTargets()
             If useNextTarget = True Then
                 nextTarget = tgt.Text
                 tgt.ForeColor = Color.Red
@@ -827,10 +827,10 @@ Public Class TheSkyXController
         Return nextTarget
     End Function
 
-    Private Function getCurrrentTargetFromList() As String
+    Private Function GetCurrrentTargetFromList() As String
         Dim currentTarget As String = ""
 
-        For Each tgt As Label In getListOfTargets()
+        For Each tgt As Label In GetListOfTargets()
             If tgt.ForeColor = Color.Red Then
                 currentTarget = tgt.Text
                 Exit For
@@ -840,22 +840,24 @@ Public Class TheSkyXController
         Return currentTarget
     End Function
 
-    Private Sub clearCurrentTargetFromList()
-        For Each tgt As Label In getListOfTargets()
+    Private Sub ClearCurrentTargetFromList()
+        For Each tgt As Label In GetListOfTargets()
             tgt.ForeColor = Color.Black
         Next
     End Sub
 
-    Private Sub saveTargets()
+    Private Sub SaveTargets()
         My.Settings.target1 = LblTargetListItem1.Text
         My.Settings.target2 = LblTargetListItem2.Text
         My.Settings.target3 = LblTargetListItem3.Text
         My.Settings.target4 = LblTargetListItem4.Text
         My.Settings.target5 = LblTargetListItem5.Text
         My.Settings.target6 = LblTargetListItem6.Text
+
+
     End Sub
 
-    Private Sub loadTargets()
+    Private Sub LoadTargets()
         LblTargetListItem1.Text = My.Settings.target1
         LblTargetListItem2.Text = My.Settings.target2
         LblTargetListItem3.Text = My.Settings.target3
@@ -864,10 +866,10 @@ Public Class TheSkyXController
         LblTargetListItem6.Text = My.Settings.target6
     End Sub
 
-    Private Function isTargetListPopulated() As Boolean
+    Private Function IsTargetListPopulated() As Boolean
         Dim isListPopulated As Boolean = False
 
-        For Each targetLabel As Label In getListOfTargets()
+        For Each targetLabel As Label In GetListOfTargets()
             If targetLabel.Text <> "" Then
                 isListPopulated = True
                 Exit For

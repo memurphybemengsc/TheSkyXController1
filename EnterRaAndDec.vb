@@ -10,7 +10,7 @@ Public Class EnterRaAndDec
             workString = workString.Replace(" RA: ", " ")
             workString = workString.Replace(" DEC: ", " ")
             ' Add to the list of targets
-            TheSkyXController.addToNextTarget("C " + workString.Trim + " Ra: " + NumUdRaDecimal.Value.ToString + " Dec: " + NumUdDecDecimal.Value.ToString)
+            TheSkyXController.AddToNextTarget("C " + workString.Trim + " Ra: " + NumUdRaDecimal.Value.ToString + " Dec: " + NumUdDecDecimal.Value.ToString)
 
             Close()
         End If
@@ -47,11 +47,11 @@ Public Class EnterRaAndDec
         ' Calculate the Hour/Min/Sec version of the Decimal Ra
         Dim raDecimal As Double = NumUdRaDecimal.Value
         Dim hour As Integer = Math.Floor(raDecimal)
-        raDecimal = raDecimal - hour
-        raDecimal = raDecimal * 60
+        raDecimal -= hour
+        raDecimal *= 60
         Dim min As Integer = Math.Floor(raDecimal)
-        raDecimal = raDecimal - min
-        raDecimal = raDecimal * 60
+        raDecimal -= min
+        raDecimal *= 60
         Dim second As Decimal = raDecimal
 
         NumUdRaHour.Value = hour
@@ -69,7 +69,7 @@ Public Class EnterRaAndDec
         Dim degreeAsDecimal As Double = NumUdDecDeg.Value
         If NumUdDecDeg.Value < 0 Then
             declinationIsPositice = False
-            degreeAsDecimal = degreeAsDecimal * -1
+            degreeAsDecimal *= -1
         End If
 
         Dim minuteAsDecimal As Double = NumUdDecMin.Value / 60
@@ -88,7 +88,7 @@ Public Class EnterRaAndDec
         Dim degreeAsDecimal As Double = NumUdDecDeg.Value
         If NumUdDecDeg.Value < 0 Then
             declinationIsPositice = False
-            degreeAsDecimal = degreeAsDecimal * -1
+            degreeAsDecimal *= -1
         End If
 
         Dim minuteAsDecimal As Double = NumUdDecMin.Value / 60
@@ -107,7 +107,7 @@ Public Class EnterRaAndDec
         Dim degreeAsDecimal As Double = NumUdDecDeg.Value
         If NumUdDecDeg.Value < 0 Then
             declinationIsPositice = False
-            degreeAsDecimal = degreeAsDecimal * -1
+            degreeAsDecimal *= -1
         End If
 
         Dim minuteAsDecimal As Double = NumUdDecMin.Value / 60
@@ -131,17 +131,17 @@ Public Class EnterRaAndDec
         End If
 
         Dim degree As Integer = Math.Floor(decDecimal)
-        decDecimal = decDecimal - degree
-        decDecimal = decDecimal * 60
+        decDecimal -= degree
+        decDecimal *= 60
 
         Dim minute As Integer = Math.Floor(decDecimal)
-        decDecimal = decDecimal - minute
-        decDecimal = decDecimal * 60
+        decDecimal -= minute
+        decDecimal *= 60
 
         Dim seconds As Decimal = decDecimal
 
         If Not declinationIsPositice Then
-            degree = degree * -1
+            degree *= -1
         End If
 
         NumUdDecDeg.Value = degree
@@ -154,8 +154,8 @@ Public Class EnterRaAndDec
 
     End Sub
 
-    Public Shared Function extractRa(target As String) As Double
-        Dim ra As Double = 0
+    Public Shared Function ExtractRa(target As String) As Double
+        Dim ra As Double
         Dim startRa As Double = target.IndexOf("Ra:")
         Dim startDec As Double = target.IndexOf("Dec:")
         Dim length As Double = startDec - (startRa + 3)
@@ -163,16 +163,16 @@ Public Class EnterRaAndDec
         Return ra
     End Function
 
-    Public Shared Function extractDec(target As String) As Double
-        Dim dec As Double = 0
+    Public Shared Function ExtractDec(target As String) As Double
+        Dim dec As Double
         Dim startDec As Double = target.IndexOf("Dec:")
         Dim length As Double = target.Length - (startDec + 4)
         dec = Double.Parse(target.Substring(startDec + 4, length))
         Return dec
     End Function
 
-    Public Shared Function extractName(target As String) As String
-        Dim name As String = ""
+    Public Shared Function ExtractName(target As String) As String
+        Dim name As String
         name = target.Substring(0, target.IndexOf("Ra:"))
         Return name
     End Function

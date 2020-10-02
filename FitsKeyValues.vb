@@ -198,10 +198,10 @@ Public Class FitsKeyValues
             ElseIf key = exposureKeyName Then
                 ExposureTime = data
             ElseIf key = imageRAKeyName Then
-                imageRAValue = TheSkyXController.skyXFunctions.convertRA(data)
+                imageRAValue = TheSkyXController.skyXFunctions.ConvertRA(data)
                 imageRAValueString = data
             ElseIf key = imageDECKeyName Then
-                imageDECValue = TheSkyXController.skyXFunctions.convertDec(data)
+                imageDECValue = TheSkyXController.skyXFunctions.ConvertDec(data)
                 imageDECValueString = data
             End If
         Next

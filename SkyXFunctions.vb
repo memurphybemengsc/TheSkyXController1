@@ -39,7 +39,7 @@ Public Class SkyXFunctions
 
     Private mountEastWest As MountPointingPosition
 
-    Enum ccdsoftInventoryIndex
+    Enum CcdsoftInventoryIndex
         cdInventoryX
         cdInventoryY
         cdInventoryMagnitude
@@ -53,39 +53,38 @@ Public Class SkyXFunctions
 
     Public Sub New()
         'Create the SkyX object and check that Skyx is present and initialised
-        connectToSkyX()
+        ConnectToSkyX()
         If theSkyXObject Is Nothing Then
             'SkyX is not running so throw exception
             Throw New System.Exception("SkyX is not running")
         End If
 
         ' Connect to the camera
-        connectToCamera()
+        ConnectToCamera()
         If camera Is Nothing Then
             Throw New System.Exception("Unable to connect to camera")
         End If
 
         'Get the filter wheel filters and refresh the filters in the drop downs
         ' Is there a filter wheel? Test connecting to a FW if there is not one connected.
-        If isFilterWheelPresent() Then
+        If IsFilterWheelPresent() Then
             camera.filterWheelConnect()
             ' Loop over filters and get names
-            populateFilterNames()
+            PopulateFilterNames()
         End If
 
-        If isFocuserPresent() Then
+        If IsFocuserPresent() Then
             camera.focConnect()
         End If
 
         mountEastWest = MountPointingPosition.noPosition
-        CLSUntilArcSecs = My.Settings.CLSUntilArcSecs
     End Sub
 
-    Public Function getFilterNames() As List(Of String)
+    Public Function GetFilterNames() As List(Of String)
         Return filterNames
     End Function
 
-    Private Sub populateFilterNames()
+    Private Sub PopulateFilterNames()
         Dim numberOfFilters = camera.lNumberFilters
         Dim thisFilter As Integer = 0
         filterNames = New List(Of String)
@@ -95,21 +94,21 @@ Public Class SkyXFunctions
         End While
     End Sub
 
-    Private Sub moveToFilter(newFilter As String)
+    Private Sub MoveToFilter(newFilter As String)
         If camera.filterWheelIsConnected() = 0 Then
             Return
         End If
 
         If filterNames Is Nothing Then
-            populateFilterNames()
+            PopulateFilterNames()
         End If
 
-        If getFilterIndexZeroBased(newFilter) <> -1 Then
-            camera.FilterIndexZeroBased = getFilterIndexZeroBased(newFilter)
+        If GetFilterIndexZeroBased(newFilter) <> -1 Then
+            camera.FilterIndexZeroBased = GetFilterIndexZeroBased(newFilter)
         End If
     End Sub
 
-    Private Function getFilterIndexZeroBased(filterName As String) As Integer
+    Private Function GetFilterIndexZeroBased(filterName As String) As Integer
         Dim filterIndexZeroBased As Integer = 0
         Dim filterNotFound As Boolean = True
         For Each locFilterName As String In filterNames
@@ -127,7 +126,7 @@ Public Class SkyXFunctions
         Return filterIndexZeroBased
     End Function
 
-    Public Sub cameraStatus()
+    Public Sub CameraStatus()
         'MsgBox(camera.Status) '"Ready" when camera is idle
         'MsgBox(camera.State) ' '0' when idle ccdsoftCameraState.cdStateNone
         MsgBox("camera.szFilterName(0) " + camera.szFilterName(0))
@@ -139,36 +138,34 @@ Public Class SkyXFunctions
 
     End Sub
 
-    Public Sub setCLSUntilArcSecs(arcsec As Double)
+    Public Sub SetCLSUntilArcSecs(arcsec As Double)
         CLSUntilArcSecs = arcsec
-        My.Settings.CLSUntilArcSecs = CLSUntilArcSecs
-        My.Settings.Save()
     End Sub
 
-    Public Sub setImageFolder(imgFldr As String)
+    Public Sub SetImageFolder(imgFldr As String)
         imageFolder = imgFldr
     End Sub
 
-    Public Function getImageFolder() As String
+    Public Function GetImageFolder() As String
         Return imageFolder
     End Function
 
-    Public Sub setImagePrefix(imgPfx As String)
+    Public Sub SetImagePrefix(imgPfx As String)
         imagePrefix = imgPfx
     End Sub
 
-    Public Function getImagePrefix() As String
+    Public Function GetImagePrefix() As String
         Return imagePrefix
     End Function
 
-    Public Sub disconnect()
-        disconnectFromCamera()
+    Public Sub Disconnect()
+        DisconnectFromCamera()
     End Sub
 
-    Private Function setImageSettings(imageType As Integer, filter As String, exposure As Double, bx As Integer, by As Integer) As Boolean
+    Private Function SetImageSettings(imageType As Integer, filter As String, exposure As Double, bx As Integer, by As Integer) As Boolean
         Dim retval As Boolean = True
 
-        moveToFilter(filter)
+        MoveToFilter(filter)
         camera.ExposureTime = exposure
         camera.BinX = bx
         camera.BinY = by
@@ -178,14 +175,14 @@ Public Class SkyXFunctions
     End Function
     ' Add a method to check for image saturation
 
-    Private Sub connectToSkyXTest()
+    Private Sub ConnectToSkyXTest()
         skyXVersion = "TEST"
         theSkyXObject = New Object()
         camera = New Object()
         MsgBox(“TSX Version: “ & skyXVersion)
     End Sub
 
-    Private Sub connectToSkyX()
+    Private Sub ConnectToSkyX()
         Try
             theSkyXObject = New TheSkyXLib.Application
         Catch ex As Exception
@@ -198,7 +195,7 @@ Public Class SkyXFunctions
         End If
     End Sub
 
-    Private Sub connectToCamera()
+    Private Sub ConnectToCamera()
         Try
             camera = New TheSkyXLib.ccdsoftCamera
         Catch ex As Exception
@@ -213,14 +210,14 @@ Public Class SkyXFunctions
         End If
     End Sub
 
-    Private Sub disconnectFromCamera()
+    Private Sub DisconnectFromCamera()
         If camera IsNot Nothing Then
             camera.Disconnect()
             camera = Nothing
         End If
     End Sub
 
-    Public Function isCameraConnected() As Boolean
+    Public Function IsCameraConnected() As Boolean
         If theSkyXObject Is Nothing Or camera Is Nothing Then
             Return False
         Else
@@ -228,17 +225,17 @@ Public Class SkyXFunctions
         End If
     End Function
 
-    Public Function isFocuserPresentAndConnected() As Boolean
+    Public Function IsFocuserPresentAndConnected() As Boolean
         Dim retval As Boolean = True
-        If isFocuserPresent() AndAlso isFocuserConnected() Then
+        If IsFocuserPresent() AndAlso IsFocuserConnected() Then
             retval = True
         End If
         Return retval
     End Function
 
-    Public Function isFocuserPresent() As Boolean
+    Public Function IsFocuserPresent() As Boolean
         Dim retval As Boolean = True
-        If Not isFocuserConnected() Then
+        If Not IsFocuserConnected() Then
             retval = False
             Try
                 camera.focConnect()
@@ -249,7 +246,7 @@ Public Class SkyXFunctions
         Return retval
     End Function
 
-    Public Function isFocuserConnected() As Boolean
+    Public Function IsFocuserConnected() As Boolean
         If camera IsNot Nothing AndAlso camera.focIsConnected = 1 Then
             Return True
         Else
@@ -257,16 +254,16 @@ Public Class SkyXFunctions
         End If
     End Function
 
-    Public Function isFilterWheelPresentAndConnected() As Boolean
+    Public Function IsFilterWheelPresentAndConnected() As Boolean
         Dim retval As Boolean = False
-        If isFilterWheelPresent() AndAlso isFilterWheelConnected() Then
+        If IsFilterWheelPresent() AndAlso IsFilterWheelConnected() Then
             retval = True
         End If
         Return retval
     End Function
-    Public Function isFilterWheelPresent() As Boolean
+    Public Function IsFilterWheelPresent() As Boolean
         Dim retval As Boolean = True
-        If Not isFilterWheelConnected() Then
+        If Not IsFilterWheelConnected() Then
             Try
                 camera.filterWheelConnect()
             Catch ex As Exception
@@ -277,7 +274,7 @@ Public Class SkyXFunctions
         Return retval
     End Function
 
-    Public Function isFilterWheelConnected() As Boolean
+    Public Function IsFilterWheelConnected() As Boolean
         If camera.filterWheelIsConnected = 1 Then
             Return True
         Else
@@ -285,15 +282,15 @@ Public Class SkyXFunctions
         End If
     End Function
 
-    Public Function isSkyXInitialised() As Boolean
+    Public Function IsSkyXInitialised() As Boolean
         Dim initialised As Boolean
 
-        isSkyXInitialised = False
+        IsSkyXInitialised = False
 
         Return initialised
     End Function
 
-    Public Function slewTocurrentObject() As Boolean
+    Public Function SlewTocurrentObject() As Boolean
         Dim success As Boolean = False
         Return success
     End Function
@@ -391,39 +388,39 @@ Public Class SkyXFunctions
         'ccdsoftInventoryIndex
     End Sub
 
-    Public Function refreshCameraImageSettingsFromCurrentImageSequence() As Boolean
+    Public Function RefreshCameraImageSettingsFromCurrentImageSequence() As Boolean
         Dim retval As Boolean = True
 
-        Dim filter As String = TheSkyXController.imageFileSequence.getCurrentImageSequenceElement.filter
-        Dim bx As Double = TheSkyXController.imageFileSequence.getCurrentImageSequenceElement.binX
-        Dim by As Double = TheSkyXController.imageFileSequence.getCurrentImageSequenceElement.binY
-        Dim exposure As Double = TheSkyXController.imageFileSequence.getCurrentImageSequenceElement.exposureLength
+        Dim filter As String = TheSkyXController.imageFileSequence.GetCurrentImageSequenceElement.filter
+        Dim bx As Double = TheSkyXController.imageFileSequence.GetCurrentImageSequenceElement.binX
+        Dim by As Double = TheSkyXController.imageFileSequence.GetCurrentImageSequenceElement.binY
+        Dim exposure As Double = TheSkyXController.imageFileSequence.GetCurrentImageSequenceElement.exposureLength
         Dim exposureType As Integer
 
-        If TheSkyXController.imageFileSequence.isCurrentExposureTypeALightFrame Then
+        If TheSkyXController.imageFileSequence.IsCurrentExposureTypeALightFrame Then
             exposureType = ccdsoftImageFrame.cdLight
-        ElseIf TheSkyXController.imageFileSequence.isCurrentExposureTypeAtFocus3 Then
+        ElseIf TheSkyXController.imageFileSequence.IsCurrentExposureTypeAtFocus3 Then
             ' What?????
             exposureType = ccdsoftImageFrame.cdLight
         End If
 
-        setImageSettings(exposureType, filter, exposure, bx, by)
+        SetImageSettings(exposureType, filter, exposure, bx, by)
 
         Return retval
     End Function
 
-    Public Function runAtFocus3FullyAutomatically() As Boolean
+    Public Function RunAtFocus3FullyAutomatically() As Boolean
         Dim retval As Boolean = False
 
-        retval = runAtFocus3(0, True)
+        retval = RunAtFocus3(0, True)
 
         Return retval
     End Function
 
-    Public Function runAtFocus3Manually(nAveraging As Integer) As Boolean
+    Public Function RunAtFocus3Manually(nAveraging As Integer) As Boolean
         Dim retval As Boolean = False
 
-        retval = runAtFocus3(nAveraging, False)
+        retval = RunAtFocus3(nAveraging, False)
 
         Return retval
     End Function
@@ -436,7 +433,7 @@ Public Class SkyXFunctions
     ''' Returns true if success.
     ''' </summary>
     ''' <remarks></remarks>
-    Private Function runAtFocus3(nAveraging As Integer, fullyAutomatic As Boolean) As Boolean
+    Private Function RunAtFocus3(nAveraging As Integer, fullyAutomatic As Boolean) As Boolean
         Dim retval As Boolean = False
 
         If nAveraging > 3 Then
@@ -451,13 +448,13 @@ Public Class SkyXFunctions
 
         Return retval
     End Function
-    Public Function takeAnImageAsynchronously() As Boolean
+    Public Function TakeAnImageAsynchronously() As Boolean
         Dim retval As Boolean = True
 
         ' Set the camera to be asynchronous
         camera.Asynchronous = 1
-        camera.AutoSavePath = getImageFolder()
-        camera.AutoSavePrefix = getImagePrefix()
+        camera.AutoSavePath = GetImageFolder()
+        camera.AutoSavePrefix = GetImagePrefix()
         If camera.AutoSavePrefix = "" Then
             camera.AutoSavePrefix = "IMAGE"
         End If
@@ -471,13 +468,13 @@ Public Class SkyXFunctions
         Return retval
     End Function
 
-    Public Function takeAnImageSynchronously() As Boolean
+    Public Function TakeAnImageSynchronously() As Boolean
         Dim retval As Boolean = True
 
         ' Set the camera to be asynchronous
         camera.Asynchronous = 0
-        camera.AutoSavePath = getImageFolder()
-        camera.AutoSavePrefix = getImagePrefix()
+        camera.AutoSavePath = GetImageFolder()
+        camera.AutoSavePrefix = GetImagePrefix()
         If camera.AutoSavePrefix = "" Then
             camera.AutoSavePrefix = "IMAGE"
         End If
@@ -494,10 +491,10 @@ Public Class SkyXFunctions
     ''' <summary>
     ''' Abort the image, returns true of successful, false if unsuccessful
     ''' </summary>
-    Public Function abortImage() As Boolean
+    Public Function AbortImage() As Boolean
         Dim retval As Boolean = False
 
-        If isImagingInProgress() Then
+        If IsImagingInProgress() Then
             Try
                 If camera.Abort() = 0 Then
                     retval = True
@@ -512,7 +509,7 @@ Public Class SkyXFunctions
         Return retval
     End Function
 
-    Public Function isImagingInProgress() As Boolean
+    Public Function IsImagingInProgress() As Boolean
         Dim retval As Boolean = False
 
         ' Set the camera to be asynchronous
@@ -523,7 +520,7 @@ Public Class SkyXFunctions
         Return retval
     End Function
 
-    Public Function attachImage(fullPathToImage As String) As Boolean
+    Public Function AttachImage(fullPathToImage As String) As Boolean
         Dim retval As Boolean = True
 
         If currentImage Is Nothing Then
@@ -536,7 +533,7 @@ Public Class SkyXFunctions
         Return retval
     End Function
 
-    Public Function attachCurrentImage() As Boolean
+    Public Function AttachCurrentImage() As Boolean
         Dim retval As Boolean = True
 
         If currentImage Is Nothing Then
@@ -547,7 +544,7 @@ Public Class SkyXFunctions
         Return retval
     End Function
 
-    Public Function attachCurrentImage0() As Boolean
+    Public Function AttachCurrentImage0() As Boolean
         Dim retval As Boolean = True
 
         If currentImage Is Nothing Then
@@ -568,7 +565,7 @@ Public Class SkyXFunctions
         currentImage.ShowInventory()
 
         'Dim obj As List(Of Double) = currentImage.InventoryArray(ccdsoftInventoryIndex.cdInventoryFWHM)
-        Dim obj As Object = currentImage.InventoryArray(ccdsoftInventoryIndex.cdInventoryFWHM)
+        Dim obj As Object = currentImage.InventoryArray(CcdsoftInventoryIndex.cdInventoryFWHM)
 
         For Each db As Double In obj
             Console.WriteLine(db)
@@ -586,7 +583,7 @@ Public Class SkyXFunctions
     ''' Attaches the current image object to the image most recently captured by the camera.<br/>
     ''' Returns true if OK else false.
     ''' </summary>
-    Public Function attachCurrentImageToActiveImager() As Boolean
+    Public Function AttachCurrentImageToActiveImager() As Boolean
         Dim retval As Boolean = True
 
         If currentImage Is Nothing Then
@@ -600,10 +597,10 @@ Public Class SkyXFunctions
     ''' Attaches the current image object to the image most recently captured by the camera.<br/>
     ''' Returns true if OK else false.
     ''' </summary>
-    Public Function attachCurrentImageToActiveImagerAndShowInventory() As Boolean
+    Public Function AttachCurrentImageToActiveImagerAndShowInventory() As Boolean
         Dim retval As Boolean = False
 
-        If attachCurrentImageToActiveImager() Then
+        If AttachCurrentImageToActiveImager() Then
             currentImage.ShowInventory()
             retval = True
         Else
@@ -613,7 +610,7 @@ Public Class SkyXFunctions
         Return retval
     End Function
 
-    Public Sub setCurrentImagetoNothing()
+    Public Sub SetCurrentImagetoNothing()
         currentImage = Nothing
     End Sub
 
@@ -621,11 +618,11 @@ Public Class SkyXFunctions
     ''' Return the average FWHM for the image.<br/>
     ''' Will return a -1 if an error.
     ''' </summary>
-    Public Function getAverageFWHMForCurrentImage() As Double
+    Public Function GetAverageFWHMForCurrentImage() As Double
         Dim averageFWHM As Double = -1
 
-        If attachCurrentImageToActiveImagerAndShowInventory() Then
-            Dim obj As Object = currentImage.InventoryArray(ccdsoftInventoryIndex.cdInventoryFWHM)
+        If AttachCurrentImageToActiveImagerAndShowInventory() Then
+            Dim obj As Object = currentImage.InventoryArray(CcdsoftInventoryIndex.cdInventoryFWHM)
             Dim counter As Integer = 0
             Dim totalFWHN As Double = 0
             For Each db As Double In obj
@@ -648,11 +645,11 @@ Public Class SkyXFunctions
     ''' Return the average Ellipticity for the image.<br/>
     ''' Will return a -1 if an error.
     ''' </summary>
-    Public Function getAverageEllipticityForCurrentImage() As Double
+    Public Function GetAverageEllipticityForCurrentImage() As Double
         Dim averageEllipticity As Double = -1
 
-        If attachCurrentImageToActiveImagerAndShowInventory() Then
-            Dim obj As Object = currentImage.InventoryArray(ccdsoftInventoryIndex.cdInventoryEllipticity)
+        If AttachCurrentImageToActiveImagerAndShowInventory() Then
+            Dim obj As Object = currentImage.InventoryArray(CcdsoftInventoryIndex.cdInventoryEllipticity)
             Dim counter As Integer = 0
             Dim totalEllipticity As Double = 0
             For Each db As Double In obj
@@ -671,7 +668,7 @@ Public Class SkyXFunctions
         Return averageEllipticity
     End Function
 
-    Private Sub connectToMount()
+    Private Sub ConnectToMount()
         If mount Is Nothing Then
             mount = New TheSkyXLib.sky6RASCOMTele
             Try
@@ -684,7 +681,7 @@ Public Class SkyXFunctions
         End If
     End Sub
 
-    Public Function slewMount(ra As Double, dec As Double, target As String) As Boolean
+    Public Function SlewMount(ra As Double, dec As Double, target As String) As Boolean
         Dim retval As Boolean = True
 
         If mount IsNot Nothing Then
@@ -694,7 +691,7 @@ Public Class SkyXFunctions
         Return retval
     End Function
 
-    Public Function isMountParked() As Boolean
+    Public Function IsMountParked() As Boolean
         If mount Is Nothing Then
             Return True
         Else
@@ -702,10 +699,10 @@ Public Class SkyXFunctions
         End If
     End Function
 
-    Public Function isMountpresentAndConnected() As Boolean
+    Public Function IsMountpresentAndConnected() As Boolean
         Dim retval As Boolean = False
 
-        If isMountPresent() AndAlso isMountConnected() Then
+        If IsMountPresent() AndAlso IsMountConnected() Then
             retval = True
         Else
             retval = False
@@ -713,10 +710,10 @@ Public Class SkyXFunctions
 
         Return retval
     End Function
-    Public Function isMountPresent() As Boolean
+    Public Function IsMountPresent() As Boolean
         Dim retval As Boolean = False
 
-        connectToMount()
+        ConnectToMount()
         If mount Is Nothing Then
             retval = False
         Else
@@ -726,7 +723,7 @@ Public Class SkyXFunctions
         Return retval
     End Function
 
-    Public Function isMountConnected() As Boolean
+    Public Function IsMountConnected() As Boolean
         Dim retval As Boolean = False
 
         If mount Is Nothing Then
@@ -749,10 +746,10 @@ Public Class SkyXFunctions
     ''' <param name="ra"></param>
     ''' <param name="dec"></param>
     ''' <returns></returns>
-    Public Function syncMount(ra As Double, dec As Double) As Boolean
+    Public Function SyncMount(ra As Double, dec As Double) As Boolean
         Dim retval As Boolean = False
 
-        If isMountpresentAndConnected() Then
+        If IsMountpresentAndConnected() Then
             mount.Sync(ra, dec, "")
             retval = True
         Else
@@ -762,7 +759,7 @@ Public Class SkyXFunctions
         Return retval
     End Function
 
-    Public Function imageLinkUsingImage(fullImageLinkImagePath As String) As Boolean
+    Public Function ImageLinkUsingImage(fullImageLinkImagePath As String) As Boolean
         Dim retval As Boolean = False
 
         If imageLink Is Nothing Then
@@ -776,7 +773,7 @@ Public Class SkyXFunctions
         imageLink.scale = 2.219 ' We set this to 2.219 as this the setting for my Atik
         imageLink.unknownScale = 1
 
-        setDefaultAutomatedImageLinkSettings()
+        SetDefaultAutomatedImageLinkSettings()
 
         Try
             imageLink.execute()
@@ -795,11 +792,11 @@ Public Class SkyXFunctions
         Return retval
     End Function
 
-    Public Function isLastImageLinkVisible() As Boolean
-        Return isRaAndDecVisible(getImageLinkResultsRAJ2000, getImageLinkResultsDecJ2000)
+    Public Function IsLastImageLinkVisible() As Boolean
+        Return IsRaAndDecVisible(GetImageLinkResultsRAJ2000, GetImageLinkResultsDecJ2000)
     End Function
 
-    Public Function getImageLinkResultsRAJ2000() As Double
+    Public Function GetImageLinkResultsRAJ2000() As Double
         Dim ra As Double
 
         If imageLinkResults IsNot Nothing Then
@@ -811,7 +808,7 @@ Public Class SkyXFunctions
         Return ra
     End Function
 
-    Public Function getImageLinkResultsDecJ2000() As Double
+    Public Function GetImageLinkResultsDecJ2000() As Double
         Dim dec As Double
 
         If imageLinkResults IsNot Nothing Then
@@ -823,7 +820,7 @@ Public Class SkyXFunctions
         Return dec
     End Function
 
-    Public Function isRaAndDecVisible(ra As Double, dec As Double) As Boolean
+    Public Function IsRaAndDecVisible(ra As Double, dec As Double) As Boolean
         Dim visible As Boolean = False
 
         If skyUtils Is Nothing Then
@@ -841,7 +838,7 @@ Public Class SkyXFunctions
         Return visible
     End Function
 
-    Public Function findObject(obj As String) As Boolean
+    Public Function FindObject(obj As String) As Boolean
         Dim objectFound As Boolean = True
 
         If starChart Is Nothing Then
@@ -891,7 +888,7 @@ Public Class SkyXFunctions
         Return objectFound
     End Function
 
-    Private Function getCurrentObjectRa() As Double
+    Private Function GetCurrentObjectRa() As Double
         Dim raString As String
         Dim ra As Double
         astroTargetInformation.Property(Sk6ObjectInformationProperty.sk6ObjInfoProp_RA_NOW)
@@ -901,7 +898,7 @@ Public Class SkyXFunctions
         Return ra
     End Function
 
-    Private Function getCurrentObjectDec() As Double
+    Private Function GetCurrentObjectDec() As Double
         Dim decString As String
         Dim dec As Double
         astroTargetInformation.Property(Sk6ObjectInformationProperty.sk6ObjInfoProp_DEC_NOW)
@@ -911,22 +908,22 @@ Public Class SkyXFunctions
         Return dec
     End Function
 
-    Public Sub setRaAndDec(ra As Double, dec As Double)
+    Public Sub SetRaAndDec(ra As Double, dec As Double)
         tgtRa = ra
         tgtDec = dec
     End Sub
 
-    Public Sub setRaAndDecFromObject()
-        tgtRa = getCurrentObjectRa()
-        tgtDec = getCurrentObjectDec()
+    Public Sub SetRaAndDecFromObject()
+        tgtRa = GetCurrentObjectRa()
+        tgtDec = GetCurrentObjectDec()
     End Sub
 
-    Public Sub setRaAndDecFromImageLink()
-        tgtRa = getImageLinkResultsRAJ2000()
-        tgtDec = getImageLinkResultsDecJ2000()
+    Public Sub SetRaAndDecFromImageLink()
+        tgtRa = GetImageLinkResultsRAJ2000()
+        tgtDec = GetImageLinkResultsDecJ2000()
     End Sub
 
-    Public Function isCurrentdObjectVisible() As Boolean
+    Public Function IsCurrentdObjectVisible() As Boolean
         Dim isObjectVisible As Boolean = False
 
         If astroTargetInformation Is Nothing Then
@@ -946,7 +943,7 @@ Public Class SkyXFunctions
     End Function
 
 
-    Sub setDefaultAutomatedImageLinkSettings()
+    Sub SetDefaultAutomatedImageLinkSettings()
 
         If automatedImageLinkSettings Is Nothing Then
             automatedImageLinkSettings = New AutomatedImageLinkSettings
@@ -961,31 +958,31 @@ Public Class SkyXFunctions
 
     End Sub
 
-    Sub clearDefaultAutomatedImageLinkSettings()
+    Sub ClearDefaultAutomatedImageLinkSettings()
         automatedImageLinkSettings = Nothing
     End Sub
 
-    Public Sub setMountPositionToNoPosition()
+    Public Sub SetMountPositionToNoPosition()
         mountEastWest = MountPointingPosition.noPosition
     End Sub
 
-    Public Sub setMountPositionToEast()
+    Public Sub SetMountPositionToEast()
         mountEastWest = MountPointingPosition.mountEast
     End Sub
 
-    Public Sub setMountPositionToWest()
+    Public Sub SetMountPositionToWest()
         mountEastWest = MountPointingPosition.mountWest
     End Sub
 
-    Public Sub setMountPointingPosition()
+    Public Sub SetMountPointingPosition()
         mount.GetAzAlt()
         Dim azimuth As Double = mount.dAz
         Dim altitide As Double = mount.dAlt
 
         If azimuth >= 0 And azimuth <= 180 Then
-            setMountPositionToEast()
+            SetMountPositionToEast()
         Else
-            setMountPositionToWest()
+            SetMountPositionToWest()
         End If
 
         'mount.GetRaDec()
@@ -994,12 +991,12 @@ Public Class SkyXFunctions
 
     End Sub
 
-    Public Function updateMountPointingPositionAndReturnMeridianFlip() As Boolean
+    Public Function UpdateMountPointingPositionAndReturnMeridianFlip() As Boolean
         Dim retval As Boolean = False
 
         Dim prevMountEastWest As MountPointingPosition = mountEastWest
 
-        setMountPointingPosition()
+        SetMountPointingPosition()
 
         If prevMountEastWest = MountPointingPosition.noPosition Then
             prevMountEastWest = mountEastWest
@@ -1014,26 +1011,26 @@ Public Class SkyXFunctions
         Return retval
     End Function
 
-    Public Function closedLoopSlewToMountPosition() As Boolean
+    Public Function ClosedLoopSlewToMountPosition() As Boolean
         Dim retval As Boolean = True
 
         mount.GetRaDec()
-        retval = closedLoopSlewToPosition(mount.dRa, mount.dDec)
+        retval = ClosedLoopSlewToPosition(mount.dRa, mount.dDec)
 
         Return retval
     End Function
 
-    Public Function closedLoopSlewToPosition(ra As Double, dec As Double) As Boolean
+    Public Function ClosedLoopSlewToPosition(ra As Double, dec As Double) As Boolean
         Dim retval As Boolean = False
         Dim localRa As Double
         Dim localDec As Double
         Dim continueLoop As Boolean = True
 
         Do
-            retval = slewMount(ra, dec, "")
+            retval = SlewMount(ra, dec, "")
 
             If retval Then
-                retval = takeAnImageSynchronouslyImageLinkAndSyncMount()
+                retval = TakeAnImageSynchronouslyImageLinkAndSyncMount()
             Else
                 continueLoop = False
             End If
@@ -1058,17 +1055,17 @@ Public Class SkyXFunctions
         Return retval
     End Function
 
-    Public Function closedLoopSlewToTarget() As Boolean
+    Public Function ClosedLoopSlewToTarget() As Boolean
         Dim retval As Boolean = True
         Dim retryCLS As Boolean = True
         Dim numberOfTries As Integer = 10
         Dim lastAngularSeperation As Double = 500
 
         Do
-            retryCLS = slewMount(tgtRa, tgtDec, "")
+            retryCLS = SlewMount(tgtRa, tgtDec, "")
 
             If retryCLS Then
-                retryCLS = takeAnImageSynchronouslyImageLinkAndSyncMount()
+                retryCLS = TakeAnImageSynchronouslyImageLinkAndSyncMount()
             End If
 
             If retryCLS Then
@@ -1095,16 +1092,16 @@ Public Class SkyXFunctions
         Return retval
     End Function
 
-    Public Function takeAnImageSynchronouslyImageLinkAndSyncMount() As Boolean
+    Public Function TakeAnImageSynchronouslyImageLinkAndSyncMount() As Boolean
         Dim retval As Boolean = False
 
-        retval = takeAnImageSynchronously()
+        retval = TakeAnImageSynchronously()
 
         If retval Then
-            attachCurrentImage()
+            AttachCurrentImage()
 
-            If imageLinkUsingImage(currentImage.Path) Then
-                syncMount(imageLinkResults.imageCenterRAJ2000, imageLinkResults.imageCenterDecJ2000)
+            If ImageLinkUsingImage(currentImage.Path) Then
+                SyncMount(imageLinkResults.imageCenterRAJ2000, imageLinkResults.imageCenterDecJ2000)
             Else
                 retval = False
             End If
@@ -1112,7 +1109,7 @@ Public Class SkyXFunctions
 
         Return retval
     End Function
-    Public Sub testFunction()
+    Public Sub TestFunction()
         Dim ra1 As Double
         Dim dec1 As Double
         Dim ra2 As Double
@@ -1120,36 +1117,36 @@ Public Class SkyXFunctions
 
         Dim file1 As String = "C:\Users\murph\source\repos\memurphybemengsc\TheSkyXController1\M1_Ha_1x1_300.000secs_Image_Drift_00002871.fit"
 
-        imageLinkUsingImage(file1)
+        ImageLinkUsingImage(file1)
 
-        attachImage(file1)
-        ra1 = getAverageEllipticityForCurrentImage()
-        ra2 = getAverageFWHMForCurrentImage()
-        setCurrentImagetoNothing()
+        AttachImage(file1)
+        ra1 = GetAverageEllipticityForCurrentImage()
+        ra2 = GetAverageFWHMForCurrentImage()
+        SetCurrentImagetoNothing()
 
 
         'C:\Users\murph\Source\Repos\memurphybemengsc\TheSkyXController1\Leo_Triplet_20200415.fit
         Dim file2 As String = "C:\Users\murph\Source\Repos\memurphybemengsc\TheSkyXController1\Leo_Triplet_20200415.fit"
-        attachImage(file2)
+        AttachImage(file2)
 
-        dec1 = getAverageEllipticityForCurrentImage()
-        dec2 = getAverageFWHMForCurrentImage()
-        setCurrentImagetoNothing()
+        dec1 = GetAverageEllipticityForCurrentImage()
+        dec2 = GetAverageFWHMForCurrentImage()
+        SetCurrentImagetoNothing()
 
         'C:\Users\murph\Source\Repos\memurphybemengsc\TheSkyXController1\M 27_OK_1x1_120.000secs_Lum_Light_00000815.fit
         Dim file3 As String = "C:\Users\murph\source\repos\memurphybemengsc\TheSkyXController1\M 27_OK_1x1_120.000secs_Lum_Light_00000815.fit"
-        attachImage(file3)
+        AttachImage(file3)
 
-        dec1 = getAverageEllipticityForCurrentImage()
-        dec2 = getAverageFWHMForCurrentImage()
-        setCurrentImagetoNothing()
+        dec1 = GetAverageEllipticityForCurrentImage()
+        dec2 = GetAverageFWHMForCurrentImage()
+        SetCurrentImagetoNothing()
 
         Dim file4 As String = "C:\Users\murph\source\repos\memurphybemengsc\TheSkyXController1\M51_000.fit"
-        attachImage(file4)
+        AttachImage(file4)
 
-        dec1 = getAverageEllipticityForCurrentImage()
-        dec2 = getAverageFWHMForCurrentImage()
-        setCurrentImagetoNothing()
+        dec1 = GetAverageEllipticityForCurrentImage()
+        dec2 = GetAverageFWHMForCurrentImage()
+        SetCurrentImagetoNothing()
 
         'findObject("M13")
         'ra1 = getCurrentObjectRa()
@@ -1182,12 +1179,12 @@ Public Class SkyXFunctions
         'Dim s As String
     End Sub
 
-    Public Sub saveCurrentImageToImageFolder()
+    Public Sub SaveCurrentImageToImageFolder()
         'currentImage.Path = getImageFolder()
         'currentImage.Save()
     End Sub
 
-    Public Function convertRA(ra As String) As Double
+    Public Function ConvertRA(ra As String) As Double
         Dim retval As Double
 
         If Me.skyUtils Is Nothing Then
@@ -1200,7 +1197,7 @@ Public Class SkyXFunctions
         Return retval
     End Function
 
-    Public Function convertDec(dec As String) As Double
+    Public Function ConvertDec(dec As String) As Double
         Dim retval As Double
 
         If Me.skyUtils Is Nothing Then

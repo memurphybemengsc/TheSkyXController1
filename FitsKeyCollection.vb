@@ -19,7 +19,7 @@ Public Class FitsKeyCollection
 
     Public Sub populateKeysAndGenerateSequence(folder As String)
         populateFitsKeysFromFilesInfolder(folder)
-        TheSkyXController.imageFileSequence.populateSequenceUsingFitsKeyCollection(Me)
+        TheSkyXController.imageFileSequence.PopulateSequenceUsingFitsKeyCollection(Me)
     End Sub
 
     Private Sub populateFitsKeysFromFilesInfolder(folder As String)

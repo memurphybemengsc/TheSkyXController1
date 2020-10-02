@@ -33,7 +33,7 @@ Public Class GenerateCalibrationSequence
         End If
 
         fkc.populateKeysAndGenerateSequence(TxtBoxImageFolder.Text)
-        TheSkyXController.imageFileSequence.buildPanel()
+        TheSkyXController.imageFileSequence.BuildPanel()
 
     End Sub
 

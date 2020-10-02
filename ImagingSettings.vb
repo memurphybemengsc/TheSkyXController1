@@ -7,7 +7,6 @@
 
         ' Add any initialization after the InitializeComponent() call.
         Me.TxtImageFolder.Text = My.Settings.ImageFolder
-        NumUpDownCLSTo.Value = My.Settings.CLSUntilArcSecs
     End Sub
 
     Private Sub BtnSelectFolder_Click(sender As Object, e As EventArgs) Handles BtnSelectFolder.Click
@@ -17,7 +16,7 @@
 
         If folderBrowserDialog1.ShowDialog() = System.Windows.Forms.DialogResult.OK Then
             TxtImageFolder.Text = folderBrowserDialog1.SelectedPath
-            TheSkyXController.skyXFunctions.setImageFolder(TxtImageFolder.Text)
+            TheSkyXController.skyXFunctions.SetImageFolder(TxtImageFolder.Text)
             TheSkyXController.TxtImageFolder.Text = TxtImageFolder.Text
         Else
             Me.Close()
@@ -25,7 +24,7 @@
     End Sub
 
     Private Sub BtnExit_Click(sender As Object, e As EventArgs) Handles BtnExit.Click
-        TheSkyXController.skyXFunctions.setCLSUntilArcSecs(NumUpDownCLSTo.Value)
+        TheSkyXController.skyXFunctions.SetCLSUntilArcSecs(NumUpDownCLSTo.Value)
         Close()
     End Sub
 End Class

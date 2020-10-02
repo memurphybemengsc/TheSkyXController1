@@ -27,103 +27,103 @@
 
     ReadOnly allExposureTypes = New String() {lightFrame, darkFrame, flatPercentageFrame, flatSecondsFrame, biasFrame, atFocus3, prompt, closedLoopSlew, abort, parkMount, shutdown, ftp}
 
-    Public Function isCurrentExposureTypeFTP() As Boolean
+    Public Function IsCurrentExposureTypeFTP() As Boolean
         Dim retval As Boolean = False
-        If getCurrentImageSequenceElement.exposureType = ftp Then
+        If GetCurrentImageSequenceElement.exposureType = ftp Then
             retval = True
         End If
         Return retval
     End Function
 
-    Public Function isCurrentExposureTypeShutdown() As Boolean
+    Public Function IsCurrentExposureTypeShutdown() As Boolean
         Dim retval As Boolean = False
-        If getCurrentImageSequenceElement.exposureType = shutdown Then
+        If GetCurrentImageSequenceElement.exposureType = shutdown Then
             retval = True
         End If
         Return retval
     End Function
 
-    Public Function isCurrentExposureTypeParkMount() As Boolean
+    Public Function IsCurrentExposureTypeParkMount() As Boolean
         Dim retval As Boolean = False
-        If getCurrentImageSequenceElement.exposureType = parkMount Then
+        If GetCurrentImageSequenceElement.exposureType = parkMount Then
             retval = True
         End If
         Return retval
     End Function
 
-    Public Function isCurrentExposureTypeAbort() As Boolean
+    Public Function IsCurrentExposureTypeAbort() As Boolean
         Dim retval As Boolean = False
-        If getCurrentImageSequenceElement.exposureType = abort Then
+        If GetCurrentImageSequenceElement.exposureType = abort Then
             retval = True
         End If
         Return retval
     End Function
 
-    Public Function isCurrentExposureTypeClosedLoopSlew() As Boolean
+    Public Function IsCurrentExposureTypeClosedLoopSlew() As Boolean
         Dim retval As Boolean = False
-        If getCurrentImageSequenceElement.exposureType = closedLoopSlew Then
+        If GetCurrentImageSequenceElement.exposureType = closedLoopSlew Then
             retval = True
         End If
         Return retval
     End Function
 
-    Public Function isCurrentExposureTypePrompt() As Boolean
+    Public Function IsCurrentExposureTypePrompt() As Boolean
         Dim retval As Boolean = False
-        If getCurrentImageSequenceElement.exposureType = prompt Then
+        If GetCurrentImageSequenceElement.exposureType = prompt Then
             retval = True
         End If
         Return retval
     End Function
 
-    Public Function isCurrentExposureTypeAtFocus3() As Boolean
+    Public Function IsCurrentExposureTypeAtFocus3() As Boolean
         Dim retval As Boolean = False
-        If getCurrentImageSequenceElement.exposureType = atFocus3 Then
+        If GetCurrentImageSequenceElement.exposureType = atFocus3 Then
             retval = True
         End If
         Return retval
     End Function
 
-    Public Function isCurrentExposureTypeALightFrame() As Boolean
+    Public Function IsCurrentExposureTypeALightFrame() As Boolean
         Dim retval As Boolean = False
-        If getCurrentImageSequenceElement.exposureType = lightFrame Then
+        If GetCurrentImageSequenceElement.exposureType = lightFrame Then
             retval = True
         End If
         Return retval
     End Function
 
-    Public Function isCurrentExposureTypeADarkFrame() As Boolean
+    Public Function IsCurrentExposureTypeADarkFrame() As Boolean
         Dim retval As Boolean = False
-        If getCurrentImageSequenceElement.exposureType = darkFrame Then
+        If GetCurrentImageSequenceElement.exposureType = darkFrame Then
             retval = True
         End If
         Return retval
     End Function
 
-    Public Function isCurrentExposureTypeAFlatPercentageFrame() As Boolean
+    Public Function IsCurrentExposureTypeAFlatPercentageFrame() As Boolean
         Dim retval As Boolean = False
-        If getCurrentImageSequenceElement.exposureType = flatPercentageFrame Then
+        If GetCurrentImageSequenceElement.exposureType = flatPercentageFrame Then
             retval = True
         End If
         Return retval
     End Function
 
-    Public Function isCurrentExposureTypeAFlatSecondsFrame() As Boolean
+    Public Function IsCurrentExposureTypeAFlatSecondsFrame() As Boolean
         Dim retval As Boolean = False
-        If getCurrentImageSequenceElement.exposureType = flatSecondsFrame Then
+        If GetCurrentImageSequenceElement.exposureType = flatSecondsFrame Then
             retval = True
         End If
         Return retval
     End Function
 
-    Public Function isCurrentExposureTypeABiasFrame() As Boolean
+    Public Function IsCurrentExposureTypeABiasFrame() As Boolean
         Dim retval As Boolean = False
-        If getCurrentImageSequenceElement.exposureType = biasFrame Then
+        If GetCurrentImageSequenceElement.exposureType = biasFrame Then
             retval = True
         End If
         Return retval
     End Function
 
-    Public Sub initialiseImageRun()
+    Public Sub InitialiseImageRun()
         currentImageSequenceElementIndex = 0
         currentDitherCount = 1
         currentExposureCount = 1
@@ -135,53 +135,53 @@
     ''' <summary>
     ''' Get the current sequence. Returns the first element if there is no current one.
     ''' </summary>
-    Public Function getCurrentImageSequenceElement() As ImageSequenceElement
-        Return getImageSequenceElement(currentImageSequenceElementIndex)
+    Public Function GetCurrentImageSequenceElement() As ImageSequenceElement
+        Return GetImageSequenceElement(currentImageSequenceElementIndex)
     End Function
 
     ''' <summary>
     ''' Get the current sequence index (zero based).
     ''' </summary>
-    Public Function getCurrentImageSequenceIndex() As Integer
+    Public Function GetCurrentImageSequenceIndex() As Integer
         Return currentImageSequenceElementIndex
     End Function
 
     ''' <summary>
     ''' Get the last sequence index (zero based).
     ''' </summary>
-    Public Function getLastImageSequenceindex() As Integer
+    Public Function GetLastImageSequenceindex() As Integer
         Return imageSequenceElements.Count - 1
     End Function
 
     ''' <summary>
     ''' Get the first sequence. Returns Nothing if none.
     ''' </summary>
-    Public Function getFirstImageSequenceElement() As ImageSequenceElement
+    Public Function GetFirstImageSequenceElement() As ImageSequenceElement
         currentImageSequenceElementIndex = 0
-        Return getImageSequenceElement(currentImageSequenceElementIndex)
+        Return GetImageSequenceElement(currentImageSequenceElementIndex)
     End Function
 
     ''' <summary>
     ''' Get the next sequence. Returns Nothing if none.
     ''' </summary>
-    Public Function getNextImageSequenceElement() As ImageSequenceElement
+    Public Function GetNextImageSequenceElement() As ImageSequenceElement
         currentImageSequenceElementIndex += 1
         currentDitherCount = 1
         currentExposureCount = 1
-        Return getImageSequenceElement(currentImageSequenceElementIndex)
+        Return GetImageSequenceElement(currentImageSequenceElementIndex)
     End Function
 
     ''' <summary>
     ''' Get the last sequence. Returns Nothing if none.
     ''' </summary>
-    Public Function getlastImageSequenceElement() As ImageSequenceElement
-        Return getImageSequenceElement(imageSequenceElements.Count - 1)
+    Public Function GetlastImageSequenceElement() As ImageSequenceElement
+        Return GetImageSequenceElement(imageSequenceElements.Count - 1)
     End Function
 
     ''' <summary>
     ''' Get the next sequence. Returns Nothing if none.
     ''' </summary>
-    Public Function getImageSequenceElement(index As Integer) As ImageSequenceElement
+    Public Function GetImageSequenceElement(index As Integer) As ImageSequenceElement
         If index >= imageSequenceElements.Count Or index < 0 Then
             Return Nothing
         End If
@@ -193,34 +193,34 @@
     ''' Neeed a proper name for this function.  It sets up pointers etc. for the next image.<br/>
     ''' It will set dither flag and also whether imaging is complete
     ''' </summary>
-    Public Sub incrementSequenceImageCount()
+    Public Sub IncrementSequenceImageCount()
         currentExposureCount += 1
         currentDitherCount += 1
 
-        If isCurrentExposureTypeABiasFrame() Or isCurrentExposureTypeADarkFrame() Or isCurrentExposureTypeAFlatPercentageFrame() Or
-                isCurrentExposureTypeAFlatSecondsFrame() Or isCurrentExposureTypeALightFrame() Then
+        If IsCurrentExposureTypeABiasFrame() Or IsCurrentExposureTypeADarkFrame() Or IsCurrentExposureTypeAFlatPercentageFrame() Or
+                IsCurrentExposureTypeAFlatSecondsFrame() Or IsCurrentExposureTypeALightFrame() Then
             currentExposure += 1
-            currentExposureTimeElapsed += Double.Parse(getCurrentImageSequenceElement.exposureLength)
+            currentExposureTimeElapsed += Double.Parse(GetCurrentImageSequenceElement.exposureLength)
         End If
 
-        If isCurrentExposureTypeAtFocus3() Or currentExposureCount > getCurrentImageSequenceElement.repeats Then
-            If getNextImageSequenceElement() Is Nothing Then
+        If IsCurrentExposureTypeAtFocus3() Or currentExposureCount > GetCurrentImageSequenceElement.repeats Then
+            If GetNextImageSequenceElement() Is Nothing Then
                 imageRunComplete = True
             End If
         Else
-            If currentDitherCount > getCurrentImageSequenceElement.ditherEveryNImages Then
+            If currentDitherCount > GetCurrentImageSequenceElement.ditherEveryNImages Then
                 dither = True
                 currentDitherCount = 1
             End If
         End If
     End Sub
 
-    Public Function isImageRunComplete() As Boolean
+    Public Function IsImageRunComplete() As Boolean
         Return imageRunComplete
     End Function
 
-    Public Function isSequenceComplete() As Boolean
-        If getCurrentImageSequenceElement() IsNot Nothing AndAlso currentExposureCount <= getCurrentImageSequenceElement.repeats Then
+    Public Function IsSequenceComplete() As Boolean
+        If GetCurrentImageSequenceElement() IsNot Nothing AndAlso currentExposureCount <= GetCurrentImageSequenceElement.repeats Then
             Return False
         Else
             ' We need to check if we have another sequence
@@ -229,11 +229,11 @@
         End If
     End Function
 
-    Public Function isExecuteDitherSet() As Boolean
+    Public Function IsExecuteDitherSet() As Boolean
         Return dither
     End Function
 
-    Public Sub clearDither()
+    Public Sub ClearDither()
         dither = False
     End Sub
 
@@ -539,7 +539,7 @@
 
         TheSkyXController.LblFilter.Location = New System.Drawing.Point(0, componentY)
         Dim labFilter As New ComboBox()
-        For Each filter As String In TheSkyXController.getFilterWheelNames
+        For Each filter As String In TheSkyXController.GetFilterWheelNames
             labFilter.Items.Add(filter)
         Next
         labFilter.Font = panelFont
@@ -674,7 +674,7 @@
         btnFarLeft.Size = New System.Drawing.Size(btnWidth, btnHeight)
         btnFarLeft.Name = "btnFarLeft_" & counter
         btnFarLeft.Location = New System.Drawing.Point(btnX, btnY)
-        AddHandler btnFarLeft.Click, AddressOf Me.button_click
+        AddHandler btnFarLeft.Click, AddressOf Me.Button_click
         pnlComponents.Controls.Add(btnFarLeft)
 
         btnX += btnWidth
@@ -685,7 +685,7 @@
         btnLeft.Size = New System.Drawing.Size(btnWidth, btnHeight)
         btnLeft.Name = "btnLeft_" & counter
         btnLeft.Location = New System.Drawing.Point(btnX, btnY)
-        AddHandler btnLeft.Click, AddressOf Me.button_click
+        AddHandler btnLeft.Click, AddressOf Me.Button_click
         pnlComponents.Controls.Add(btnLeft)
 
         btnX += btnWidth
@@ -696,7 +696,7 @@
         btnCopy.Size = New System.Drawing.Size(btnWidth, btnHeight)
         btnCopy.Name = "btnCopy_" & counter
         btnCopy.Location = New System.Drawing.Point(btnX, btnY)
-        AddHandler btnCopy.Click, AddressOf Me.button_click
+        AddHandler btnCopy.Click, AddressOf Me.Button_click
         pnlComponents.Controls.Add(btnCopy)
 
         btnX += btnWidth
@@ -707,7 +707,7 @@
         btnDelete.Size = New System.Drawing.Size(btnWidth, btnHeight)
         btnDelete.Name = "btnDelete_" & counter
         btnDelete.Location = New System.Drawing.Point(btnX, btnY)
-        AddHandler btnDelete.Click, AddressOf Me.button_click
+        AddHandler btnDelete.Click, AddressOf Me.Button_click
         pnlComponents.Controls.Add(btnDelete)
 
         btnX += btnWidth
@@ -717,7 +717,7 @@
         btnRight.Size = New System.Drawing.Size(btnWidth, btnHeight)
         btnRight.Name = "btnRight_" & counter
         btnRight.Location = New System.Drawing.Point(btnX, btnY)
-        AddHandler btnRight.Click, AddressOf Me.button_click
+        AddHandler btnRight.Click, AddressOf Me.Button_click
         pnlComponents.Controls.Add(btnRight)
 
         btnX += btnWidth
@@ -728,38 +728,38 @@
         btnFarRight.Size = New System.Drawing.Size(btnWidth, btnHeight)
         btnFarRight.Name = "btnFarRight_" & counter
         btnFarRight.Location = New System.Drawing.Point(btnX, btnY)
-        AddHandler btnFarRight.Click, AddressOf Me.button_click
+        AddHandler btnFarRight.Click, AddressOf Me.Button_click
         pnlComponents.Controls.Add(btnFarRight)
 
         Return pnlComponents
     End Function
 
 
-    Private Sub button_click(sender As Object, e As System.EventArgs)
+    Private Sub Button_click(sender As Object, e As System.EventArgs)
         'MsgBox("Name is " & sender.name & " Text is " & sender.text)
         Dim buttonName As String = sender.name
         Dim panelNumber As Integer = Convert.ToInt32(buttonName.Substring(buttonName.IndexOf("_") + 1, buttonName.Length - (buttonName.IndexOf("_") + 1)))
         If buttonName.Substring(0, buttonName.IndexOf("_")) = "btnFarLeft" And panelNumber > 1 Then
-            moveSequenceElementToFarLeft(panelNumber)
+            MoveSequenceElementToFarLeft(panelNumber)
         ElseIf buttonName.Substring(0, buttonName.IndexOf("_")) = "btnLeft" And panelNumber > 1 Then
-            moveSequenceElementToLeft(panelNumber)
+            MoveSequenceElementToLeft(panelNumber)
         ElseIf buttonName.Substring(0, buttonName.IndexOf("_")) = "btnCopy" Then
-            copySequenceElement(panelNumber)
+            CopySequenceElement(panelNumber)
         ElseIf buttonName.Substring(0, buttonName.IndexOf("_")) = "btnDelete" And imageSequenceElements.Count > 1 Then
-            removeSequenceElement(panelNumber)
+            RemoveSequenceElement(panelNumber)
         ElseIf buttonName.Substring(0, buttonName.IndexOf("_")) = "btnRight" And panelNumber < imageSequenceElements.Count Then
-            moveSequenceElementToRight(panelNumber)
+            MoveSequenceElementToRight(panelNumber)
         ElseIf buttonName.Substring(0, buttonName.IndexOf("_")) = "btnFarRight" And panelNumber < imageSequenceElements.Count Then
-            moveSequenceElementToFarRight(panelNumber)
+            MoveSequenceElementToFarRight(panelNumber)
         End If
     End Sub
 
-    Private Sub moveSequenceElementToFarLeft(sequenceElementToCopy As Integer)
+    Private Sub MoveSequenceElementToFarLeft(sequenceElementToCopy As Integer)
         Dim counter As Integer = 1
         Dim newSequenceElements As New List(Of ImageSequenceElement)
         Dim tmpSequenceElements As New List(Of ImageSequenceElement)
         Dim selectedSeqEl As New ImageSequenceElement
-        refreshElementsfromControls()
+        RefreshElementsfromControls()
         For Each seqEl In imageSequenceElements
             If counter = sequenceElementToCopy Then
                 selectedSeqEl = seqEl
@@ -771,15 +771,15 @@
         newSequenceElements.Add(selectedSeqEl)
         newSequenceElements.AddRange(tmpSequenceElements)
         imageSequenceElements = newSequenceElements
-        buildPanel()
+        BuildPanel()
     End Sub
 
-    Private Sub moveSequenceElementToLeft(sequenceElementToCopy As Integer)
+    Private Sub MoveSequenceElementToLeft(sequenceElementToCopy As Integer)
         Dim counter As Integer = 1
         Dim preSequenceElements As New List(Of ImageSequenceElement)
         Dim postSequenceElements As New List(Of ImageSequenceElement)
         Dim selectedSeqEl As New ImageSequenceElement
-        refreshElementsfromControls()
+        RefreshElementsfromControls()
         For Each seqEl In imageSequenceElements
             If counter < sequenceElementToCopy - 1 Then
                 preSequenceElements.Add(seqEl)
@@ -793,13 +793,13 @@
         preSequenceElements.Add(selectedSeqEl)
         preSequenceElements.AddRange(postSequenceElements)
         imageSequenceElements = preSequenceElements
-        buildPanel()
+        BuildPanel()
     End Sub
 
-    Private Sub copySequenceElement(sequenceElementToCopy As Integer)
+    Private Sub CopySequenceElement(sequenceElementToCopy As Integer)
         Dim counter As Integer = 1
         Dim newSequenceElements As New List(Of ImageSequenceElement)
-        refreshElementsfromControls()
+        RefreshElementsfromControls()
         For Each seqEl In imageSequenceElements
             If counter <> sequenceElementToCopy Then
                 newSequenceElements.Add(seqEl)
@@ -810,14 +810,14 @@
             counter += 1
         Next
         imageSequenceElements = newSequenceElements
-        buildPanel()
-        populateTotalsFromImageSequenceElements()
+        BuildPanel()
+        PopulateTotalsFromImageSequenceElements()
     End Sub
 
-    Private Sub removeSequenceElement(sequenceElementToRemove As Integer)
+    Private Sub RemoveSequenceElement(sequenceElementToRemove As Integer)
         Dim counter As Integer = 1
         Dim newSequenceElements As New List(Of ImageSequenceElement)
-        refreshElementsfromControls()
+        RefreshElementsfromControls()
         For Each seqEl In imageSequenceElements
             If counter <> sequenceElementToRemove Then
                 newSequenceElements.Add(seqEl)
@@ -825,16 +825,16 @@
             counter += 1
         Next
         imageSequenceElements = newSequenceElements
-        buildPanel()
-        populateTotalsFromImageSequenceElements()
+        BuildPanel()
+        PopulateTotalsFromImageSequenceElements()
     End Sub
 
-    Private Sub moveSequenceElementToRight(sequenceElementToCopy As Integer)
+    Private Sub MoveSequenceElementToRight(sequenceElementToCopy As Integer)
         Dim counter As Integer = 1
         Dim preSequenceElements As New List(Of ImageSequenceElement)
         Dim postSequenceElements As New List(Of ImageSequenceElement)
         Dim selectedSeqEl As New ImageSequenceElement
-        refreshElementsfromControls()
+        RefreshElementsfromControls()
         For Each seqEl In imageSequenceElements
             If counter <= sequenceElementToCopy - 1 Then
                 preSequenceElements.Add(seqEl)
@@ -850,15 +850,15 @@
         preSequenceElements.Add(selectedSeqEl)
         preSequenceElements.AddRange(postSequenceElements)
         imageSequenceElements = preSequenceElements
-        buildPanel()
+        BuildPanel()
     End Sub
 
-    Private Sub moveSequenceElementToFarRight(sequenceElementToCopy As Integer)
+    Private Sub MoveSequenceElementToFarRight(sequenceElementToCopy As Integer)
         Dim counter As Integer = 1
         Dim newSequenceElements As New List(Of ImageSequenceElement)
         Dim tmpSequenceElements As New List(Of ImageSequenceElement)
         Dim selectedSeqEl As New ImageSequenceElement
-        refreshElementsfromControls()
+        RefreshElementsfromControls()
         For Each seqEl In imageSequenceElements
             If counter = sequenceElementToCopy Then
                 selectedSeqEl = seqEl
@@ -870,10 +870,10 @@
         newSequenceElements.AddRange(tmpSequenceElements)
         newSequenceElements.Add(selectedSeqEl)
         imageSequenceElements = newSequenceElements
-        buildPanel()
+        BuildPanel()
     End Sub
 
-    Public Sub buildPanel()
+    Public Sub BuildPanel()
         componentPanel.Controls.Clear()
         Dim xPos As Integer = 0
         Dim xSpacing As Integer = 5
@@ -896,7 +896,7 @@
         Next
     End Sub
 
-    Private Sub populateTotalsFromImageSequenceElements()
+    Private Sub PopulateTotalsFromImageSequenceElements()
         totalExposures = 0
         totalExposureTime = 0
 
@@ -910,7 +910,7 @@
         Next
     End Sub
 
-    Public Sub refreshElementsfromControls()
+    Public Sub RefreshElementsfromControls()
         imageSequenceElements.Clear()
         Dim hasChilderen As Boolean = componentPanel.HasChildren
 
@@ -945,20 +945,20 @@
             Next
             imageSequenceElements.Add(imgSeqEl)
         Next
-        populateTotalsFromImageSequenceElements()
+        PopulateTotalsFromImageSequenceElements()
     End Sub
 
-    Public Sub openFileAndBuildComponents()
+    Public Sub OpenFileAndBuildComponents()
         OpenSequenceFile()
-        buildPanel()
+        BuildPanel()
     End Sub
 
-    Public Sub refreshComponentsAndSaveFile()
-        refreshElementsfromControls()
+    Public Sub RefreshComponentsAndSaveFile()
+        RefreshElementsfromControls()
         SaveSequenceFileAs()
     End Sub
 
-    Public Sub createInitialPanel()
+    Public Sub CreateInitialPanel()
         If My.Settings.ImageSequenceFile IsNot "" Then
             sequenceFileValue = My.Settings.ImageSequenceFile
             imageSequenceElements.Clear()
@@ -967,34 +967,34 @@
             imageSequenceElements.Add(New ImageSequenceElement)
         End If
 
-        buildPanel()
+        BuildPanel()
     End Sub
 
-    Public Function getTotalExposures() As Integer
+    Public Function GetTotalExposures() As Integer
         Return totalExposures
     End Function
 
-    Public Function getTotalExposureTime() As Double
+    Public Function GetTotalExposureTime() As Double
         Return totalExposureTime
     End Function
 
-    Public Function getcurrentExposureTimeElapsed() As Double
+    Public Function GetcurrentExposureTimeElapsed() As Double
         Return currentExposureTimeElapsed
     End Function
 
-    Public Function getCurrentExposure() As Integer
+    Public Function GetCurrentExposure() As Integer
         Return currentExposure
     End Function
 
-    Public Function getCurrentProgress() As String
+    Public Function GetCurrentProgress() As String
         Dim progress As String
 
-        progress = getCurrentExposure.ToString + "/" + getTotalExposures.ToString + " " + getcurrentExposureTimeElapsed().ToString + "/" + getTotalExposureTime().ToString
+        progress = GetCurrentExposure.ToString + "/" + GetTotalExposures.ToString + " " + GetcurrentExposureTimeElapsed().ToString + "/" + GetTotalExposureTime().ToString
 
         Return progress
     End Function
 
-    Public Sub populateSequenceUsingFitsKeyCollection(fkc As FitsKeyCollection)
+    Public Sub PopulateSequenceUsingFitsKeyCollection(fkc As FitsKeyCollection)
         imageSequenceElements.Clear()
         For Each fkv As FitsKeyValues In fkc.fitsKeySummaryForFlats
             Dim ise As New ImageSequenceElement
