@@ -391,15 +391,15 @@ Public Class SkyXFunctions
     Public Function RefreshCameraImageSettingsFromCurrentImageSequence() As Boolean
         Dim retval As Boolean = True
 
-        Dim filter As String = TheSkyXController.imageFileSequence.GetCurrentImageSequenceElement.filter
-        Dim bx As Double = TheSkyXController.imageFileSequence.GetCurrentImageSequenceElement.binX
-        Dim by As Double = TheSkyXController.imageFileSequence.GetCurrentImageSequenceElement.binY
-        Dim exposure As Double = TheSkyXController.imageFileSequence.GetCurrentImageSequenceElement.exposureLength
+        Dim filter As String = TheSkyXController.imageFileSequence.getCurrentImageSequenceElement.filter
+        Dim bx As Double = TheSkyXController.imageFileSequence.getCurrentImageSequenceElement.binX
+        Dim by As Double = TheSkyXController.imageFileSequence.getCurrentImageSequenceElement.binY
+        Dim exposure As Double = TheSkyXController.imageFileSequence.getCurrentImageSequenceElement.exposureLength
         Dim exposureType As Integer
 
-        If TheSkyXController.imageFileSequence.IsCurrentExposureTypeALightFrame Then
+        If TheSkyXController.imageFileSequence.isCurrentExposureTypeALightFrame Then
             exposureType = ccdsoftImageFrame.cdLight
-        ElseIf TheSkyXController.imageFileSequence.IsCurrentExposureTypeAtFocus3 Then
+        ElseIf TheSkyXController.imageFileSequence.isCurrentExposureTypeAtFocus3 Then
             ' What?????
             exposureType = ccdsoftImageFrame.cdLight
         End If
