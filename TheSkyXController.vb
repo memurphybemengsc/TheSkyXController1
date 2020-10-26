@@ -889,4 +889,20 @@ Public Class TheSkyXController
         My.Settings.Save()
     End Sub
 
+    Private Sub Button1_Click(sender As Object, e As EventArgs) Handles Button1.Click
+        'Image link
+        If skyXFunctions.TakeAnImageSynchronouslyImageLinkAndSyncMount() Then
+            MsgBox("Image Link Succeeded")
+        Else
+            MsgBox("Image Link failed")
+        End If
+    End Sub
+
+    Private Sub Button2_Click(sender As Object, e As EventArgs) Handles Button2.Click
+        If skyXFunctions.RunAtFocus3FullyAutomatically() Then
+            MsgBox("Focus Succeeded")
+        Else
+            MsgBox("Focus Failed")
+        End If
+    End Sub
 End Class

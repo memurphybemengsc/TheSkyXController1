@@ -412,7 +412,7 @@ Public Class SkyXFunctions
     Public Function RunAtFocus3FullyAutomatically() As Boolean
         Dim retval As Boolean = False
 
-        retval = RunAtFocus3(0, True)
+        retval = RunAtFocus3(2, True)
 
         Return retval
     End Function
