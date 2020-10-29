@@ -1210,4 +1210,20 @@ Public Class SkyXFunctions
         Return retval
     End Function
 
+    ''' <summary>
+    ''' Returns a value that determines if the telescope slew is complete (non-zero) or if the telescope is slewing (zero).<br/>
+    ''' Use this command to determine if the telescope Is slewing.<br/>
+    ''' Note: The Telescope must be Using asynchronous slewing For this command To work
+    ''' </summary>
+    Public Function isMountSlewing() As Integer
+        Return mount.IsSlewComplete
+    End Function
+
+    ''' <summary>
+    ''' Returns a value that determines if the telescope tracking is currently on<br/>
+    ''' </summary>
+    Public Function isMountTracking() As Integer
+        Return mount.IsTracking
+    End Function
+
 End Class

@@ -328,7 +328,7 @@ Public Class TheSkyXController
             ElseIf currentImagingStatus = ImagingStatus.acqireTarget Then
                 TextBoxStatus.Text = "Acquire Image"
                 Dim tgt As String = GetNextTargetFromList()
-                Dim tgt_type = ""
+                Dim tgt_type
                 Dim tgt_name = ""
 
                 phd2guiding.stopGuiding()
@@ -905,4 +905,34 @@ Public Class TheSkyXController
             MsgBox("Focus Failed")
         End If
     End Sub
+
+    Private Sub Button3_Click(sender As Object, e As EventArgs) Handles Button3.Click
+        ' TxtTarget text panel
+        If TxtTarget.TextLength = 0 Then
+            MsgBox("No target")
+        End If
+
+        If skyXFunctions.FindObject(TxtTarget.Text) Then
+            MsgBox("target Valid")
+            If skyXFunctions.IsCurrentdObjectVisible() Then
+                MsgBox("target is visible")
+                skyXFunctions.SetRaAndDecFromObject()
+                If skyXFunctions.ClosedLoopSlewToTarget() Then
+                    MsgBox("CLS Complete")
+                Else
+                    MsgBox("CLS Failed")
+                End If
+            End If
+        End If
+
+    End Sub
+
+    Private Sub Button4_Click(sender As Object, e As EventArgs) Handles Button4.Click
+        MsgBox("PHD2 guiding is" + phd2guiding.getPHDStatus().ToString)
+    End Sub
+
+    Private Sub Button5_Click(sender As Object, e As EventArgs) Handles Button5.Click
+        MsgBox("is mount slewing " + skyXFunctions.isMountSlewing().ToString + " is mount tracking " + skyXFunctions.isMountTracking().ToString)
+    End Sub
+
 End Class
