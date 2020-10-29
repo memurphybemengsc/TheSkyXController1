@@ -224,12 +224,21 @@ Public Class TheSkyXController
     End Sub
 
     Private Sub BtnTest_Click(sender As Object, e As EventArgs) Handles BtnTest.Click
+        If myAscomUtilities.myMount Is Nothing Then
+            myAscomUtilities.chooseAndConnectToMount()
+        End If
 
-        Dim tgt As String = GetNextTargetFromList()
+        If myAscomUtilities.myMount.Slewing Then
+            MsgBox("Mount is slewing")
+        Else
+            MsgBox("Mount is not slewing")
+        End If
 
-        Dim ra As Double = EnterRaAndDec.ExtractRa(tgt)
-        Dim dec As Double = EnterRaAndDec.ExtractDec(tgt)
-        Dim name As String = EnterRaAndDec.ExtractName(tgt)
+        'Dim tgt As String = GetNextTargetFromList()
+
+        'Dim ra As Double = EnterRaAndDec.ExtractRa(tgt)
+        'Dim dec As Double = EnterRaAndDec.ExtractDec(tgt)
+        'Dim name As String = EnterRaAndDec.ExtractName(tgt)
 
 
         TxtImageFolder.Text = "the image folder"
