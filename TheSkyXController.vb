@@ -224,15 +224,17 @@ Public Class TheSkyXController
     End Sub
 
     Private Sub BtnTest_Click(sender As Object, e As EventArgs) Handles BtnTest.Click
-        If myAscomUtilities.myMount Is Nothing Then
-            myAscomUtilities.chooseAndConnectToMount()
-        End If
+        ImagingSettings.Show()
 
-        If myAscomUtilities.myMount.Slewing Then
-            MsgBox("Mount is slewing")
-        Else
-            MsgBox("Mount is not slewing")
-        End If
+        'If myAscomUtilities.myMount Is Nothing Then
+        '    myAscomUtilities.chooseAndConnectToMount()
+        'End If
+
+        'If myAscomUtilities.myMount.Slewing Then
+        '    MsgBox("Mount is slewing")
+        'Else
+        '    MsgBox("Mount is not slewing")
+        'End If
 
         'Dim tgt As String = GetNextTargetFromList()
 
@@ -944,4 +946,15 @@ Public Class TheSkyXController
         MsgBox("is mount slewing " + skyXFunctions.isMountSlewing().ToString + " is mount tracking " + skyXFunctions.isMountTracking().ToString)
     End Sub
 
+    Private Sub Button6_Click(sender As Object, e As EventArgs) Handles Button6.Click
+        If skyXFunctions.FindObject(TxtTarget.Text) Then
+            MsgBox("target Valid")
+            If skyXFunctions.IsCurrentdObjectVisible() Then
+                ' not sure I have to do this.
+                'skyXFunctions.SetRaAndDecFromObject()
+                skyXFunctions.memScratch()
+            End If
+        End If
+
+    End Sub
 End Class

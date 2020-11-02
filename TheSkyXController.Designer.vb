@@ -60,6 +60,7 @@ Partial Class TheSkyXController
         Me.BtnSelectImage = New System.Windows.Forms.Button()
         Me.BtnRemoveTarget = New System.Windows.Forms.Button()
         Me.BtnEnterRAAndDec = New System.Windows.Forms.Button()
+        Me.Button5 = New System.Windows.Forms.Button()
         Me.LblImageFolder = New System.Windows.Forms.Label()
         Me.TxtImageFolder = New System.Windows.Forms.TextBox()
         Me.LblFocuser = New System.Windows.Forms.Label()
@@ -80,7 +81,7 @@ Partial Class TheSkyXController
         Me.Button2 = New System.Windows.Forms.Button()
         Me.Button3 = New System.Windows.Forms.Button()
         Me.Button4 = New System.Windows.Forms.Button()
-        Me.Button5 = New System.Windows.Forms.Button()
+        Me.Button6 = New System.Windows.Forms.Button()
         Me.PnlImageSeqTitles.SuspendLayout()
         Me.GroupBox2.SuspendLayout()
         Me.GroupBox1.SuspendLayout()
@@ -449,6 +450,16 @@ Partial Class TheSkyXController
         Me.ToolTipStart.SetToolTip(Me.BtnEnterRAAndDec, "Search the SkyX database for the target")
         Me.BtnEnterRAAndDec.UseVisualStyleBackColor = True
         '
+        'Button5
+        '
+        Me.Button5.Location = New System.Drawing.Point(330, 443)
+        Me.Button5.Name = "Button5"
+        Me.Button5.Size = New System.Drawing.Size(75, 23)
+        Me.Button5.TabIndex = 40
+        Me.Button5.Text = "Mount"
+        Me.ToolTipStart.SetToolTip(Me.Button5, "Exit the application")
+        Me.Button5.UseVisualStyleBackColor = True
+        '
         'LblImageFolder
         '
         Me.LblImageFolder.AutoSize = True
@@ -463,7 +474,7 @@ Partial Class TheSkyXController
         '
         Me.TxtImageFolder.BackColor = System.Drawing.SystemColors.ControlLightLight
         Me.TxtImageFolder.Location = New System.Drawing.Point(422, 326)
-        Me.TxtImageFolder.Margin = New System.Windows.Forms.Padding(2, 2, 2, 2)
+        Me.TxtImageFolder.Margin = New System.Windows.Forms.Padding(2)
         Me.TxtImageFolder.Name = "TxtImageFolder"
         Me.TxtImageFolder.ReadOnly = True
         Me.TxtImageFolder.Size = New System.Drawing.Size(390, 20)
@@ -515,7 +526,7 @@ Partial Class TheSkyXController
         '
         Me.TxtTarget.BackColor = System.Drawing.SystemColors.ControlLightLight
         Me.TxtTarget.Location = New System.Drawing.Point(397, 408)
-        Me.TxtTarget.Margin = New System.Windows.Forms.Padding(2, 2, 2, 2)
+        Me.TxtTarget.Margin = New System.Windows.Forms.Padding(2)
         Me.TxtTarget.Name = "TxtTarget"
         Me.TxtTarget.Size = New System.Drawing.Size(96, 20)
         Me.TxtTarget.TabIndex = 27
@@ -534,7 +545,7 @@ Partial Class TheSkyXController
         'TextBoxStatus
         '
         Me.TextBoxStatus.Location = New System.Drawing.Point(777, 284)
-        Me.TextBoxStatus.Margin = New System.Windows.Forms.Padding(2, 2, 2, 2)
+        Me.TextBoxStatus.Margin = New System.Windows.Forms.Padding(2)
         Me.TextBoxStatus.Name = "TextBoxStatus"
         Me.TextBoxStatus.Size = New System.Drawing.Size(473, 20)
         Me.TextBoxStatus.TabIndex = 33
@@ -652,21 +663,22 @@ Partial Class TheSkyXController
         Me.Button4.Text = "Get PHD Status"
         Me.Button4.UseVisualStyleBackColor = True
         '
-        'Button5
+        'Button6
         '
-        Me.Button5.Location = New System.Drawing.Point(330, 443)
-        Me.Button5.Name = "Button5"
-        Me.Button5.Size = New System.Drawing.Size(75, 23)
-        Me.Button5.TabIndex = 40
-        Me.Button5.Text = "Mount"
-        Me.ToolTipStart.SetToolTip(Me.Button5, "Exit the application")
-        Me.Button5.UseVisualStyleBackColor = True
+        Me.Button6.Location = New System.Drawing.Point(330, 494)
+        Me.Button6.Name = "Button6"
+        Me.Button6.Size = New System.Drawing.Size(75, 23)
+        Me.Button6.TabIndex = 41
+        Me.Button6.Text = "SkyX CLS"
+        Me.ToolTipStart.SetToolTip(Me.Button6, "Exit the application")
+        Me.Button6.UseVisualStyleBackColor = True
         '
         'TheSkyXController
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
         Me.ClientSize = New System.Drawing.Size(1278, 555)
+        Me.Controls.Add(Me.Button6)
         Me.Controls.Add(Me.Button5)
         Me.Controls.Add(Me.Button4)
         Me.Controls.Add(Me.Button3)
@@ -768,4 +780,5 @@ Partial Class TheSkyXController
     Friend WithEvents Button3 As Button
     Friend WithEvents Button4 As Button
     Friend WithEvents Button5 As Button
+    Friend WithEvents Button6 As Button
 End Class

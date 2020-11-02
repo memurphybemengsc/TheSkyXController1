@@ -80,6 +80,17 @@ Public Class SkyXFunctions
         mountEastWest = MountPointingPosition.noPosition
     End Sub
 
+    ' This is a dummy fn to see what is in various objects
+    Public Sub memScratch()
+        'Dim imager As New TheSkyXLib.ccdsoftCamera()
+        'imager.Autoguide()
+
+        'Dim int As Integer = imager.ShowAutoguider ' show/hide autoguider image
+
+        closedLoopSlew.Asynchronous = 0
+        closedLoopSlew.exec()
+
+    End Sub
     Public Function GetFilterNames() As List(Of String)
         Return filterNames
     End Function
