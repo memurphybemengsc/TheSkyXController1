@@ -43,6 +43,7 @@ Partial Class ImagingSettings
         Me.CheckBoxEnablePauseImagingIfGuidingStops = New System.Windows.Forms.CheckBox()
         Me.CheckBoxEnableResumeImagingIfGuidingStarts = New System.Windows.Forms.CheckBox()
         Me.CheckBoxRunCLSOnImagingResume = New System.Windows.Forms.CheckBox()
+        Me.Label11 = New System.Windows.Forms.Label()
         CType(Me.NumUpDownCLSTo, System.ComponentModel.ISupportInitialize).BeginInit()
         CType(Me.NumUpDnHaltIfMountBelow, System.ComponentModel.ISupportInitialize).BeginInit()
         CType(Me.NumUpDnHaltIfSunAboveDeg, System.ComponentModel.ISupportInitialize).BeginInit()
@@ -53,7 +54,7 @@ Partial Class ImagingSettings
         'BtnSelectFolder
         '
         Me.BtnSelectFolder.Location = New System.Drawing.Point(25, 21)
-        Me.BtnSelectFolder.Margin = New System.Windows.Forms.Padding(2, 2, 2, 2)
+        Me.BtnSelectFolder.Margin = New System.Windows.Forms.Padding(2)
         Me.BtnSelectFolder.Name = "BtnSelectFolder"
         Me.BtnSelectFolder.Size = New System.Drawing.Size(98, 19)
         Me.BtnSelectFolder.TabIndex = 0
@@ -64,7 +65,7 @@ Partial Class ImagingSettings
         '
         Me.TxtImageFolder.BackColor = System.Drawing.SystemColors.ControlLightLight
         Me.TxtImageFolder.Location = New System.Drawing.Point(157, 22)
-        Me.TxtImageFolder.Margin = New System.Windows.Forms.Padding(2, 2, 2, 2)
+        Me.TxtImageFolder.Margin = New System.Windows.Forms.Padding(2)
         Me.TxtImageFolder.Name = "TxtImageFolder"
         Me.TxtImageFolder.ReadOnly = True
         Me.TxtImageFolder.Size = New System.Drawing.Size(388, 20)
@@ -72,8 +73,8 @@ Partial Class ImagingSettings
         '
         'BtnExit
         '
-        Me.BtnExit.Location = New System.Drawing.Point(246, 236)
-        Me.BtnExit.Margin = New System.Windows.Forms.Padding(2, 2, 2, 2)
+        Me.BtnExit.Location = New System.Drawing.Point(251, 283)
+        Me.BtnExit.Margin = New System.Windows.Forms.Padding(2)
         Me.BtnExit.Name = "BtnExit"
         Me.BtnExit.Size = New System.Drawing.Size(56, 19)
         Me.BtnExit.TabIndex = 2
@@ -95,7 +96,7 @@ Partial Class ImagingSettings
         Me.NumUpDownCLSTo.DecimalPlaces = 1
         Me.NumUpDownCLSTo.Increment = New Decimal(New Integer() {1, 0, 0, 65536})
         Me.NumUpDownCLSTo.Location = New System.Drawing.Point(157, 64)
-        Me.NumUpDownCLSTo.Margin = New System.Windows.Forms.Padding(2, 2, 2, 2)
+        Me.NumUpDownCLSTo.Margin = New System.Windows.Forms.Padding(2)
         Me.NumUpDownCLSTo.Minimum = New Decimal(New Integer() {1, 0, 0, 65536})
         Me.NumUpDownCLSTo.Name = "NumUpDownCLSTo"
         Me.NumUpDownCLSTo.Size = New System.Drawing.Size(90, 20)
@@ -260,12 +261,23 @@ Partial Class ImagingSettings
         Me.CheckBoxRunCLSOnImagingResume.Text = "Run CLS on Resume"
         Me.CheckBoxRunCLSOnImagingResume.UseVisualStyleBackColor = True
         '
+        'Label11
+        '
+        Me.Label11.AutoSize = True
+        Me.Label11.Location = New System.Drawing.Point(22, 245)
+        Me.Label11.Margin = New System.Windows.Forms.Padding(2, 0, 2, 0)
+        Me.Label11.Name = "Label11"
+        Me.Label11.Size = New System.Drawing.Size(220, 13)
+        Me.Label11.TabIndex = 22
+        Me.Label11.Text = "Add logic to check for and reconnect evices."
+        '
         'ImagingSettings
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
         Me.BackColor = System.Drawing.SystemColors.Control
-        Me.ClientSize = New System.Drawing.Size(600, 266)
+        Me.ClientSize = New System.Drawing.Size(600, 313)
+        Me.Controls.Add(Me.Label11)
         Me.Controls.Add(Me.CheckBoxRunCLSOnImagingResume)
         Me.Controls.Add(Me.CheckBoxEnableResumeImagingIfGuidingStarts)
         Me.Controls.Add(Me.CheckBoxEnablePauseImagingIfGuidingStops)
@@ -287,7 +299,7 @@ Partial Class ImagingSettings
         Me.Controls.Add(Me.BtnExit)
         Me.Controls.Add(Me.TxtImageFolder)
         Me.Controls.Add(Me.BtnSelectFolder)
-        Me.Margin = New System.Windows.Forms.Padding(2, 2, 2, 2)
+        Me.Margin = New System.Windows.Forms.Padding(2)
         Me.Name = "ImagingSettings"
         Me.Text = "ImagingSettings"
         CType(Me.NumUpDownCLSTo, System.ComponentModel.ISupportInitialize).EndInit()
@@ -321,4 +333,5 @@ Partial Class ImagingSettings
     Friend WithEvents CheckBoxEnablePauseImagingIfGuidingStops As CheckBox
     Friend WithEvents CheckBoxEnableResumeImagingIfGuidingStarts As CheckBox
     Friend WithEvents CheckBoxRunCLSOnImagingResume As CheckBox
+    Friend WithEvents Label11 As Label
 End Class
