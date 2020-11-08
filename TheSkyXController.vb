@@ -947,14 +947,6 @@ Public Class TheSkyXController
     End Sub
 
     Private Sub Button6_Click(sender As Object, e As EventArgs) Handles Button6.Click
-        If skyXFunctions.FindObject(TxtTarget.Text) Then
-            MsgBox("target Valid")
-            If skyXFunctions.IsCurrentdObjectVisible() Then
-                ' not sure I have to do this.
-                'skyXFunctions.SetRaAndDecFromObject()
-                skyXFunctions.memScratch()
-            End If
-        End If
-
+        skyXFunctions.memScratch(TxtTarget.Text)
     End Sub
 End Class

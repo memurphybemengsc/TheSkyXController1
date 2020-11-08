@@ -21,7 +21,7 @@ Public Class SkyXFunctions
     Private currentImage As TheSkyXLib.ccdsoftImage
     Private mount As TheSkyXLib.sky6RASCOMTele
     Private automatedImageLinkSettings As TheSkyXLib.AutomatedImageLinkSettings
-    Private closedLoopSlew As TheSkyXLib.ClosedLoopSlew
+    Private closedLoopSlew As TheSkyXLib.ClosedLoopSlew ' There is an issue with this on the Eagle
     Private imageLink As TheSkyXLib.ImageLink
     Private imageLinkResults As TheSkyXLib.ImageLinkResults
     Private astroTargetInformation As TheSkyXLib.sky6ObjectInformation
@@ -81,14 +81,22 @@ Public Class SkyXFunctions
     End Sub
 
     ' This is a dummy fn to see what is in various objects
-    Public Sub memScratch()
+    Public Sub memScratch(target As String)
         'Dim imager As New TheSkyXLib.ccdsoftCamera()
         'imager.Autoguide()
 
         'Dim int As Integer = imager.ShowAutoguider ' show/hide autoguider image
 
-        closedLoopSlew.Asynchronous = 0
-        closedLoopSlew.exec()
+        If FindObject(target) Then
+            MsgBox("target Valid")
+            If closedLoopSlew Is Nothing Then
+                closedLoopSlew = New ClosedLoopSlew
+            End If
+            MsgBox("after new cls")
+            closedLoopSlew.Asynchronous = 0
+            closedLoopSlew.exec()
+            MsgBox("closedLoopSlew.lastError = " + closedLoopSlew.lastError)
+        End If
 
     End Sub
     Public Function GetFilterNames() As List(Of String)
