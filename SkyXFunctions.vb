@@ -77,6 +77,8 @@ Public Class SkyXFunctions
             camera.focConnect()
         End If
 
+        ConnectToMount()
+
         mountEastWest = MountPointingPosition.noPosition
     End Sub
 

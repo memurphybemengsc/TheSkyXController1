@@ -140,8 +140,16 @@ Public Class TheSkyXController
 
         Else
             ' We are disconnecting from SkyX, check are we guiding or imaging
-            Dim res = MsgBox("Imaging is in progress, do you wish to disconnect?", MsgBoxStyle.YesNo)
-            If (res = MsgBoxResult.Yes) Then
+            Dim disconnect As Boolean = False
+
+            If IsImagingInProgress() Then
+                Dim res = MsgBox("Imaging is in progress, do you wish to disconnect?", MsgBoxStyle.YesNo)
+                If (res = MsgBoxResult.Yes) Then
+                    disconnect = True
+                End If
+            End If
+
+            If disconnect Then
                 Me.PnlSkyXStatus.BackColor = Color.Red
                 skyXFunctions.Disconnect()
                 skyXFunctions = Nothing
@@ -157,6 +165,18 @@ Public Class TheSkyXController
             End If
         End If
     End Sub
+
+    Private Function IsImagingInProgress() As Boolean
+        Dim retval As Boolean
+
+        If currentImagingStatus = ImagingStatus.empty Or currentImagingStatus = ImagingStatus.halt Or currentImagingStatus = ImagingStatus.start Or currentImagingStatus = ImagingStatus.notImaging Then
+            retval = False
+        Else
+            retval = True
+        End If
+
+        Return retval
+    End Function
 
     Private Sub BtnPHD2_Click(sender As Object, e As EventArgs) Handles BtnPHD2.Click
         If Not isPhd2Connected Then
@@ -910,6 +930,7 @@ Public Class TheSkyXController
     End Sub
 
     Private Sub Button2_Click(sender As Object, e As EventArgs) Handles Button2.Click
+        MsgBox("Running @Focus3 fully automatially - If this doesn't work try the manual version using javascript")
         If skyXFunctions.RunAtFocus3FullyAutomatically() Then
             MsgBox("Focus Succeeded")
         Else
